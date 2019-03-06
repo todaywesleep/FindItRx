@@ -18,3 +18,9 @@
 \.idea/runConfigurations\.xml
 
 \.idea/vcs\.xml
+
+\.idea/caches/gradle_models\.ser
+
+\.idea/codeStyles/codeStyleConfig\.xml
+
+\.idea/gradle\.xml
