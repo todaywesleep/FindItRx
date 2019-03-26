@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name">FindItRx</string>
     <!-- Authorization activity -->
-    <string name="activity_auth_email">E-mail</string>
-    <string name="activity_auth_password">Password</string>
-    <string name="activity_auth_repeat_password">Repeat password</string>
-    <string name="activity_auth_to_login">To login</string>
-    <string name="activity_auth_login">Login</string>
-    <string name="activity_auth_to_registration">To registration</string>
-    <string name="activity_auth_register">Register</string>
+    <string name="auth_auth_email">E-mail</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_repeat_password">Repeat password</string>
+    <string name="auth_to_login">To login</string>
+    <string name="auth_login">Login</string>
+    <string name="auth_to_registration">To registration</string>
+    <string name="auth_register">Register</string>
+    <!-- Authorization activity error -->
+    <string name="auth_password_length_error">Required password can\'t be at least 6 digits</string>
+    <string name="auth_repeat_password_error">Passwords does not match</string>
+    <string name="auth_email_error">Please enter correct email</string>
 </resources>

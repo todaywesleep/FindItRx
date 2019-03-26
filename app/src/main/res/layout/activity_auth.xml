@@ -26,7 +26,7 @@
                 android:id="@+id/auth_et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_auth_email" />
+                android:hint="@string/auth_auth_email" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -40,7 +40,7 @@
                 android:id="@+id/auth_et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_auth_password"
+                android:hint="@string/auth_password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,7 +56,7 @@
                 android:id="@+id/auth_et_repeat_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_auth_repeat_password"
+                android:hint="@string/auth_repeat_password"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,13 +64,13 @@
             android:id="@+id/auth_bth_login"
             style="@style/BaseButton"
             android:layout_marginTop="@dimen/padding_small"
-            android:text="@string/activity_auth_login" />
+            android:text="@string/auth_login" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/auth_bth_register"
             style="@style/BaseButton"
             android:layout_marginTop="@dimen/padding_small"
-            android:text="@string/activity_auth_to_registration" />
+            android:text="@string/auth_to_registration" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
