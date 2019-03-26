@@ -3,6 +3,8 @@ package pro.papaya.canyo.finditrx;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class AuthActivity extends AppCompatActivity {
 
   @Override
