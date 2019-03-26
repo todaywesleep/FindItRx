@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:orientation="vertical"
     android:padding="@dimen/padding_default"
     tools:context=".activity.AuthActivity">
@@ -39,7 +40,8 @@
                 android:id="@+id/auth_et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_auth_password" />
+                android:hint="@string/activity_auth_password"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -47,13 +49,15 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_small">
+            android:layout_marginTop="@dimen/padding_small"
+            android:visibility="gone">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/auth_et_repeat_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/activity_auth_password" />
+                android:hint="@string/activity_auth_repeat_password"
+                android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -66,7 +70,7 @@
             android:id="@+id/auth_bth_register"
             style="@style/BaseButton"
             android:layout_marginTop="@dimen/padding_small"
-            android:text="@string/activity_auth_register" />
+            android:text="@string/activity_auth_to_registration" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
