@@ -1,4 +1,4 @@
-package pro.papaya.canyo.finditrx;
+package pro.papaya.canyo.finditrx.activity;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -9,9 +9,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pro.papaya.canyo.finditrx.R;
 import timber.log.Timber;
 
-public class AuthActivity extends AppCompatActivity {
+public class AuthActivity extends BaseActivity {
   @BindView(R.id.auth_et_password)
   TextInputEditText etPassword;
 
@@ -25,7 +26,7 @@ public class AuthActivity extends AppCompatActivity {
     ButterKnife.bind(this);
 
     btnLogin.setOnClickListener(v -> {
-      Timber.d("Sample message");
+      logDebug("Sample");
     });
   }
 }
