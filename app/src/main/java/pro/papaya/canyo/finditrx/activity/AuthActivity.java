@@ -9,7 +9,9 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManger;
 import pro.papaya.canyo.finditrx.utils.BaseTextWatcher;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.StringUtils;
@@ -36,24 +38,40 @@ public class AuthActivity extends BaseActivity {
   @BindView(R.id.auth_bth_register)
   Button btnRegister;
 
+  private Disposable authEventSubscription;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_auth);
     ButterKnife.bind(this);
     setListeners();
+    subscribeToEvents();
+  }
+
+  private void subscribeToEvents(){
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    authEventSubscription.dispose();
   }
 
   private void setListeners() {
     btnLogin.setOnClickListener(v -> {
       if (isActivityInRegistrationMode()) {
         setActivityMode(false);
+      } else {
+
       }
     });
 
     btnRegister.setOnClickListener(v -> {
       if (!isActivityInRegistrationMode()) {
         setActivityMode(true);
+      } else {
+        signUp();
       }
     });
 
@@ -71,8 +89,8 @@ public class AuthActivity extends BaseActivity {
     etRepeatPassword.addTextChangedListener(new BaseTextWatcher() {
       @Override
       protected void onTextContentChanged(String s) {
-        String password = etPassword.getText() != null
-            ? etPassword.getText().toString()
+        String password = etPassword.getText() != null ? etPassword.getText()
+            .toString()
             : Constants.EMPTY_STRING;
 
         if (!s.isEmpty() && !s.equals(password)) {
@@ -86,7 +104,7 @@ public class AuthActivity extends BaseActivity {
     etEmail.addTextChangedListener(new BaseTextWatcher() {
       @Override
       protected void onTextContentChanged(String s) {
-        if (!s.isEmpty() && !StringUtils.isEmailValid(s)) {
+        if (isEmailValid(getEmailTextString())) {
           etEmailLayout.setError(getString(R.string.auth_email_error));
         } else {
           etEmailLayout.setErrorEnabled(false);
@@ -95,23 +113,73 @@ public class AuthActivity extends BaseActivity {
     });
   }
 
+  private String getEmailTextString() {
+    return etEmail.getText() == null ? Constants.EMPTY_STRING : etEmail.getText()
+        .toString();
+  }
+
+  private boolean isEmailValid(String email) {
+    return !email.isEmpty() && !StringUtils.isEmailValid(email);
+  }
+
+  private boolean isRegistrationDataValid() {
+    String email = etEmail.getText() == null
+        ? Constants.EMPTY_STRING
+        : etEmail.getText().toString();
+    String password = etPassword.getText() == null
+        ? Constants.EMPTY_STRING
+        : etPassword.getText().toString();
+    String repeatPassword = etRepeatPassword.getText() == null
+        ? Constants.EMPTY_STRING
+        : etRepeatPassword.getText().toString();
+    return isEmailValid(email)
+        && !password.isEmpty()
+        && password.length() >= Constants.MIN_PASSWORD_LENGTH
+        && repeatPassword.equals(password);
+  }
+
+  private boolean isLoginDataValid() {
+    String email = etEmail.getText() == null
+        ? Constants.EMPTY_STRING
+        : etEmail.getText().toString();
+    String password = etPassword.getText() == null
+        ? Constants.EMPTY_STRING
+        : etPassword.getText().toString();
+    return isEmailValid(email)
+        && !password.isEmpty()
+        && password.length() >= Constants.MIN_PASSWORD_LENGTH;
+  }
+
   private boolean isActivityInRegistrationMode() {
     return etRepeatPasswordLayout.getVisibility() == View.VISIBLE;
   }
 
   private void setActivityMode(boolean toRegistration) {
-    String newLoginButtonText = getString(toRegistration
-        ? R.string.auth_to_login
-        : R.string.auth_login);
-    String newRegisterButtonText = getString(toRegistration
-        ? R.string.auth_register
-        : R.string.auth_to_registration);
-    int newRepeatPasswordLabelVisibility = toRegistration
-        ? View.VISIBLE
-        : View.GONE;
+    String newLoginButtonText = getString(
+        toRegistration ? R.string.auth_to_login : R.string.auth_login);
+    String newRegisterButtonText = getString(
+        toRegistration ? R.string.auth_register : R.string.auth_to_registration);
+    int newRepeatPasswordLabelVisibility = toRegistration ? View.VISIBLE : View.GONE;
 
     btnRegister.setText(newRegisterButtonText);
     btnLogin.setText(newLoginButtonText);
     etRepeatPasswordLayout.setVisibility(newRepeatPasswordLabelVisibility);
+  }
+
+  private void signUp() {
+    authEventSubscription = FireBaseLoginManger.getInstance()
+        .createRemoteUser(etEmail.getText()
+                .toString(),
+            etPassword.getText()
+                .toString())
+        .subscribe(fireBaseResponseModel -> {
+          if (!fireBaseResponseModel.isResponseSuccessful()) {
+            logDebug(
+                "Registration failed with message: "
+                    + fireBaseResponseModel.getMessage());
+            showSnackBar(
+                fireBaseResponseModel.getMessage());
+          }
+        });
   }
 }
