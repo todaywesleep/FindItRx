@@ -46,10 +46,6 @@ public class AuthActivity extends BaseActivity {
     setContentView(R.layout.activity_auth);
     ButterKnife.bind(this);
     setListeners();
-    subscribeToEvents();
-  }
-
-  private void subscribeToEvents(){
   }
 
   @Override
@@ -80,8 +76,10 @@ public class AuthActivity extends BaseActivity {
       protected void onTextContentChanged(String s) {
         if (!s.isEmpty() && s.length() < Constants.MIN_PASSWORD_LENGTH) {
           etPasswordLayout.setError(getString(R.string.auth_password_length_error));
+          setError(true);
         } else {
           etPasswordLayout.setErrorEnabled(false);
+          setError(false);
         }
       }
     });
@@ -89,14 +87,16 @@ public class AuthActivity extends BaseActivity {
     etRepeatPassword.addTextChangedListener(new BaseTextWatcher() {
       @Override
       protected void onTextContentChanged(String s) {
-        String password = etPassword.getText() != null ? etPassword.getText()
-            .toString()
+        String password = etPassword.getText() != null
+            ? etPassword.getText().toString()
             : Constants.EMPTY_STRING;
 
         if (!s.isEmpty() && !s.equals(password)) {
           etRepeatPasswordLayout.setError(getString(R.string.auth_repeat_password_error));
+          setError(true);
         } else {
           etRepeatPasswordLayout.setErrorEnabled(false);
+          setError(false);
         }
       }
     });
@@ -106,11 +106,21 @@ public class AuthActivity extends BaseActivity {
       protected void onTextContentChanged(String s) {
         if (isEmailValid(getEmailTextString())) {
           etEmailLayout.setError(getString(R.string.auth_email_error));
+          setError(true);
         } else {
           etEmailLayout.setErrorEnabled(false);
+          setError(false);
         }
       }
     });
+  }
+
+  private void setError(boolean isErrorExist) {
+    if (isActivityInRegistrationMode()) {
+      setRegisterButtonState(!isErrorExist);
+    } else {
+      setAuthButtonState(!isErrorExist);
+    }
   }
 
   private String getEmailTextString() {
@@ -138,7 +148,7 @@ public class AuthActivity extends BaseActivity {
         && repeatPassword.equals(password);
   }
 
-  private boolean isLoginDataValid() {
+  private boolean isAuthDataValid() {
     String email = etEmail.getText() == null
         ? Constants.EMPTY_STRING
         : etEmail.getText().toString();
@@ -162,8 +172,18 @@ public class AuthActivity extends BaseActivity {
     int newRepeatPasswordLabelVisibility = toRegistration ? View.VISIBLE : View.GONE;
 
     btnRegister.setText(newRegisterButtonText);
+    setRegisterButtonState(!toRegistration || isRegistrationDataValid());
     btnLogin.setText(newLoginButtonText);
+    setAuthButtonState(toRegistration || isAuthDataValid());
     etRepeatPasswordLayout.setVisibility(newRepeatPasswordLabelVisibility);
+  }
+
+  private void setRegisterButtonState(boolean isEnabled){
+    btnRegister.setEnabled(isEnabled);
+  }
+
+  private void setAuthButtonState(boolean isEnabled){
+    btnLogin.setEnabled(isEnabled);
   }
 
   private void signUp() {
