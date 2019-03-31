@@ -11,13 +11,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManger;
 import pro.papaya.canyo.finditrx.model.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.BaseTextWatcher;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.StringUtils;
+import timber.log.Timber;
 
 public class AuthActivity extends BaseActivity {
   @BindView(R.id.auth_et_email_layout)
