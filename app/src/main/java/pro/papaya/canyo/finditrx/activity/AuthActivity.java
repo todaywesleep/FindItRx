@@ -9,9 +9,12 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManger;
+import pro.papaya.canyo.finditrx.model.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.BaseTextWatcher;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.StringUtils;
@@ -38,20 +41,12 @@ public class AuthActivity extends BaseActivity {
   @BindView(R.id.auth_bth_register)
   Button btnRegister;
 
-  private Disposable authEventSubscription;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_auth);
     ButterKnife.bind(this);
     setListeners();
-  }
-
-  @Override
-  protected void onDestroy() {
-    super.onDestroy();
-    authEventSubscription.dispose();
   }
 
   private void setListeners() {
@@ -124,8 +119,21 @@ public class AuthActivity extends BaseActivity {
   }
 
   private String getEmailTextString() {
-    return etEmail.getText() == null ? Constants.EMPTY_STRING : etEmail.getText()
-        .toString();
+    return etEmail.getText() == null
+        ? Constants.EMPTY_STRING
+        : etEmail.getText().toString();
+  }
+
+  private String getPasswordTextString() {
+    return etPassword.getText() == null
+        ? Constants.EMPTY_STRING
+        : etPassword.getText().toString();
+  }
+
+  private String getRepPasswordTextString() {
+    return etRepeatPassword.getText() == null
+        ? Constants.EMPTY_STRING
+        : etRepeatPassword.getText().toString();
   }
 
   private boolean isEmailValid(String email) {
@@ -133,15 +141,9 @@ public class AuthActivity extends BaseActivity {
   }
 
   private boolean isRegistrationDataValid() {
-    String email = etEmail.getText() == null
-        ? Constants.EMPTY_STRING
-        : etEmail.getText().toString();
-    String password = etPassword.getText() == null
-        ? Constants.EMPTY_STRING
-        : etPassword.getText().toString();
-    String repeatPassword = etRepeatPassword.getText() == null
-        ? Constants.EMPTY_STRING
-        : etRepeatPassword.getText().toString();
+    String email = getEmailTextString();
+    String password = getPasswordTextString();
+    String repeatPassword = getRepPasswordTextString();
     return isEmailValid(email)
         && !password.isEmpty()
         && password.length() >= Constants.MIN_PASSWORD_LENGTH
@@ -149,12 +151,8 @@ public class AuthActivity extends BaseActivity {
   }
 
   private boolean isAuthDataValid() {
-    String email = etEmail.getText() == null
-        ? Constants.EMPTY_STRING
-        : etEmail.getText().toString();
-    String password = etPassword.getText() == null
-        ? Constants.EMPTY_STRING
-        : etPassword.getText().toString();
+    String email = getEmailTextString();
+    String password = getPasswordTextString();
     return isEmailValid(email)
         && !password.isEmpty()
         && password.length() >= Constants.MIN_PASSWORD_LENGTH;
@@ -178,28 +176,42 @@ public class AuthActivity extends BaseActivity {
     etRepeatPasswordLayout.setVisibility(newRepeatPasswordLabelVisibility);
   }
 
-  private void setRegisterButtonState(boolean isEnabled){
+  private void setRegisterButtonState(boolean isEnabled) {
     btnRegister.setEnabled(isEnabled);
   }
 
-  private void setAuthButtonState(boolean isEnabled){
+  private void setAuthButtonState(boolean isEnabled) {
     btnLogin.setEnabled(isEnabled);
   }
 
   private void signUp() {
-    authEventSubscription = FireBaseLoginManger.getInstance()
-        .createRemoteUser(etEmail.getText()
-                .toString(),
-            etPassword.getText()
-                .toString())
-        .subscribe(fireBaseResponseModel -> {
-          if (!fireBaseResponseModel.isResponseSuccessful()) {
-            logDebug(
-                "Registration failed with message: "
-                    + fireBaseResponseModel.getMessage());
-            showSnackBar(
-                fireBaseResponseModel.getMessage());
+    FireBaseLoginManger.getInstance()
+        .createRemoteUser(
+            getEmailTextString(),
+            getPasswordTextString()
+        ).subscribe(new SingleObserver<FireBaseResponseModel>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+
+          }
+
+          @Override
+          public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
+
+          }
+
+          @Override
+          public void onError(Throwable e) {
+
           }
         });
+
+//    if (!fireBaseResponseModel.isResponseSuccessful()) {
+//      logDebug(
+//          "Registration failed with message: "
+//              + fireBaseResponseModel.getMessage());
+//      showSnackBar(
+//          fireBaseResponseModel.getMessage());
+//    }
   }
 }

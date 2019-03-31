@@ -4,6 +4,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import pro.papaya.canyo.finditrx.model.FireBaseResponseModel;
 
 public class FireBaseLoginManger {
@@ -14,28 +16,32 @@ public class FireBaseLoginManger {
     return ourInstance;
   }
 
-  private FireBaseResponseModel fireBaseResponse = new FireBaseResponseModel(false, null);
-  private Observable<FireBaseResponseModel> fireBaseResponseModel = Observable.just(fireBaseResponse);
-
   private FireBaseLoginManger() {
     auth = FirebaseAuth.getInstance();
   }
 
-  public Observable<FireBaseResponseModel> getAuthResponseEvent() {
-    return fireBaseResponseModel;
+  public Single<FireBaseResponseModel> createRemoteUser(String email, String password) {
+    return new Single<FireBaseResponseModel>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super FireBaseResponseModel> observer) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener(authResult -> {
+              observer.onSuccess(new FireBaseResponseModel(true, null));
+            })
+            .addOnFailureListener(observer::onError);
+      }
+    };
   }
 
-  public Observable<FireBaseResponseModel> createRemoteUser(String email, String password) {
-    return new Observable<FireBaseResponseModel>() {
+  public Single<FireBaseResponseModel> signInRemote(String email, String password) {
+    return new Single<FireBaseResponseModel>() {
       @Override
-      protected void subscribeActual(Observer<? super FireBaseResponseModel> observer) {
+      protected void subscribeActual(SingleObserver<? super FireBaseResponseModel> observer) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener(authResult -> {
-              observer.onNext(new FireBaseResponseModel(true, null));
+              observer.onSuccess(new FireBaseResponseModel(true, null));
             })
-            .addOnFailureListener(e -> {
-              observer.onNext(new FireBaseResponseModel(false, e.getLocalizedMessage()));
-            });
+            .addOnFailureListener(observer::onError);
       }
     };
   }
