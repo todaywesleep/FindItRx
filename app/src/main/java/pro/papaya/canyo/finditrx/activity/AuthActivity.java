@@ -1,5 +1,6 @@
 package pro.papaya.canyo.finditrx.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -7,17 +8,17 @@ import android.widget.Button;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManger;
 import pro.papaya.canyo.finditrx.model.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.BaseTextWatcher;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.StringUtils;
-import timber.log.Timber;
+import pro.papaya.canyo.finditrx.viewmodel.AuthViewModel;
 
 public class AuthActivity extends BaseActivity {
   @BindView(R.id.auth_et_email_layout)
@@ -41,12 +42,45 @@ public class AuthActivity extends BaseActivity {
   @BindView(R.id.auth_bth_register)
   Button btnRegister;
 
+  private AuthViewModel authViewModel;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_auth);
     ButterKnife.bind(this);
     setListeners();
+
+    authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
+    renewAuth();
+  }
+
+  private void renewAuth() {
+    authViewModel.renewAuth()
+        .subscribe(new SingleObserver<Boolean>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+            logDebug("Renew auth started");
+          }
+
+          @Override
+          public void onSuccess(Boolean aBoolean) {
+            logDebug("Auth renewed successfully");
+            navigateToMainActivity();
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            logDebug("Cant renew auth with error: %s", e);
+            showSnackBar(e.getLocalizedMessage());
+          }
+        });
+  }
+
+  private void navigateToMainActivity() {
+    Intent navigationIntent = new Intent(AuthActivity.this, MainActivity.class);
+    startActivity(navigationIntent);
+    finish();
   }
 
   private void setListeners() {
@@ -187,53 +221,50 @@ public class AuthActivity extends BaseActivity {
   }
 
   private void signIn() {
-    FireBaseLoginManger.getInstance().signInRemote(
-        getEmailTextString(),
-        getPasswordTextString()
-    ).subscribe(new SingleObserver<FireBaseResponseModel>() {
-      @Override
-      public void onSubscribe(Disposable d) {
-      }
+    authViewModel.signIn(getEmailTextString(), getPasswordTextString())
+        .subscribe(new SingleObserver<FireBaseResponseModel>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+            logDebug("SignIn request started");
+          }
 
-      @Override
-      public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
-        setLoading(false);
-        showSnackBar("Login success");
-        logDebug("Login success");
-      }
+          @Override
+          public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
+            setLoading(false);
+            navigateToMainActivity();
+            logDebug("Login success");
+          }
 
-      @Override
-      public void onError(Throwable e) {
-        setLoading(false);
-        showSnackBar(e.getLocalizedMessage());
-        logDebug("SignIn failed with error: %s", e.getMessage());
-      }
-    });
+          @Override
+          public void onError(Throwable e) {
+            setLoading(false);
+            showSnackBar(e.getLocalizedMessage());
+            logDebug("SignIn failed with error: %s", e.getMessage());
+          }
+        });
   }
 
   private void signUp() {
-    FireBaseLoginManger.getInstance()
-        .createRemoteUser(
-            getEmailTextString(),
-            getPasswordTextString()
-        ).subscribe(new SingleObserver<FireBaseResponseModel>() {
-      @Override
-      public void onSubscribe(Disposable d) {
-      }
+    authViewModel.signUp(getEmailTextString(), getPasswordTextString())
+        .subscribe(new SingleObserver<FireBaseResponseModel>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+            logDebug("SignUp request started");
+          }
 
-      @Override
-      public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
-        setLoading(false);
-        showSnackBar("SignUpSuccess");
-        logDebug("SignUp success");
-      }
+          @Override
+          public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
+            setLoading(false);
+            navigateToMainActivity();
+            logDebug("SignUp success");
+          }
 
-      @Override
-      public void onError(Throwable e) {
-        setLoading(false);
-        showSnackBar(e.getLocalizedMessage());
-        logDebug("Registration failed with message: %s", e.getMessage());
-      }
-    });
+          @Override
+          public void onError(Throwable e) {
+            setLoading(false);
+            showSnackBar(e.getLocalizedMessage());
+            logDebug("Registration failed with message: %s", e.getMessage());
+          }
+        });
   }
 }

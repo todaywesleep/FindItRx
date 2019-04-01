@@ -1,6 +1,9 @@
 package pro.papaya.canyo.finditrx.firebase;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -42,6 +45,22 @@ public class FireBaseLoginManger {
               observer.onSuccess(new FireBaseResponseModel(true, null));
             })
             .addOnFailureListener(observer::onError);
+      }
+    };
+  }
+
+  public Single<Boolean> renewAuth() {
+    return new Single<Boolean>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+          currentUser.getIdToken(true)
+              .addOnSuccessListener(getTokenResult -> observer.onSuccess(true))
+              .addOnFailureListener(observer::onError);
+        } else {
+          observer.onSuccess(false);
+        }
       }
     };
   }
