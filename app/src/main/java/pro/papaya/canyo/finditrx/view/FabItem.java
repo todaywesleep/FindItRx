@@ -1,5 +1,6 @@
 package pro.papaya.canyo.finditrx.view;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -12,7 +13,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
 import pro.papaya.canyo.finditrx.R;
-import timber.log.Timber;
 
 public class FabItem extends LinearLayout {
   public interface FabItemCallback {
@@ -40,11 +40,59 @@ public class FabItem extends LinearLayout {
   }
 
   public void setHeaderVisibility(boolean isVisible) {
-    title.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    title.setVisibility(VISIBLE);
+    title.setAlpha(isVisible ? .0f : 1f);
+
+    title.animate()
+        .translationY(0)
+        .alpha(isVisible ? 1f : .0f)
+        .setListener(new Animator.AnimatorListener() {
+          @Override
+          public void onAnimationStart(Animator animation) {
+          }
+
+          @Override
+          public void onAnimationEnd(Animator animation) {
+            title.setVisibility(isVisible ? VISIBLE : GONE);
+          }
+
+          @Override
+          public void onAnimationCancel(Animator animation) {
+          }
+
+          @Override
+          public void onAnimationRepeat(Animator animation) {
+          }
+        })
+        .start();
   }
 
   public void setItemVisibility(boolean isVisible) {
-    root.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    root.setVisibility(VISIBLE);
+    root.setAlpha(isVisible ? .0f : 1f);
+
+    root.animate()
+        .translationY(0)
+        .alpha(isVisible ? 1f : .0f)
+        .setListener(new Animator.AnimatorListener() {
+          @Override
+          public void onAnimationStart(Animator animation) {
+          }
+
+          @Override
+          public void onAnimationEnd(Animator animation) {
+            root.setVisibility(isVisible ? VISIBLE : GONE);
+          }
+
+          @Override
+          public void onAnimationCancel(Animator animation) {
+          }
+
+          @Override
+          public void onAnimationRepeat(Animator animation) {
+          }
+        })
+        .start();
   }
 
   public void setCallback(FabItemCallback callback) {
