@@ -1,20 +1,29 @@
 package pro.papaya.canyo.finditrx.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
+import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
+import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ActionPageFragment.ActionPageCallback {
+  private final static int CAMERA_PERMISSION_CODE = 1000;
+
   @BindView(R.id.main_view_pager)
   ViewPager mainViewPager;
   @BindView(R.id.main_tab_navigator)
@@ -34,21 +43,32 @@ public class MainActivity extends BaseActivity {
     setListeners();
   }
 
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+      adapter.refreshActionFragment();
+    }else{
+      new CameraUnavailableDialog(this).show();
+    }
+  }
+
   private void initViews() {
-    adapter = new MainPageAdapter(getSupportFragmentManager());
+    adapter = new MainPageAdapter(getSupportFragmentManager(), this);
     mainViewPager.setAdapter(adapter);
     selectPage(MainViewPagerModel.CAMERA_PAGE.ordinal(), false);
     selectTab(MainViewPagerModel.CAMERA_PAGE.ordinal());
   }
 
-  private void selectTab(int idx){
+  private void selectTab(int idx) {
     TabLayout.Tab tab = tabLayout.getTabAt(idx);
-    if (tab != null){
+    if (tab != null) {
       tab.select();
     }
   }
 
-  private void selectPage(int idx, boolean smoothScroll){
+  private void selectPage(int idx, boolean smoothScroll) {
     mainViewPager.setCurrentItem(idx, smoothScroll);
   }
 
@@ -75,7 +95,7 @@ public class MainActivity extends BaseActivity {
     tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
       @Override
       public void onTabSelected(TabLayout.Tab tab) {
-        mainViewPager.setCurrentItem(tab.getPosition(), true);
+        selectPage(tab.getPosition(), true);
       }
 
       @Override
@@ -87,5 +107,20 @@ public class MainActivity extends BaseActivity {
       public void onTabReselected(TabLayout.Tab tab) {
       }
     });
+  }
+
+  @Override
+  public void requestCameraPermissions() {
+    ActivityCompat.requestPermissions(MainActivity.this,
+        new String[]{Manifest.permission.CAMERA},
+        CAMERA_PERMISSION_CODE);
+  }
+
+  @Override
+  public boolean isCameraPermissionsGranted() {
+    return ContextCompat.checkSelfPermission(
+        MainActivity.this,
+        Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED;
   }
 }

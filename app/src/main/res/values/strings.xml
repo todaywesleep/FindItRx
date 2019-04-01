@@ -17,4 +17,8 @@
     <string name="main_photo_title">Action</string>
     <string name="main_profile_title">Profile</string>
     <string name="main_stats_title">Stats</string>
+    <!-- Camera forbid dialog -->
+    <string name="camera_dialog_title">Warning</string>
+    <string name="camera_dialog_message">This application can\'t work normally without camera permission. To get full app experience, please allow use camera.</string>
+    <string name="camera_dialog_positive_btn">Ok</string>
 </resources>

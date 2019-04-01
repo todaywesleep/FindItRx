@@ -9,8 +9,12 @@ import pro.papaya.canyo.finditrx.fragment.StatsPageFragment;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 
 public class MainPageAdapter extends FragmentPagerAdapter {
-  public MainPageAdapter(FragmentManager fm) {
+  private ActionPageFragment.ActionPageCallback actionPageCallback;
+
+  public MainPageAdapter(FragmentManager fm,
+                         ActionPageFragment.ActionPageCallback actionPageCallback) {
     super(fm);
+    this.actionPageCallback = actionPageCallback;
   }
 
   @Override
@@ -22,7 +26,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
       }
 
       case CAMERA_PAGE: {
-        return ActionPageFragment.getInstance();
+        return ActionPageFragment.getInstance(actionPageCallback);
       }
 
       case STATS_PAGE: {
@@ -36,5 +40,9 @@ public class MainPageAdapter extends FragmentPagerAdapter {
   @Override
   public int getCount() {
     return MainViewPagerModel.values().length;
+  }
+
+  public void refreshActionFragment(){
+    ActionPageFragment.getInstance(actionPageCallback).refresh();
   }
 }

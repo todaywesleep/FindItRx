@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pro.papaya.canyo.finditrx">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".Application"
         android:allowBackup="true"
