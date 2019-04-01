@@ -78,9 +78,9 @@ public class ActionPageFragment extends Fragment {
               FocusModeSelectorsKt.autoFocus(),
               FocusModeSelectorsKt.fixed()
           ))
-          .flash(SelectorsKt.firstAvailable(
+//          .flash(SelectorsKt.firstAvailable(
 //              FlashSelectorsKt.autoFlash(),
-          ))
+//          ))
 //          .frameProcessor(myFrameProcessor)   // (optional) receives each frame from preview stream
           .build();
 
