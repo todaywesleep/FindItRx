@@ -9,8 +9,12 @@
     <color name="snackBarText">#FFFFFF</color>
     <color name="inactiveFab">#FFFFFF</color>
 
-    <!-- FAB -->
-    <color name="fabNormalColor">#000000</color>
-    <color name="fabTintColor">#FFFFFF</color>
-    <color name="fabRippleColor">#303030</color>
+    <!-- FAB disabled-->
+    <color name="fabDisabledNormalColor">#000000</color>
+    <color name="fabDisabledTintColor">#FFFFFF</color>
+    <color name="fabDisabledTitleColor">#FFFFFF</color>
+    <!-- FAB enabled -->
+    <color name="fabEnabledNormalColor">#FFFFFF</color>
+    <color name="fabEnabledTintColor">#000000</color>
+    <color name="fabEnabledTitleColor">#000000</color>
 </resources>

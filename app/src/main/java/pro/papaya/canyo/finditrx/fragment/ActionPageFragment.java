@@ -8,16 +8,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.fotoapparat.Fotoapparat;
+import io.fotoapparat.configuration.UpdateConfiguration;
 import io.fotoapparat.parameter.ScaleType;
+import io.fotoapparat.selector.FlashSelectorsKt;
 import io.fotoapparat.selector.FocusModeSelectorsKt;
 import io.fotoapparat.selector.LensPositionSelectorsKt;
 import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.selector.SelectorsKt;
 import io.fotoapparat.view.CameraView;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
+import pro.papaya.canyo.finditrx.view.FabItem;
+import pro.papaya.canyo.finditrx.view.FabMenu;
 
-public class ActionPageFragment extends Fragment {
+public class ActionPageFragment extends Fragment implements FabMenu.FabMenuCallback {
   public static ActionPageFragment INSTANCE = null;
 
   public interface ActionPageCallback {
@@ -26,7 +33,11 @@ public class ActionPageFragment extends Fragment {
     boolean isCameraPermissionsGranted();
   }
 
-  private CameraView cameraView;
+  @BindView(R.id.action_camera_view)
+  CameraView cameraView;
+  @BindView(R.id.action_menu)
+  FabMenu menu;
+
   private Fotoapparat fotoapparat;
   private ActionPageCallback callback;
 
@@ -35,7 +46,7 @@ public class ActionPageFragment extends Fragment {
       ActionPageFragment fragment = new ActionPageFragment();
       fragment.setCallback(callback);
       INSTANCE = fragment;
-    }else if (callback != INSTANCE.callback) {
+    } else if (callback != INSTANCE.callback) {
       INSTANCE.setCallback(callback);
     }
 
@@ -54,7 +65,8 @@ public class ActionPageFragment extends Fragment {
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    cameraView = view.findViewById(R.id.action_camera_view);
+    ButterKnife.bind(this, view);
+    menu.setCallback(this);
     initFotoapparat();
   }
 
@@ -70,8 +82,23 @@ public class ActionPageFragment extends Fragment {
     fotoapparat.start();
   }
 
+  @Override
+  public void onFabItemClick(FabItem item) {
+    if (item.getAction() == FabMenuAction.ACTION_AUTO_FLASH) {
+      fotoapparat.updateConfiguration(
+          UpdateConfiguration.builder()
+              .flash(FlashSelectorsKt.off())
+              .build()
+      );
+    }
+  }
+
   public void setCallback(ActionPageCallback callback) {
     this.callback = callback;
+  }
+
+  public void refresh() {
+    initFotoapparat();
   }
 
   private void initFotoapparat() {
@@ -97,9 +124,5 @@ public class ActionPageFragment extends Fragment {
     } else {
       callback.requestCameraPermissions();
     }
-  }
-
-  public void refresh(){
-    initFotoapparat();
   }
 }

@@ -2,7 +2,11 @@ package pro.papaya.canyo.finditrx.view;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +16,39 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
 
-public class FabItem extends LinearLayout {
+public class FabItem extends LinearLayout implements View.OnClickListener {
+  private final static float INVISIBLE_ALPHA = .0f;
+  private final static float VISIBLE_ALPHA = 1f;
+  private final static int Y_TRANSLATION = 0;
+
+  @Override
+  public void onClick(View v) {
+    if (callback != null) {
+      callback.onFabClick(this);
+    }
+
+    isEnabled = !isEnabled;
+    setSelectionState(isEnabled);
+  }
+
   public interface FabItemCallback {
     void onFabClick(FabItem item);
   }
 
+  // View
   private View root;
   private FloatingActionButton fab;
   private TextView title;
+
+  // Logic
   private boolean isSwitcher;
+  private boolean isEnabled = false;
   private FabItemCallback callback;
+  private FabMenuAction action;
 
   public FabItem(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
@@ -39,13 +64,43 @@ public class FabItem extends LinearLayout {
     return isSwitcher;
   }
 
+  public FabMenuAction getAction() {
+    return action;
+  }
+
+  public void setSelectionState(boolean isEnabled) {
+    int drawableResource = isEnabled
+        ? R.drawable.fab_item_enabled_bg
+        : R.drawable.fab_item_disabled_bg;
+    int tintColor = isEnabled
+        ? R.color.fabDisabledTintColor
+        : R.color.fabEnabledTintColor;
+    int textColor = isEnabled
+        ? R.color.fabEnabledTitleColor
+        : R.color.fabDisabledTitleColor;
+    int backgroundColor = isEnabled
+        ? R.color.fabEnabledNormalColor
+        : R.color.fabDisabledNormalColor;
+
+    title.setBackground(ContextCompat.getDrawable(getContext(), drawableResource));
+    title.setTextColor(ContextCompat.getColor(getContext(), textColor));
+
+    Drawable myFabSrc = fab.getDrawable();
+    myFabSrc.mutate().setColorFilter(
+        ContextCompat.getColor(getContext(), tintColor),
+        PorterDuff.Mode.XOR
+    );
+    fab.setImageDrawable(myFabSrc);
+    fab.setBackgroundColor(ContextCompat.getColor(getContext(), backgroundColor));
+  }
+
   public void setHeaderVisibility(boolean isVisible) {
     title.setVisibility(VISIBLE);
-    title.setAlpha(isVisible ? .0f : 1f);
+    title.setAlpha(isVisible ? INVISIBLE_ALPHA : VISIBLE_ALPHA);
 
     title.animate()
-        .translationY(0)
-        .alpha(isVisible ? 1f : .0f)
+        .translationY(Y_TRANSLATION)
+        .alpha(isVisible ? VISIBLE_ALPHA : INVISIBLE_ALPHA)
         .setListener(new Animator.AnimatorListener() {
           @Override
           public void onAnimationStart(Animator animation) {
@@ -69,11 +124,11 @@ public class FabItem extends LinearLayout {
 
   public void setItemVisibility(boolean isVisible) {
     root.setVisibility(VISIBLE);
-    root.setAlpha(isVisible ? .0f : 1f);
+    root.setAlpha(isVisible ? INVISIBLE_ALPHA : VISIBLE_ALPHA);
 
     root.animate()
-        .translationY(0)
-        .alpha(isVisible ? 1f : .0f)
+        .translationY(Y_TRANSLATION)
+        .alpha(isVisible ? VISIBLE_ALPHA : INVISIBLE_ALPHA)
         .setListener(new Animator.AnimatorListener() {
           @Override
           public void onAnimationStart(Animator animation) {
@@ -109,16 +164,8 @@ public class FabItem extends LinearLayout {
       unpackAttributes(attributeSet);
     }
 
-    fab.setOnClickListener(view -> {
-      if (callback != null) {
-        callback.onFabClick(this);
-      }
-    });
-    title.setOnClickListener(view -> {
-      if (callback != null) {
-        callback.onFabClick(this);
-      }
-    });
+    fab.setOnClickListener(this);
+    title.setOnClickListener(this);
   }
 
   private void unpackAttributes(AttributeSet attributeSet) {
@@ -129,6 +176,12 @@ public class FabItem extends LinearLayout {
     );
     title.setText(typedArray.getText(R.styleable.FabItem_android_text));
     isSwitcher = typedArray.getBoolean(R.styleable.FabItem_switcher, false);
+    action = FabMenuAction.from(
+        typedArray.getInt(
+            R.styleable.FabItem_action,
+            FabMenuAction.ACTION_NOT_SPECIFIED.getAction()
+        )
+    );
     typedArray.recycle();
   }
 }

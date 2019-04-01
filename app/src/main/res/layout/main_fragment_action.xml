@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <pro.papaya.canyo.finditrx.view.FabMenu
+        android:id="@+id/action_menu"
         android:padding="@dimen/padding_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

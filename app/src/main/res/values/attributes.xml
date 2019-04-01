@@ -4,5 +4,8 @@
         <attr name="android:src" />
         <attr name="android:text" />
         <attr name="switcher" format="boolean" />
+        <attr name="action" format="enum">
+            <enum name="autoFlash" value="0"/>
+        </attr>
     </declare-styleable>
 </resources>
