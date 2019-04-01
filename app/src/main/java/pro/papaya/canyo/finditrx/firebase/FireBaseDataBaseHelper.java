@@ -25,7 +25,7 @@ public class FireBaseDataBaseHelper {
           @Override
           public void onSuccess(Integer integer) {
             database.collection(TABLE_USERS).add(new UserModel(
-                email, Constants.STOCK_NICKNAME
+                email, Constants.STOCK_NICKNAME + integer.toString()
             )).addOnSuccessListener(documentReference -> {
               observer.onSuccess(true);
             }).addOnFailureListener(observer::onError);
