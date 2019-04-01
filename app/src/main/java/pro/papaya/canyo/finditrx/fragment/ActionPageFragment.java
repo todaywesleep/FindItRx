@@ -1,6 +1,5 @@
 package pro.papaya.canyo.finditrx.fragment;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.PagerAdapter;
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.selector.FocusModeSelectorsKt;
@@ -18,7 +16,6 @@ import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.selector.SelectorsKt;
 import io.fotoapparat.view.CameraView;
 import pro.papaya.canyo.finditrx.R;
-import timber.log.Timber;
 
 public class ActionPageFragment extends Fragment {
   public static ActionPageFragment INSTANCE = null;
@@ -59,6 +56,18 @@ public class ActionPageFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     cameraView = view.findViewById(R.id.camera_view);
     initFotoapparat();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    fotoapparat.stop();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    fotoapparat.start();
   }
 
   public void setCallback(ActionPageCallback callback) {

@@ -6,4 +6,5 @@
     <color name="colorLoadingBackground">#40000000</color>
 
     <color name="buttonTint">#7e87b7</color>
+    <color name="snackBarText">#FFFFFF</color>
 </resources>

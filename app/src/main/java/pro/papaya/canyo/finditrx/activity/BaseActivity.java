@@ -3,11 +3,13 @@ package pro.papaya.canyo.finditrx.activity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.utils.Constants;
@@ -15,7 +17,6 @@ import pro.papaya.canyo.finditrx.view.LoadingDialog;
 import timber.log.Timber;
 
 public abstract class BaseActivity extends AppCompatActivity {
-  protected RelativeLayout progressContainer;
   protected FrameLayout contentContainer;
   protected LoadingDialog loadingDialog;
 
@@ -59,10 +60,16 @@ public abstract class BaseActivity extends AppCompatActivity {
   }
 
   protected void showSnackBar(String message) {
-    Snackbar.make(
+    Snackbar snackbar = Snackbar.make(
         getWindow().getDecorView().findViewById(android.R.id.content),
         message,
         Snackbar.LENGTH_LONG
-    ).show();
+    );
+    TextView textView = snackbar.getView().findViewById(R.id.snackbar_text);
+    textView.setTextColor(ContextCompat.getColor(
+        this,
+        R.color.snackBarText
+    ));
+    snackbar.show();
   }
 }

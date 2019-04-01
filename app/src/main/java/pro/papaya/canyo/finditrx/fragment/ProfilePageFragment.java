@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import butterknife.BindView;
@@ -18,7 +16,6 @@ import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.firebase.FireBaseDataBaseHelper;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManger;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
-import timber.log.Timber;
 
 public class ProfilePageFragment extends BaseFragment {
   private static ProfilePageFragment INSTANCE;
