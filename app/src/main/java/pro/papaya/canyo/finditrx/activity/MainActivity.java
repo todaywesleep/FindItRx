@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private void initViews(){
-    adapter = new MainPageAdapter(MainActivity.this);
+    adapter = new MainPageAdapter(getSupportFragmentManager());
     mainViewPager.setAdapter(adapter);
     mainViewPager.setCurrentItem(MainViewPagerModel.CAMERA_PAGE.ordinal());
   }
