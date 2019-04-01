@@ -3,6 +3,9 @@ package pro.papaya.canyo.finditrx.utils;
 import java.util.regex.Pattern;
 
 public final class Constants {
+  //DATABASE
+  public static final String STOCK_NICKNAME = "Newbie#";
+
   //GLOBAL
   public static final String EMPTY_STRING = "";
 

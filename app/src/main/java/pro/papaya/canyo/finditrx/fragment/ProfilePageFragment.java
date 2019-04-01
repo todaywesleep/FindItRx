@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.firebase.FireBaseDataBaseHelper;
-import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManger;
 
 public class ProfilePageFragment extends Fragment {
   public static ProfilePageFragment INSTANCE = null;
@@ -40,9 +38,5 @@ public class ProfilePageFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    FireBaseDataBaseHelper.addUserWrite(
-        FireBaseLoginManger.getInstance().getUserEmail(),
-        "Jora"
-    );
   }
 }

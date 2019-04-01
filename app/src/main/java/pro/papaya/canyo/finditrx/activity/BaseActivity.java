@@ -35,9 +35,9 @@ public abstract class BaseActivity extends AppCompatActivity {
   }
 
   protected void setLoading(boolean isLoading) {
-    if (isLoading){
+    if (isLoading) {
       loadingDialog.show(this, getString(R.string.loading));
-    }else{
+    } else {
       loadingDialog.dismiss();
     }
   }
@@ -49,6 +49,14 @@ public abstract class BaseActivity extends AppCompatActivity {
             .concat(Constants.LOG_TAG_DIVIDER)
             .concat(message),
         args);
+  }
+
+  protected void logError(Throwable e) {
+    Timber.e(Constants.LOG_OPENED_BRACKET
+        .concat(getClass().getSimpleName())
+        .concat(Constants.LOG_CLOSED_BRACKET)
+        .concat(Constants.LOG_TAG_DIVIDER)
+        .concat(e.getLocalizedMessage()));
   }
 
   protected void showSnackBar(String message) {

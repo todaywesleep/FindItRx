@@ -14,6 +14,8 @@ import butterknife.ButterKnife;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.firebase.FireBaseDataBaseHelper;
+import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManger;
 import pro.papaya.canyo.finditrx.model.firebase.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.BaseTextWatcher;
 import pro.papaya.canyo.finditrx.utils.Constants;
@@ -259,9 +261,7 @@ public class AuthActivity extends BaseActivity {
 
           @Override
           public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
-            setLoading(false);
-            navigateToMainActivity();
-            logDebug("SignUp success");
+            createUserWrite();
           }
 
           @Override
@@ -271,5 +271,29 @@ public class AuthActivity extends BaseActivity {
             logDebug("Registration failed with message: %s", e.getMessage());
           }
         });
+  }
+
+  private void createUserWrite(){
+    FireBaseDataBaseHelper.createUserWrite(
+        FireBaseLoginManger.getInstance().getUserEmail()
+    ).subscribe(new SingleObserver<Boolean>() {
+      @Override
+      public void onSubscribe(Disposable d) {
+
+      }
+
+      @Override
+      public void onSuccess(Boolean aBoolean) {
+        setLoading(false);
+        navigateToMainActivity();
+        logDebug("SignUp success");
+      }
+
+      @Override
+      public void onError(Throwable e) {
+        showSnackBar(e.getLocalizedMessage());
+        logError(e);
+      }
+    });
   }
 }
