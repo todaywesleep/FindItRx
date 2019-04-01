@@ -7,4 +7,10 @@
 
     <color name="buttonTint">#7e87b7</color>
     <color name="snackBarText">#FFFFFF</color>
+    <color name="inactiveFab">#FFFFFF</color>
+
+    <!-- FAB -->
+    <color name="fabNormalColor">#000000</color>
+    <color name="fabTintColor">#FFFFFF</color>
+    <color name="fabRippleColor">#303030</color>
 </resources>

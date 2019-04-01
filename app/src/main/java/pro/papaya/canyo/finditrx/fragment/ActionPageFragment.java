@@ -54,7 +54,7 @@ public class ActionPageFragment extends Fragment {
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    cameraView = view.findViewById(R.id.camera_view);
+    cameraView = view.findViewById(R.id.action_camera_view);
     initFotoapparat();
   }
 

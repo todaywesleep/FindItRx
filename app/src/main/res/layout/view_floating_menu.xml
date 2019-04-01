@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <pro.papaya.canyo.finditrx.view.FabItem
+        android:id="@+id/menu_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_settings"
+        android:text="@string/fab_settings"
+        app:switcher="true" />
+
+    <pro.papaya.canyo.finditrx.view.FabItem
+        android:id="@+id/menu_auto_flash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:src="@drawable/ic_auto_flash"
+        android:text="@string/fab_auto_flash" />
+</LinearLayout>
