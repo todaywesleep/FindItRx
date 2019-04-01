@@ -6,11 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.Nullable;
 import pro.papaya.canyo.finditrx.R;
 
-public class FabMenu extends LinearLayout {
-  private View root;
+public class FabMenu extends LinearLayout implements FabItem.FabItemCallback {
+  private boolean isMenuVisible = false;
+  private LinearLayout root;
+  private List<FabItem> items = new ArrayList<>();
 
   public FabMenu(Context context) {
     super(context);
@@ -33,6 +38,43 @@ public class FabMenu extends LinearLayout {
   }
 
   private void init() {
-    root = LayoutInflater.from(getContext()).inflate(R.layout.view_floating_menu, this);
+    root = LayoutInflater.from(getContext()).inflate(R.layout.view_floating_menu, this)
+        .findViewById(R.id.fab_menu_root);
+
+    setItemListeners();
+    setItemsVisibility(false);
+  }
+
+  private void setItemListeners(){
+    for (int i = 0; i < root.getChildCount(); i++) {
+      View child = root.getChildAt(i);
+      if (child instanceof FabItem) {
+        FabItem currentFab = (FabItem) child;
+        currentFab.setCallback(this);
+      }
+    }
+  }
+
+  private void setItemsVisibility(boolean isVisible){
+    for (int i = 0; i < root.getChildCount(); i++) {
+      View child = root.getChildAt(i);
+      if (child instanceof FabItem) {
+        FabItem currentFab = (FabItem) child;
+
+        if (!currentFab.isSwitcher()) {
+          currentFab.setItemVisibility(isVisible);
+        } else {
+          currentFab.setHeaderVisibility(isVisible);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void onFabClick(FabItem item) {
+    if (item.isSwitcher()){
+      isMenuVisible = !isMenuVisible;
+      setItemsVisibility(isMenuVisible);
+    }
   }
 }
