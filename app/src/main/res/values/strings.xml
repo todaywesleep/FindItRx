@@ -13,4 +13,8 @@
     <string name="auth_password_length_error">Required password can\'t be at least 6 digits</string>
     <string name="auth_repeat_password_error">Passwords does not match</string>
     <string name="auth_email_error">Please enter correct email</string>
+    <!-- Main Activity -->
+    <string name="main_photo_title">Action</string>
+    <string name="main_profile_title">Profile</string>
+    <string name="main_stats_title">Stats</string>
 </resources>
