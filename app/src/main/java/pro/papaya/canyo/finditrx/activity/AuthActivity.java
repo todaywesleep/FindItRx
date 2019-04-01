@@ -275,7 +275,8 @@ public class AuthActivity extends BaseActivity {
 
   private void createUserWrite(){
     FireBaseDataBaseHelper.createUserWrite(
-        FireBaseLoginManger.getInstance().getUserEmail()
+        FireBaseLoginManger.getInstance().getUserEmail(),
+        FireBaseLoginManger.getInstance().getUserId()
     ).subscribe(new SingleObserver<Boolean>() {
       @Override
       public void onSubscribe(Disposable d) {

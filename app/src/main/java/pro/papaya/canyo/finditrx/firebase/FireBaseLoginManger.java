@@ -69,4 +69,12 @@ public class FireBaseLoginManger {
 
     return Constants.EMPTY_STRING;
   }
+
+  public String getUserId(){
+    if (auth.getCurrentUser() != null){
+      return auth.getCurrentUser().getUid();
+    }
+
+    return Constants.EMPTY_STRING;
+  }
 }
