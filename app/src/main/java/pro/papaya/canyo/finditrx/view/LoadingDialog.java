@@ -11,15 +11,11 @@ import pro.papaya.canyo.finditrx.R;
 public final class LoadingDialog {
   private Dialog dialog;
 
-  public Dialog show(Context context) {
-    return show(context, null);
+  public LoadingDialog(Context context){
+    dialog = new Dialog(context, R.style.loadingDialog);
   }
 
-  public Dialog show(Context context, CharSequence title) {
-    return show(context, title, false);
-  }
-
-  public Dialog show(Context context, CharSequence title, boolean cancelable) {
+  public void show(Context context, CharSequence title) {
     LayoutInflater inflater = (LayoutInflater) context
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     final View view = inflater.inflate(R.layout.view_progress_bar, null);
@@ -28,20 +24,12 @@ public final class LoadingDialog {
       tv.setText(title);
     }
 
-    dialog = new Dialog(context, R.style.LoadingDialog);
-    dialog = new Dialog(context, R.style.LoadingDialog);
     dialog.setContentView(view);
-    dialog.setCancelable(cancelable);
+    dialog.setCancelable(false);
     dialog.show();
-
-    return dialog;
   }
 
   public void dismiss(){
     dialog.dismiss();
-  }
-
-  public Dialog getDialog() {
-    return dialog;
   }
 }

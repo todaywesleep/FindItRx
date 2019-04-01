@@ -54,7 +54,8 @@ public class AuthActivity extends BaseActivity {
       if (isActivityInRegistrationMode()) {
         setActivityMode(false);
       } else {
-
+        setLoading(true);
+        signIn();
       }
     });
 
@@ -62,6 +63,7 @@ public class AuthActivity extends BaseActivity {
       if (!isActivityInRegistrationMode()) {
         setActivityMode(true);
       } else {
+        setLoading(true);
         signUp();
       }
     });
@@ -184,34 +186,54 @@ public class AuthActivity extends BaseActivity {
     btnLogin.setEnabled(isEnabled);
   }
 
+  private void signIn() {
+    FireBaseLoginManger.getInstance().signInRemote(
+        getEmailTextString(),
+        getPasswordTextString()
+    ).subscribe(new SingleObserver<FireBaseResponseModel>() {
+      @Override
+      public void onSubscribe(Disposable d) {
+      }
+
+      @Override
+      public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
+        setLoading(false);
+        showSnackBar("Login success");
+        logDebug("Login success");
+      }
+
+      @Override
+      public void onError(Throwable e) {
+        setLoading(false);
+        showSnackBar(e.getLocalizedMessage());
+        logDebug("SignIn failed with error: %s", e.getMessage());
+      }
+    });
+  }
+
   private void signUp() {
     FireBaseLoginManger.getInstance()
         .createRemoteUser(
             getEmailTextString(),
             getPasswordTextString()
         ).subscribe(new SingleObserver<FireBaseResponseModel>() {
-          @Override
-          public void onSubscribe(Disposable d) {
+      @Override
+      public void onSubscribe(Disposable d) {
+      }
 
-          }
+      @Override
+      public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
+        setLoading(false);
+        showSnackBar("SignUpSuccess");
+        logDebug("SignUp success");
+      }
 
-          @Override
-          public void onSuccess(FireBaseResponseModel fireBaseResponseModel) {
-
-          }
-
-          @Override
-          public void onError(Throwable e) {
-
-          }
-        });
-
-//    if (!fireBaseResponseModel.isResponseSuccessful()) {
-//      logDebug(
-//          "Registration failed with message: "
-//              + fireBaseResponseModel.getMessage());
-//      showSnackBar(
-//          fireBaseResponseModel.getMessage());
-//    }
+      @Override
+      public void onError(Throwable e) {
+        setLoading(false);
+        showSnackBar(e.getLocalizedMessage());
+        logDebug("Registration failed with message: %s", e.getMessage());
+      }
+    });
   }
 }
