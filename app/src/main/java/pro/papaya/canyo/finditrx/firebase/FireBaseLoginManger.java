@@ -1,15 +1,12 @@
 package pro.papaya.canyo.finditrx.firebase;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
-import pro.papaya.canyo.finditrx.model.FireBaseResponseModel;
+import pro.papaya.canyo.finditrx.model.firebase.FireBaseResponseModel;
+import pro.papaya.canyo.finditrx.utils.Constants;
 
 public class FireBaseLoginManger {
   private static final FireBaseLoginManger ourInstance = new FireBaseLoginManger();
@@ -63,5 +60,13 @@ public class FireBaseLoginManger {
         }
       }
     };
+  }
+
+  public String getUserEmail(){
+    if (auth.getCurrentUser() != null){
+      return auth.getCurrentUser().getEmail();
+    }
+
+    return Constants.EMPTY_STRING;
   }
 }

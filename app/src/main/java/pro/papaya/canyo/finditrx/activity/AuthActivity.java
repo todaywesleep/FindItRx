@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.model.FireBaseResponseModel;
+import pro.papaya.canyo.finditrx.model.firebase.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.BaseTextWatcher;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.StringUtils;
@@ -65,6 +65,11 @@ public class AuthActivity extends BaseActivity {
 
           @Override
           public void onSuccess(Boolean aBoolean) {
+            if (!aBoolean){
+              logDebug("Can't renew session");
+              return;
+            }
+
             logDebug("Auth renewed successfully");
             navigateToMainActivity();
           }

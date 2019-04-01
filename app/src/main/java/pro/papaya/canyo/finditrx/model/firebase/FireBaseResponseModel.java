@@ -1,4 +1,4 @@
-package pro.papaya.canyo.finditrx.model;
+package pro.papaya.canyo.finditrx.model.firebase;
 
 import androidx.annotation.Nullable;
 
