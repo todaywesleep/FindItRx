@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
 
@@ -73,8 +75,8 @@ public class FabItem extends LinearLayout implements View.OnClickListener {
         ? R.drawable.fab_item_enabled_bg
         : R.drawable.fab_item_disabled_bg;
     int tintColor = isEnabled
-        ? R.color.fabDisabledTintColor
-        : R.color.fabEnabledTintColor;
+        ? R.color.fabEnabledTintColor
+        : R.color.fabDisabledTintColor;
     int textColor = isEnabled
         ? R.color.fabEnabledTitleColor
         : R.color.fabDisabledTitleColor;
@@ -85,13 +87,16 @@ public class FabItem extends LinearLayout implements View.OnClickListener {
     title.setBackground(ContextCompat.getDrawable(getContext(), drawableResource));
     title.setTextColor(ContextCompat.getColor(getContext(), textColor));
 
-    Drawable myFabSrc = fab.getDrawable();
-    myFabSrc.mutate().setColorFilter(
-        ContextCompat.getColor(getContext(), tintColor),
-        PorterDuff.Mode.XOR
-    );
-    fab.setImageDrawable(myFabSrc);
-    fab.setBackgroundColor(ContextCompat.getColor(getContext(), backgroundColor));
+    ColorStateList csl = AppCompatResources.getColorStateList(getContext(), tintColor);
+    Drawable drawable = DrawableCompat.wrap(fab.getDrawable());
+    DrawableCompat.setTintList(drawable, csl);
+
+    fab.setBackgroundTintList(ColorStateList.valueOf(
+        ContextCompat.getColor(
+            getContext(), backgroundColor
+        )
+    ));
+    fab.setImageDrawable(drawable);
   }
 
   public void setHeaderVisibility(boolean isVisible) {
