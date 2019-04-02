@@ -32,4 +32,12 @@ public final class BitmapUtils {
 
     return readBitmap;
   }
+
+  public static Bitmap rotateBitmap(Bitmap src, int degrees){
+    Matrix matrix = new Matrix();
+    matrix.postRotate(degrees);
+
+    src = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, false);
+    return src;
+  }
 }

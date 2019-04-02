@@ -25,7 +25,7 @@ public class ActionViewModel extends ViewModel {
     return FireBaseDataBaseHelper.setFlashState(oldModel, isFlashEnabled);
   }
 
-  public Single<List<FirebaseVisionImageLabel>> postImageTask(Bitmap bitmap) {
-    return FireBaseLabeler.getInstance().postTask(bitmap);
+  public Single<List<FirebaseVisionImageLabel>> postImageTask(Bitmap bitmap, int rotationDegrees) {
+    return FireBaseLabeler.getInstance().postTask(bitmap, rotationDegrees);
   }
 }

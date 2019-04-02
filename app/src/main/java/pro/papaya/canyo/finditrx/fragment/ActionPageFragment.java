@@ -40,6 +40,7 @@ import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
 import pro.papaya.canyo.finditrx.view.FabItem;
 import pro.papaya.canyo.finditrx.view.FabMenu;
 import pro.papaya.canyo.finditrx.viewmodel.ActionViewModel;
+import timber.log.Timber;
 
 public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuCallback {
   public static ActionPageFragment INSTANCE = null;
@@ -65,7 +66,6 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   private ActionPageCallback callback;
   private ActionViewModel actionViewModel;
   private SettingsModel settingsModel = SettingsModel.getStabSettings();
-  private Disposable imageScanningSubscription;
 
   public static ActionPageFragment getInstance(ActionPageCallback callback) {
     if (INSTANCE == null) {
@@ -102,7 +102,6 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
 
   @Override
   public void onDestroy() {
-    imageScanningSubscription.dispose();
     super.onDestroy();
   }
 
@@ -142,33 +141,34 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
       setLoading(true);
       fotoapparat.takePicture().toPendingResult().whenAvailable(photo -> {
         Bitmap bitmap = BitmapFactory.decodeByteArray(photo.encodedImage, 0, photo.encodedImage.length);
-        actionViewModel.postImageTask(bitmap).subscribe(new SingleObserver<List<FirebaseVisionImageLabel>>() {
-          @Override
-          public void onSubscribe(Disposable d) {
+        actionViewModel.postImageTask(bitmap, photo.rotationDegrees).subscribe(
+            new SingleObserver<List<FirebaseVisionImageLabel>>() {
+              @Override
+              public void onSubscribe(Disposable d) {
 
-          }
+              }
 
-          @SuppressLint("SetTextI18n")
-          @Override
-          public void onSuccess(List<FirebaseVisionImageLabel> firebaseVisionImageLabels) {
-            scanResultContainer.removeAllViews();
+              @SuppressLint("SetTextI18n")
+              @Override
+              public void onSuccess(List<FirebaseVisionImageLabel> firebaseVisionImageLabels) {
+                scanResultContainer.removeAllViews();
 
-            for (FirebaseVisionImageLabel label : firebaseVisionImageLabels) {
-              TextView labelContainer = new TextView(getContext());
-              labelContainer.setText(label.getText() + " " + label.getConfidence());
-              scanResultContainer.addView(labelContainer);
-            }
+                for (FirebaseVisionImageLabel label : firebaseVisionImageLabels) {
+                  TextView labelContainer = new TextView(getContext());
+                  labelContainer.setText(label.getText() + " " + label.getConfidence());
+                  scanResultContainer.addView(labelContainer);
+                }
 
-            setLoading(false);
-          }
+                setLoading(false);
+              }
 
-          @Override
-          public void onError(Throwable e) {
-            setLoading(false);
-            showSnackBar(e.getLocalizedMessage());
-            logError(e);
-          }
-        });
+              @Override
+              public void onError(Throwable e) {
+                setLoading(false);
+                showSnackBar(e.getLocalizedMessage());
+                logError(e);
+              }
+            });
 
         return null;
       });
