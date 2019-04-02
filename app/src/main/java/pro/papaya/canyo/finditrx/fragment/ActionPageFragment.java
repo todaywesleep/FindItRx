@@ -1,9 +1,19 @@
 package pro.papaya.canyo.finditrx.fragment;
 
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,10 +55,17 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   @BindView(R.id.action_menu)
   FabMenu menu;
 
+  //TODO remove after testing
+  @BindView(R.id.scan_result)
+  LinearLayout scanResultContainer;
+  @BindView(R.id.snapshot_btn)
+  Button btnSnapshot;
+
   private Fotoapparat fotoapparat;
   private ActionPageCallback callback;
   private ActionViewModel actionViewModel;
   private SettingsModel settingsModel = SettingsModel.getStabSettings();
+  private Disposable imageScanningSubscription;
 
   public static ActionPageFragment getInstance(ActionPageCallback callback) {
     if (INSTANCE == null) {
@@ -77,8 +94,16 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
     ButterKnife.bind(this, view);
     actionViewModel = ViewModelProviders.of(this).get(ActionViewModel.class);
     menu.setCallback(this);
+
     initFotoapparat();
     subscribeToViewModel();
+    setListeners();
+  }
+
+  @Override
+  public void onDestroy() {
+    imageScanningSubscription.dispose();
+    super.onDestroy();
   }
 
   @Override
@@ -110,6 +135,44 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
 
   private void subscribeToViewModel() {
     getSettings();
+  }
+
+  public void setListeners() {
+    btnSnapshot.setOnClickListener(v -> {
+      setLoading(true);
+      fotoapparat.takePicture().toPendingResult().whenAvailable(photo -> {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(photo.encodedImage, 0, photo.encodedImage.length);
+        actionViewModel.postImageTask(bitmap).subscribe(new SingleObserver<List<FirebaseVisionImageLabel>>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+
+          }
+
+          @SuppressLint("SetTextI18n")
+          @Override
+          public void onSuccess(List<FirebaseVisionImageLabel> firebaseVisionImageLabels) {
+            scanResultContainer.removeAllViews();
+
+            for (FirebaseVisionImageLabel label : firebaseVisionImageLabels) {
+              TextView labelContainer = new TextView(getContext());
+              labelContainer.setText(label.getText() + " " + label.getConfidence());
+              scanResultContainer.addView(labelContainer);
+            }
+
+            setLoading(false);
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            setLoading(false);
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
+
+        return null;
+      });
+    });
   }
 
   private void getSettings() {
@@ -194,7 +257,9 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
 //          .flash(SelectorsKt.firstAvailable(
 //              FlashSelectorsKt.autoFlash(),
 //          ))
-//          .frameProcessor(myFrameProcessor)   // (optional) receives each frame from preview stream
+//          .frameProcessor(frame -> {
+//
+//          })
           .build();
 
       fotoapparat.start();

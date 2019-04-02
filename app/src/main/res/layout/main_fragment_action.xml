@@ -7,10 +7,10 @@
 
     <pro.papaya.canyo.finditrx.view.FabMenu
         android:id="@+id/action_menu"
-        android:padding="@dimen/padding_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:elevation="1dp"
+        android:padding="@dimen/padding_default"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -18,4 +18,21 @@
         android:id="@+id/action_camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:background="@android:color/white"
+        android:id="@+id/scan_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/snapshot_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Snapshot"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
