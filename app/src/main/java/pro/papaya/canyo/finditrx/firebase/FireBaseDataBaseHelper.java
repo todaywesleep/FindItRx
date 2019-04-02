@@ -7,14 +7,17 @@ import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
+import timber.log.Timber;
 
 public class FireBaseDataBaseHelper {
   private static final String TABLE_USERS = "users";
+  private static final String TABLE_SETTINGS = "settings";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-  public static Single<Boolean> createUserWrite(String email, String id) {
+  public static Single<Boolean> createUserWrite() {
     return new Single<Boolean>() {
       @Override
       protected void subscribeActual(SingleObserver<? super Boolean> observer) {
@@ -26,12 +29,20 @@ public class FireBaseDataBaseHelper {
 
           @Override
           public void onSuccess(Integer integer) {
-            database.collection(TABLE_USERS).document(id)
-                .set(new UserModel(
-                    email, Constants.STOCK_NICKNAME + integer.toString(), id
-                )).addOnSuccessListener(documentReference -> {
+            database.collection(TABLE_USERS).document(
+                FireBaseLoginManger.getInstance().getUserId()
+            ).set(new UserModel(
+                FireBaseLoginManger.getInstance().getUserEmail(),
+                Constants.STOCK_NICKNAME + integer.toString(),
+                FireBaseLoginManger.getInstance().getUserId()
+            )).addOnSuccessListener(documentReference -> {
               observer.onSuccess(true);
             }).addOnFailureListener(observer::onError);
+
+            //Don't track settings writing
+            database.collection(TABLE_SETTINGS).document(
+                FireBaseLoginManger.getInstance().getUserId()
+            ).set(SettingsModel.getStabSettings());
           }
 
           @Override
@@ -43,11 +54,11 @@ public class FireBaseDataBaseHelper {
     };
   }
 
-  public static Observable<UserModel> getObservableUserName(String userId) {
+  public static Observable<UserModel> getObservableUserName() {
     return new Observable<UserModel>() {
       @Override
       protected void subscribeActual(Observer<? super UserModel> observer) {
-        database.collection(TABLE_USERS).document(userId)
+        database.collection(TABLE_USERS).document(FireBaseLoginManger.getInstance().getUserId())
             .addSnapshotListener((documentSnapshot, e) -> {
               if (e != null) {
                 observer.onError(e);
@@ -57,6 +68,43 @@ public class FireBaseDataBaseHelper {
             });
       }
     };
+  }
+
+  public static Single<SettingsModel> getSettings() {
+    return new Single<SettingsModel>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super SettingsModel> observer) {
+        database.collection(TABLE_SETTINGS).document(FireBaseLoginManger.getInstance().getUserId())
+            .addSnapshotListener(((documentSnapshot, e) -> {
+              if (e != null) {
+                observer.onError(e);
+              } else if (documentSnapshot != null) {
+                observer.onSuccess(documentSnapshot.toObject(SettingsModel.class));
+              }
+            }));
+      }
+    };
+  }
+
+  public static Single<Boolean> setFlashState(SettingsModel oldSettings, boolean isFlashEnabled) {
+    return new Single<Boolean>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
+        oldSettings.setFlashEnabled(isFlashEnabled);
+        database.collection(TABLE_SETTINGS)
+            .document(FireBaseLoginManger.getInstance().getUserId())
+            .set(oldSettings)
+            .addOnSuccessListener(aVoid -> observer.onSuccess(true))
+            .addOnFailureListener(observer::onError);
+      }
+    };
+  }
+
+  public static void setStableSettings() {
+    database.collection(TABLE_SETTINGS).document(FireBaseLoginManger.getInstance().getUserId())
+        .set(SettingsModel.getStabSettings())
+        .addOnSuccessListener(aVoid -> Timber.d("Stable settings"))
+        .addOnFailureListener(Timber::e);
   }
 
   private static Single<Integer> getUsersCollectionLength() {

@@ -11,6 +11,8 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
+import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
 
 public class FabMenu extends LinearLayout implements FabItem.FabItemCallback {
   public interface FabMenuCallback {
@@ -19,7 +21,6 @@ public class FabMenu extends LinearLayout implements FabItem.FabItemCallback {
 
   private boolean isMenuVisible = false;
   private LinearLayout root;
-  private List<FabItem> items = new ArrayList<>();
   private FabMenuCallback callback;
 
   public FabMenu(Context context) {
@@ -46,12 +47,35 @@ public class FabMenu extends LinearLayout implements FabItem.FabItemCallback {
     this.callback = callback;
   }
 
+  public void applySettings(SettingsModel settingsModel){
+    for (FabItem fabItem : getItems()){
+      if (fabItem.getAction() == FabMenuAction.ACTION_AUTO_FLASH){
+        fabItem.setSelectionState(settingsModel.isFlashEnabled());
+        fabItem.setIsEnabled(settingsModel.isFlashEnabled());
+        fabItem.requestLayout();
+      }
+    }
+  }
+
   private void init() {
     root = LayoutInflater.from(getContext()).inflate(R.layout.view_floating_menu, this)
         .findViewById(R.id.fab_menu_root);
 
     setItemListeners();
     setItemsVisibility(false);
+  }
+
+  private List<FabItem> getItems(){
+    List<FabItem> items = new ArrayList<>();
+
+    for (int i = 0; i < root.getChildCount(); i++) {
+      View child = root.getChildAt(i);
+      if (child instanceof FabItem) {
+        items.add((FabItem) child);
+      }
+    }
+
+    return items;
   }
 
   private void setItemListeners() {

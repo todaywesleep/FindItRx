@@ -67,7 +67,7 @@ public class AuthActivity extends BaseActivity {
 
           @Override
           public void onSuccess(Boolean aBoolean) {
-            if (!aBoolean){
+            if (!aBoolean) {
               logDebug("Can't renew session");
               return;
             }
@@ -273,28 +273,26 @@ public class AuthActivity extends BaseActivity {
         });
   }
 
-  private void createUserWrite(){
-    FireBaseDataBaseHelper.createUserWrite(
-        FireBaseLoginManger.getInstance().getUserEmail(),
-        FireBaseLoginManger.getInstance().getUserId()
-    ).subscribe(new SingleObserver<Boolean>() {
-      @Override
-      public void onSubscribe(Disposable d) {
+  private void createUserWrite() {
+    FireBaseDataBaseHelper.createUserWrite()
+        .subscribe(new SingleObserver<Boolean>() {
+          @Override
+          public void onSubscribe(Disposable d) {
 
-      }
+          }
 
-      @Override
-      public void onSuccess(Boolean aBoolean) {
-        setLoading(false);
-        navigateToMainActivity();
-        logDebug("SignUp success");
-      }
+          @Override
+          public void onSuccess(Boolean aBoolean) {
+            setLoading(false);
+            navigateToMainActivity();
+            logDebug("SignUp success");
+          }
 
-      @Override
-      public void onError(Throwable e) {
-        showSnackBar(e.getLocalizedMessage());
-        logError(e);
-      }
-    });
+          @Override
+          public void onError(Throwable e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
   }
 }

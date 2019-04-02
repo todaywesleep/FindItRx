@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -29,12 +27,12 @@ public class FabItem extends LinearLayout implements View.OnClickListener {
 
   @Override
   public void onClick(View v) {
+    isEnabled = !isEnabled;
+    setSelectionState(isEnabled);
+
     if (callback != null) {
       callback.onFabClick(this);
     }
-
-    isEnabled = !isEnabled;
-    setSelectionState(isEnabled);
   }
 
   public interface FabItemCallback {
@@ -68,6 +66,14 @@ public class FabItem extends LinearLayout implements View.OnClickListener {
 
   public FabMenuAction getAction() {
     return action;
+  }
+
+  public boolean isEnabled(){
+    return isEnabled;
+  }
+
+  public void setIsEnabled(boolean isEnabled){
+    this.isEnabled = isEnabled;
   }
 
   public void setSelectionState(boolean isEnabled) {

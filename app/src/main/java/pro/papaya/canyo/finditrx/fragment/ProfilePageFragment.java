@@ -51,32 +51,32 @@ public class ProfilePageFragment extends BaseFragment {
   }
 
   private void setListeners() {
-    FireBaseDataBaseHelper.getObservableUserName(
-        FireBaseLoginManger.getInstance().getUserId()
-    ).subscribe(new Observer<UserModel>() {
-      @Override
-      public void onSubscribe(Disposable d) {
+    FireBaseDataBaseHelper.getObservableUserName()
+        .subscribe(new Observer<UserModel>() {
+          @Override
+          public void onSubscribe(Disposable d) {
 
-      }
+          }
 
-      @Override
-      public void onNext(UserModel userModel) {
-        setLoading(false);
-        if (userModel != null && userModel.getNickName() != null) {
-          userName.setText(userModel.getNickName());
-        }
-      }
+          @Override
+          public void onNext(UserModel userModel) {
+            setLoading(false);
+            if (userModel != null && userModel.getNickName() != null) {
+              logDebug("User model updated");
+              userName.setText(userModel.getNickName());
+            }
+          }
 
-      @Override
-      public void onError(Throwable e) {
-        setLoading(false);
-        showSnackBar(e.getLocalizedMessage());
-      }
+          @Override
+          public void onError(Throwable e) {
+            setLoading(false);
+            showSnackBar(e.getLocalizedMessage());
+          }
 
-      @Override
-      public void onComplete() {
+          @Override
+          public void onComplete() {
 
-      }
-    });
+          }
+        });
   }
 }
