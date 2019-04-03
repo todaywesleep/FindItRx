@@ -26,7 +26,6 @@ import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.model.firebase.ItemModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
-import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements
     ActionPageFragment.ActionPageCallback {
@@ -94,7 +93,7 @@ public class MainActivity extends BaseActivity implements
           @Override
           public void onNext(List<ItemModel> itemModels) {
             itemsCollection = itemModels;
-            logDebug("Items get: %s", itemsCollection.toString());
+            logDebug("Items collection get: %s", itemModels);
           }
 
           @Override

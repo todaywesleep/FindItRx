@@ -2,12 +2,15 @@ package pro.papaya.canyo.finditrx.firebase;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserItemModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
@@ -15,6 +18,8 @@ import timber.log.Timber;
 public class FireBaseProfileManager {
   private static final String TABLE_USERS = "users";
   private static final String TABLE_SETTINGS = "settings";
+  private static final String TABLE_USER_QUESTS = "quests";
+  private static final String TABLE_USER_QUESTS_ID_FIELD = "id";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   public static Single<Boolean> createUserWrite() {
@@ -30,18 +35,18 @@ public class FireBaseProfileManager {
           @Override
           public void onSuccess(Integer integer) {
             database.collection(TABLE_USERS).document(
-                FireBaseLoginManger.getInstance().getUserId()
+                FireBaseLoginManager.getInstance().getUserId()
             ).set(new UserModel(
-                FireBaseLoginManger.getInstance().getUserEmail(),
+                FireBaseLoginManager.getInstance().getUserEmail(),
                 Constants.STOCK_NICKNAME + integer.toString(),
-                FireBaseLoginManger.getInstance().getUserId()
+                FireBaseLoginManager.getInstance().getUserId()
             )).addOnSuccessListener(documentReference -> {
               observer.onSuccess(true);
             }).addOnFailureListener(observer::onError);
 
             //Don't track settings writing
             database.collection(TABLE_SETTINGS).document(
-                FireBaseLoginManger.getInstance().getUserId()
+                FireBaseLoginManager.getInstance().getUserId()
             ).set(SettingsModel.getStabSettings());
           }
 
@@ -58,7 +63,7 @@ public class FireBaseProfileManager {
     return new Observable<UserModel>() {
       @Override
       protected void subscribeActual(Observer<? super UserModel> observer) {
-        database.collection(TABLE_USERS).document(FireBaseLoginManger.getInstance().getUserId())
+        database.collection(TABLE_USERS).document(FireBaseLoginManager.getInstance().getUserId())
             .addSnapshotListener((documentSnapshot, e) -> {
               if (e != null) {
                 observer.onError(e);
@@ -74,7 +79,7 @@ public class FireBaseProfileManager {
     return new Single<SettingsModel>() {
       @Override
       protected void subscribeActual(SingleObserver<? super SettingsModel> observer) {
-        database.collection(TABLE_SETTINGS).document(FireBaseLoginManger.getInstance().getUserId())
+        database.collection(TABLE_SETTINGS).document(FireBaseLoginManager.getInstance().getUserId())
             .addSnapshotListener(((documentSnapshot, e) -> {
               if (e != null) {
                 observer.onError(e);
@@ -92,7 +97,7 @@ public class FireBaseProfileManager {
       protected void subscribeActual(SingleObserver<? super Boolean> observer) {
         oldSettings.setFlashEnabled(isFlashEnabled);
         database.collection(TABLE_SETTINGS)
-            .document(FireBaseLoginManger.getInstance().getUserId())
+            .document(FireBaseLoginManager.getInstance().getUserId())
             .set(oldSettings)
             .addOnSuccessListener(aVoid -> observer.onSuccess(true))
             .addOnFailureListener(observer::onError);
@@ -101,10 +106,27 @@ public class FireBaseProfileManager {
   }
 
   public static void setStableSettings() {
-    database.collection(TABLE_SETTINGS).document(FireBaseLoginManger.getInstance().getUserId())
+    database.collection(TABLE_SETTINGS).document(FireBaseLoginManager.getInstance().getUserId())
         .set(SettingsModel.getStabSettings())
         .addOnSuccessListener(aVoid -> Timber.d("Stable settings"))
         .addOnFailureListener(Timber::e);
+  }
+
+  public static final Observable<List<UserItemModel>> getObservableUserTasks() {
+    return new Observable<List<UserItemModel>>() {
+      @Override
+      protected void subscribeActual(Observer<? super List<UserItemModel>> observer) {
+        database.collection(TABLE_USERS).document(FireBaseLoginManager.getInstance().getUserId())
+            .collection(TABLE_USER_QUESTS).orderBy(TABLE_USER_QUESTS_ID_FIELD)
+            .addSnapshotListener((queryDocumentSnapshots, e) -> {
+              if (queryDocumentSnapshots != null) {
+                observer.onNext(queryDocumentSnapshots.toObjects(UserItemModel.class));
+              } else if (e != null) {
+                observer.onError(e);
+              }
+            });
+      }
+    };
   }
 
   private static Single<Integer> getUsersCollectionLength() {

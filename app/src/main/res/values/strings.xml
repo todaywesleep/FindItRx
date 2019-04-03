@@ -24,4 +24,6 @@
     <!-- FAB menu -->
     <string name="fab_settings">Settings</string>
     <string name="fab_auto_flash">Auto-flash</string>
+    <!-- Quests fragment -->
+    <string name="fragment_quests_title">Quests</string>
 </resources>

@@ -8,15 +8,15 @@ import io.reactivex.SingleObserver;
 import pro.papaya.canyo.finditrx.model.firebase.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 
-public class FireBaseLoginManger {
-  private static final FireBaseLoginManger ourInstance = new FireBaseLoginManger();
+public class FireBaseLoginManager {
+  private static final FireBaseLoginManager ourInstance = new FireBaseLoginManager();
   private final FirebaseAuth auth;
 
-  public static FireBaseLoginManger getInstance() {
+  public static FireBaseLoginManager getInstance() {
     return ourInstance;
   }
 
-  private FireBaseLoginManger() {
+  private FireBaseLoginManager() {
     auth = FirebaseAuth.getInstance();
   }
 

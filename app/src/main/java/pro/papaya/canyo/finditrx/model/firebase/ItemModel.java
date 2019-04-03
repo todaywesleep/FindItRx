@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemModel {
-  private String label;
-  private String identifier;
+  protected String label;
+  protected String identifier;
 
   public static List<ItemModel> fromCollection(List<FirebaseVisionImageLabel> firebaseCollection) {
     List<ItemModel> items = new ArrayList<>();
