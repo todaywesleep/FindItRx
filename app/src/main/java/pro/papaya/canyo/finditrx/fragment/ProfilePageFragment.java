@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.activity.MainActivity;
+import pro.papaya.canyo.finditrx.activity.AuthActivity;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
@@ -60,7 +60,7 @@ public class ProfilePageFragment extends BaseFragment {
     logout.setOnClickListener(v -> {
       FireBaseLoginManager.getInstance().logout();
 
-      Intent navigationIntent = new Intent(getContext(), MainActivity.class);
+      Intent navigationIntent = new Intent(getContext(), AuthActivity.class);
       navigationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
       startActivity(navigationIntent);
     });

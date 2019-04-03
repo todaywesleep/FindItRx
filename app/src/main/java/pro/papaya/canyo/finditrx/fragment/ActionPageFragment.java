@@ -110,13 +110,17 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   @Override
   public void onPause() {
     super.onPause();
-    fotoapparat.stop();
+    if (callback.isCameraPermissionsGranted()) {
+      fotoapparat.stop();
+    }
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    fotoapparat.start();
+    if (callback.isCameraPermissionsGranted()) {
+      fotoapparat.start();
+    }
   }
 
   @Override
