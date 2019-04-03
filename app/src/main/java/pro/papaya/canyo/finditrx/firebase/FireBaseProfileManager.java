@@ -40,7 +40,7 @@ public class FireBaseProfileManager {
                     FireBaseLoginManager.getInstance().getUserEmail(),
                     Constants.STOCK_NICKNAME + integer.toString(),
                     getUserId(),
-                    new Date().getTime()
+                    null
                 )).addOnSuccessListener(documentReference -> {
               observer.onSuccess(true);
             }).addOnFailureListener(observer::onError);
