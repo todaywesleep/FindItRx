@@ -11,8 +11,8 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
-import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
@@ -75,40 +75,6 @@ public class FireBaseProfileManager {
     };
   }
 
-  public static Single<Long> getObservableTimestamp() {
-    return new Single<Long>() {
-      @Override
-      protected void subscribeActual(SingleObserver<? super Long> observer) {
-        database.collection(TABLE_USERS).document(getUserId())
-            .addSnapshotListener((documentSnapshot, e) -> {
-              if (documentSnapshot != null) {
-                UserModel userItemModel = documentSnapshot.toObject(UserModel.class);
-                if (userItemModel != null) {
-                  observer.onSuccess(userItemModel.getQuestTimestamp());
-                } else {
-                  observer.onError(new Throwable("User object is null"));
-                }
-              } else if (e != null) {
-                observer.onError(e);
-              }
-            });
-      }
-    };
-  }
-
-  public static void createQuestsTimestamp(long timestamp) {
-    database.collection(TABLE_USERS).document(getUserId())
-        .addSnapshotListener((documentSnapshot, e) -> {
-          if (documentSnapshot != null) {
-            UserModel userModel = documentSnapshot.toObject(UserModel.class);
-            if (userModel != null) {
-              userModel.setQuestTimestamp(timestamp);
-              database.collection(TABLE_USERS).document(getUserId()).set(userModel);
-            }
-          }
-        });
-  }
-
   public static Single<SettingsModel> getSettings() {
     return new Single<SettingsModel>() {
       @Override
@@ -139,10 +105,10 @@ public class FireBaseProfileManager {
     };
   }
 
-  public static void setStableSettings() {
+  public static void setStabSettings() {
     database.collection(TABLE_SETTINGS).document(getUserId())
         .set(SettingsModel.getStabSettings())
-        .addOnSuccessListener(aVoid -> Timber.d("Stable settings"))
+        .addOnSuccessListener(aVoid -> Timber.d("Stab settings"))
         .addOnFailureListener(Timber::e);
   }
 
@@ -161,14 +127,6 @@ public class FireBaseProfileManager {
             });
       }
     };
-  }
-
-  public static void createQuestForUser(UserQuestsModel quests) {
-    database.collection(TABLE_USERS)
-        .document(getUserId())
-        .collection(TABLE_USER_QUESTS)
-        .document(quests.getIdentifier())
-        .set(quests);
   }
 
   private static Single<Integer> getUsersCollectionLength() {

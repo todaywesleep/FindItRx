@@ -18,19 +18,15 @@ import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
-import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
-import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
-import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements
     ActionPageFragment.ActionPageCallback,
@@ -164,56 +160,11 @@ public class MainActivity extends BaseActivity implements
 
       @Override
       public void onTabUnselected(TabLayout.Tab tab) {
-
       }
 
       @Override
       public void onTabReselected(TabLayout.Tab tab) {
       }
     });
-  }
-
-  @Override
-  public void requestQuests(List<UserQuestsModel> userQuests, int questsCount) {
-    mainViewModel.requestQuests(itemsCollection, userQuests, questsCount)
-        .subscribe(new SingleObserver<Boolean>() {
-          @Override
-          public void onSubscribe(Disposable d) {
-
-          }
-
-          @Override
-          public void onSuccess(Boolean aBoolean) {
-            logDebug("Create task success: %s", aBoolean);
-          }
-
-          @Override
-          public void onError(Throwable e) {
-            showSnackBar(e.getLocalizedMessage());
-            logError(e);
-          }
-        });
-  }
-
-  @Override
-  public void requestRandomQuests(int questCount) {
-    FireBaseItemsManager.requestRandomUserQuests(itemsCollection, questCount)
-        .subscribe(new SingleObserver<Boolean>() {
-          @Override
-          public void onSubscribe(Disposable d) {
-
-          }
-
-          @Override
-          public void onSuccess(Boolean aBoolean) {
-            logDebug("Quests count requested %s times successfully", questCount);
-          }
-
-          @Override
-          public void onError(Throwable e) {
-            logError(e);
-            showSnackBar(e.getLocalizedMessage());
-          }
-        });
   }
 }

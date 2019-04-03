@@ -3,16 +3,12 @@ package pro.papaya.canyo.finditrx.firebase;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
-import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 
 public class FireBaseItemsManager {
   private static final String TABLE_LABELS = "labels";
@@ -42,53 +38,6 @@ public class FireBaseItemsManager {
         addItemToObjectsList(item);
       }
     }
-  }
-
-  public static Single<Boolean> requestUserQuests(
-      List<QuestModel> allQuests,
-      List<UserQuestsModel> oldItems,
-      int questsToRequest) {
-
-    return new Single<Boolean>() {
-      @Override
-      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
-        for (UserQuestsModel userQuest : oldItems) {
-          QuestModel questModel = QuestModel.from(userQuest);
-          allQuests.remove(questModel);
-        }
-
-        if (!allQuests.isEmpty()) {
-          for (int i = 0; i < questsToRequest; i++) {
-            int index = new Random().nextInt(allQuests.size());
-            QuestModel modelToUser = allQuests.get(index);
-            UserQuestsModel preparedObject = UserQuestsModel.from(modelToUser, generateReward());
-
-            FireBaseProfileManager.createQuestForUser(preparedObject);
-          }
-
-          FireBaseProfileManager.createQuestsTimestamp(new Date().getTime());
-        }
-
-        observer.onSuccess(true);
-      }
-    };
-  }
-
-  public static Single<Boolean> requestRandomUserQuests(List<QuestModel> allQuests, int questCount) {
-    return new Single<Boolean>() {
-      @Override
-      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
-        for (int i = 0; i < questCount; i++) {
-          int index = new Random().nextInt(allQuests.size());
-          QuestModel modelToUser = allQuests.get(index);
-          UserQuestsModel preparedObject = UserQuestsModel.from(modelToUser, generateReward());
-
-          FireBaseProfileManager.createQuestForUser(preparedObject);
-        }
-
-        FireBaseProfileManager.createQuestsTimestamp(new Date().getTime());
-      }
-    };
   }
 
   private static int generateReward() {

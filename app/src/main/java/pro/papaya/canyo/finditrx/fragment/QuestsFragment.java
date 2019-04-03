@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.tabs.TabItem;
-
 import java.util.Date;
 import java.util.List;
 
@@ -31,9 +29,6 @@ public class QuestsFragment extends BaseFragment {
   public static QuestsFragment INSTANCE = null;
 
   public interface QuestFragmentCallback {
-    void requestQuests(List<UserQuestsModel> oldQuests, int questsCount);
-
-    void requestRandomQuests(int questCount);
   }
 
   @BindView(R.id.fragment_quests_rv)
@@ -77,54 +72,10 @@ public class QuestsFragment extends BaseFragment {
     rvActiveQuests.setAdapter(adapter);
 
     subscribeToUserQuests();
-    subscribeToTimestamp();
   }
 
   public void setCallback(QuestFragmentCallback callback) {
     this.callback = callback;
-  }
-
-  private void subscribeToTimestamp() {
-    questsViewModel.getSingleQuestsTimeStamp()
-        .subscribe(new SingleObserver<Long>() {
-          @Override
-          public void onSubscribe(Disposable d) {
-
-          }
-
-          @Override
-          public void onSuccess(Long timestamp) {
-            Timber.d("TEST timestamp: %s", timestamp);
-            if (timestamp != null) {
-              //TODO here
-//              requestQuestsFrom(timestamp);
-            } else {
-              if (callback != null) {
-                callback.requestRandomQuests(Constants.USER_MAX_QUESTS);
-              }
-            }
-          }
-
-          @Override
-          public void onError(Throwable e) {
-            showSnackBar(e.getLocalizedMessage());
-            Timber.e(e);
-          }
-        });
-  }
-
-  private void requestQuestsFrom(long timestamp) {
-    long timeDifference = new Date().getTime() - timestamp;
-    int differMinutes = (int) (timeDifference / 1000 / 60);
-    int questsToRequest = differMinutes / Constants.TIME_TO_QUEST_MINS;
-    questsToRequest = questsToRequest >= Constants.USER_MAX_QUESTS
-        ? Constants.USER_MAX_QUESTS
-        : questsToRequest;
-    questsToRequest = Constants.USER_MAX_QUESTS - adapter.getData().size() - questsToRequest;
-
-    if (callback != null) {
-      callback.requestQuests(adapter.getData(), questsToRequest);
-    }
   }
 
   private void subscribeToUserQuests() {
@@ -138,7 +89,7 @@ public class QuestsFragment extends BaseFragment {
           @Override
           public void onNext(List<UserQuestsModel> userQuestsModels) {
             logDebug("Get user quests: %s", userQuestsModels);
-            adapter.setData(userQuestsModels);
+//            adapter.setData(userQuestsModels);
 //            if (userQuestsModels.size() < Constants.USER_MAX_QUESTS) {
 //
 //            }

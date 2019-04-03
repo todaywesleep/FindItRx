@@ -18,7 +18,7 @@ public class ActionViewModel extends ViewModel {
   }
 
   public void setStableSettings() {
-    FireBaseProfileManager.setStableSettings();
+    FireBaseProfileManager.setStabSettings();
   }
 
   public Single<Boolean> setFlashState(SettingsModel oldModel, boolean isFlashEnabled) {
