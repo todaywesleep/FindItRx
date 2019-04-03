@@ -5,16 +5,16 @@ import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemModel {
+public class QuestModel {
   protected String label;
   protected String identifier;
 
-  public static List<ItemModel> fromCollection(List<FirebaseVisionImageLabel> firebaseCollection) {
-    List<ItemModel> items = new ArrayList<>();
+  public static List<QuestModel> fromCollection(List<FirebaseVisionImageLabel> firebaseCollection) {
+    List<QuestModel> items = new ArrayList<>();
 
     for (FirebaseVisionImageLabel label : firebaseCollection) {
       if (label.getText() != null) {
-        items.add(new ItemModel(
+        items.add(new QuestModel(
             label.getText().toLowerCase(),
             label.getText()
         ));
@@ -24,10 +24,10 @@ public class ItemModel {
     return items;
   }
 
-  public ItemModel() {
+  public QuestModel() {
   }
 
-  public ItemModel(String identifier, String label) {
+  public QuestModel(String identifier, String label) {
     this.identifier = identifier;
     this.label = label;
   }

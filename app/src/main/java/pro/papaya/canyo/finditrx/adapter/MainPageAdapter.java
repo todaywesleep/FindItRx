@@ -10,11 +10,14 @@ import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 
 public class MainPageAdapter extends FragmentPagerAdapter {
   private ActionPageFragment.ActionPageCallback actionPageCallback;
+  private QuestsFragment.QuestFragmentCallback fragmentCallback;
 
   public MainPageAdapter(FragmentManager fm,
-                         ActionPageFragment.ActionPageCallback actionPageCallback) {
+                         ActionPageFragment.ActionPageCallback actionPageCallback,
+                         QuestsFragment.QuestFragmentCallback fragmentCallback) {
     super(fm);
     this.actionPageCallback = actionPageCallback;
+    this.fragmentCallback = fragmentCallback;
   }
 
   @Override
@@ -30,7 +33,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
       }
 
       case STATS_PAGE: {
-        return QuestsFragment.getInstance();
+        return QuestsFragment.getInstance(fragmentCallback);
       }
     }
 
@@ -42,7 +45,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     return MainViewPagerModel.values().length;
   }
 
-  public void refreshActionFragment(){
+  public void refreshActionFragment() {
     ActionPageFragment.getInstance(actionPageCallback).refresh();
   }
 }

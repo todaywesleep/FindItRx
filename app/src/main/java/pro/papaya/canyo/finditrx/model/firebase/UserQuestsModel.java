@@ -1,10 +1,10 @@
 package pro.papaya.canyo.finditrx.model.firebase;
 
-public class UserItemModel extends ItemModel {
+public class UserQuestsModel extends QuestModel {
   private int reward;
 
-  public UserItemModel(){}
-  public UserItemModel(String identifier, String label, int reward){
+  public UserQuestsModel(){}
+  public UserQuestsModel(String identifier, String label, int reward){
     super(identifier, label);
     this.reward = reward;
   }

@@ -7,7 +7,10 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import pro.papaya.canyo.finditrx.model.firebase.ItemModel;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 
 public class FireBaseItemsManager {
   private static final String TABLE_LABELS = "labels";
@@ -15,14 +18,14 @@ public class FireBaseItemsManager {
 
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-  public static Observable<List<ItemModel>> getObservableItemsCollection() {
-    return new Observable<List<ItemModel>>() {
+  public static Observable<List<QuestModel>> getObservableItemsCollection() {
+    return new Observable<List<QuestModel>>() {
       @Override
-      protected void subscribeActual(Observer<? super List<ItemModel>> observer) {
+      protected void subscribeActual(Observer<? super List<QuestModel>> observer) {
         database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_ID_FIELD)
             .addSnapshotListener((queryDocumentSnapshots, e) -> {
               if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
-                observer.onNext(queryDocumentSnapshots.toObjects(ItemModel.class));
+                observer.onNext(queryDocumentSnapshots.toObjects(QuestModel.class));
               } else if (e != null) {
                 observer.onError(e);
               }
@@ -31,15 +34,27 @@ public class FireBaseItemsManager {
     };
   }
 
-  public static void updateItemsCollection(List<ItemModel> oldItems, List<ItemModel> items) {
-    for (ItemModel item : items) {
+  public static void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
+    for (QuestModel item : items) {
       if (oldItems.isEmpty() || !oldItems.contains(item)) {
         addItemToObjectsList(item);
       }
     }
   }
 
-  private static void addItemToObjectsList(ItemModel item) {
+  public static Single<Boolean> requestUserQuests(
+      List<QuestModel> allQuests,
+      List<UserQuestsModel> oldItems,
+      int questsToRequest) {
+    return new Single<Boolean>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
+        
+      }
+    };
+  }
+
+  private static void addItemToObjectsList(QuestModel item) {
     database.collection(TABLE_LABELS).document(item.getLabel().toLowerCase()).set(item);
   }
 }

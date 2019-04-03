@@ -7,6 +7,8 @@ public final class Constants {
   public static final String STOCK_NICKNAME = "Newbie#";
 
   //GLOBAL
+  public static final int USER_MAX_QUESTS = 5;
+  public static final int TIME_TO_QUEST_MINS = 5;
   public static final String EMPTY_STRING = "";
 
   //LOG SECTION

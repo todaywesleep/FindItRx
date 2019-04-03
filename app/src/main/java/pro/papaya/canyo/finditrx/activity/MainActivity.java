@@ -23,12 +23,15 @@ import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
-import pro.papaya.canyo.finditrx.model.firebase.ItemModel;
+import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
+import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
 
 public class MainActivity extends BaseActivity implements
-    ActionPageFragment.ActionPageCallback {
+    ActionPageFragment.ActionPageCallback,
+    QuestsFragment.QuestFragmentCallback {
   private final static int CAMERA_PERMISSION_CODE = 1000;
 
   @BindView(R.id.main_view_pager)
@@ -38,7 +41,7 @@ public class MainActivity extends BaseActivity implements
 
   private MainViewModel mainViewModel;
   private MainPageAdapter adapter;
-  private List<ItemModel> itemsCollection = new ArrayList<>();
+  private List<QuestModel> itemsCollection = new ArrayList<>();
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,21 +82,21 @@ public class MainActivity extends BaseActivity implements
   }
 
   @Override
-  public void snapshotTaken(List<ItemModel> takenSnapshotLabels) {
+  public void snapshotTaken(List<QuestModel> takenSnapshotLabels) {
     mainViewModel.updateLabelsRemote(itemsCollection, takenSnapshotLabels);
   }
 
   private void subscribeToViewModel() {
     mainViewModel.getAllLabels()
-        .subscribe(new Observer<List<ItemModel>>() {
+        .subscribe(new Observer<List<QuestModel>>() {
           @Override
           public void onSubscribe(Disposable d) {
           }
 
           @Override
-          public void onNext(List<ItemModel> itemModels) {
-            itemsCollection = itemModels;
-            logDebug("Items collection get: %s", itemModels);
+          public void onNext(List<QuestModel> questModels) {
+            itemsCollection = questModels;
+            logDebug("Items collection get: %s", questModels);
           }
 
           @Override
@@ -109,7 +112,11 @@ public class MainActivity extends BaseActivity implements
   }
 
   private void initViews() {
-    adapter = new MainPageAdapter(getSupportFragmentManager(), this);
+    adapter = new MainPageAdapter(
+        getSupportFragmentManager(),
+        this,
+        this
+    );
     mainViewPager.setAdapter(adapter);
     selectPage(MainViewPagerModel.CAMERA_PAGE.ordinal(), false);
     selectTab(MainViewPagerModel.CAMERA_PAGE.ordinal());
@@ -161,5 +168,10 @@ public class MainActivity extends BaseActivity implements
       public void onTabReselected(TabLayout.Tab tab) {
       }
     });
+  }
+
+  @Override
+  public void requestQuests(List<UserQuestsModel> userQuests, int questsCount) {
+    mainViewModel.requestQuests(itemsCollection, userQuests, questsCount);
   }
 }

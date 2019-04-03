@@ -35,7 +35,7 @@ import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
-import pro.papaya.canyo.finditrx.model.firebase.ItemModel;
+import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
 import pro.papaya.canyo.finditrx.view.FabItem;
@@ -50,7 +50,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
 
     boolean isCameraPermissionsGranted();
 
-    void snapshotTaken(List<ItemModel> takenSnapshotLabels);
+    void snapshotTaken(List<QuestModel> takenSnapshotLabels);
   }
 
   @BindView(R.id.action_camera_view)
@@ -162,7 +162,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
                 }
 
                 if (callback != null) {
-                  callback.snapshotTaken(ItemModel.fromCollection(firebaseVisionImageLabels));
+                  callback.snapshotTaken(QuestModel.fromCollection(firebaseVisionImageLabels));
                 }
 
                 setLoading(false);
