@@ -1,14 +1,34 @@
 package pro.papaya.canyo.finditrx.model.firebase;
 
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemModel {
   private String label;
-  private int id;
+  private String identifier;
+
+  public static List<ItemModel> fromCollection(List<FirebaseVisionImageLabel> firebaseCollection) {
+    List<ItemModel> items = new ArrayList<>();
+
+    for (FirebaseVisionImageLabel label : firebaseCollection) {
+      if (label.getText() != null) {
+        items.add(new ItemModel(
+            label.getText().toLowerCase(),
+            label.getText()
+        ));
+      }
+    }
+
+    return items;
+  }
 
   public ItemModel() {
   }
 
-  public ItemModel(int id, String label) {
-    this.id = id;
+  public ItemModel(String identifier, String label) {
+    this.identifier = identifier;
     this.label = label;
   }
 
@@ -20,11 +40,11 @@ public class ItemModel {
     this.label = label;
   }
 
-  public int getId() {
-    return id;
+  public String getIdentifier() {
+    return identifier;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
   }
 }

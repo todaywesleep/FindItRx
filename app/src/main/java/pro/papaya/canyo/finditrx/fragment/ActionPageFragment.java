@@ -35,6 +35,7 @@ import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
+import pro.papaya.canyo.finditrx.model.firebase.ItemModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
 import pro.papaya.canyo.finditrx.view.FabItem;
@@ -48,6 +49,8 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
     void requestCameraPermissions();
 
     boolean isCameraPermissionsGranted();
+
+    void snapshotTaken(List<ItemModel> takenSnapshotLabels);
   }
 
   @BindView(R.id.action_camera_view)
@@ -156,6 +159,10 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
                   TextView labelContainer = new TextView(getContext());
                   labelContainer.setText(label.getText() + " " + label.getConfidence());
                   scanResultContainer.addView(labelContainer);
+                }
+
+                if (callback != null) {
+                  callback.snapshotTaken(ItemModel.fromCollection(firebaseVisionImageLabels));
                 }
 
                 setLoading(false);

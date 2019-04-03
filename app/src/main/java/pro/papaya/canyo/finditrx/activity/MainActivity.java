@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -14,14 +17,19 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
+import pro.papaya.canyo.finditrx.model.firebase.ItemModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
+import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements ActionPageFragment.ActionPageCallback {
+public class MainActivity extends BaseActivity implements
+    ActionPageFragment.ActionPageCallback {
   private final static int CAMERA_PERMISSION_CODE = 1000;
 
   @BindView(R.id.main_view_pager)
@@ -31,6 +39,7 @@ public class MainActivity extends BaseActivity implements ActionPageFragment.Act
 
   private MainViewModel mainViewModel;
   private MainPageAdapter adapter;
+  private List<ItemModel> itemsCollection = new ArrayList<>();
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,17 +50,63 @@ public class MainActivity extends BaseActivity implements ActionPageFragment.Act
     ButterKnife.bind(this);
     initViews();
     setListeners();
+    subscribeToViewModel();
   }
 
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-    if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       adapter.refreshActionFragment();
-    }else{
+    } else {
       new CameraUnavailableDialog(this).show();
     }
+  }
+
+  @Override
+  public void requestCameraPermissions() {
+    ActivityCompat.requestPermissions(MainActivity.this,
+        new String[]{Manifest.permission.CAMERA},
+        CAMERA_PERMISSION_CODE);
+  }
+
+  @Override
+  public boolean isCameraPermissionsGranted() {
+    return ContextCompat.checkSelfPermission(
+        MainActivity.this,
+        Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED;
+  }
+
+  @Override
+  public void snapshotTaken(List<ItemModel> takenSnapshotLabels) {
+    mainViewModel.updateLabelsRemote(itemsCollection, takenSnapshotLabels);
+  }
+
+  private void subscribeToViewModel() {
+    mainViewModel.getAllLabels()
+        .subscribe(new Observer<List<ItemModel>>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+          }
+
+          @Override
+          public void onNext(List<ItemModel> itemModels) {
+            itemsCollection = itemModels;
+            logDebug("Items get: %s", itemsCollection.toString());
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+
+          @Override
+          public void onComplete() {
+          }
+        });
   }
 
   private void initViews() {
@@ -107,20 +162,5 @@ public class MainActivity extends BaseActivity implements ActionPageFragment.Act
       public void onTabReselected(TabLayout.Tab tab) {
       }
     });
-  }
-
-  @Override
-  public void requestCameraPermissions() {
-    ActivityCompat.requestPermissions(MainActivity.this,
-        new String[]{Manifest.permission.CAMERA},
-        CAMERA_PERMISSION_CODE);
-  }
-
-  @Override
-  public boolean isCameraPermissionsGranted() {
-    return ContextCompat.checkSelfPermission(
-        MainActivity.this,
-        Manifest.permission.CAMERA
-    ) == PackageManager.PERMISSION_GRANTED;
   }
 }

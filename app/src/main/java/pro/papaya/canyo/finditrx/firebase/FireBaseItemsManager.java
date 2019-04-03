@@ -21,7 +21,7 @@ public class FireBaseItemsManager {
       protected void subscribeActual(Observer<? super List<ItemModel>> observer) {
         database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_ID_FIELD)
             .addSnapshotListener((queryDocumentSnapshots, e) -> {
-              if (queryDocumentSnapshots != null) {
+              if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
                 observer.onNext(queryDocumentSnapshots.toObjects(ItemModel.class));
               } else if (e != null) {
                 observer.onError(e);
@@ -29,5 +29,17 @@ public class FireBaseItemsManager {
             });
       }
     };
+  }
+
+  public static void updateItemsCollection(List<ItemModel> oldItems, List<ItemModel> items) {
+    for (ItemModel item : items) {
+      if (oldItems.isEmpty() || !oldItems.contains(item)) {
+        addItemToObjectsList(item);
+      }
+    }
+  }
+
+  private static void addItemToObjectsList(ItemModel item) {
+    database.collection(TABLE_LABELS).document(item.getLabel().toLowerCase()).set(item);
   }
 }
