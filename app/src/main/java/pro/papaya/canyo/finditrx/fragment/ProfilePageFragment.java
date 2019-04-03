@@ -1,9 +1,11 @@
 package pro.papaya.canyo.finditrx.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,8 @@ import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.activity.MainActivity;
+import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 
@@ -21,6 +25,8 @@ public class ProfilePageFragment extends BaseFragment {
 
   @BindView(R.id.profile_username)
   TextView userName;
+  @BindView(R.id.profile_logout)
+  Button logout;
 
   public static ProfilePageFragment getInstance() {
     if (INSTANCE == null) {
@@ -47,6 +53,17 @@ public class ProfilePageFragment extends BaseFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     setListeners();
+    setViewListeners();
+  }
+
+  private void setViewListeners() {
+    logout.setOnClickListener(v -> {
+      FireBaseLoginManager.getInstance().logout();
+
+      Intent navigationIntent = new Intent(getContext(), MainActivity.class);
+      navigationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+      startActivity(navigationIntent);
+    });
   }
 
   private void setListeners() {

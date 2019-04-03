@@ -62,6 +62,10 @@ public class FireBaseLoginManager {
     };
   }
 
+  public void logout(){
+    auth.signOut();
+  }
+
   public String getUserEmail(){
     if (auth.getCurrentUser() != null){
       return auth.getCurrentUser().getEmail();

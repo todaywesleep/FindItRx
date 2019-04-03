@@ -26,4 +26,6 @@
     <string name="fab_auto_flash">Auto-flash</string>
     <!-- Quests fragment -->
     <string name="fragment_quests_title">Quests</string>
+    <!-- Profile fragment -->
+    <string name="fragment_profile_logout">Logout</string>
 </resources>
