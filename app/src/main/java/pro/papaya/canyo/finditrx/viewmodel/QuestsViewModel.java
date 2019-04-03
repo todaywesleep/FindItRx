@@ -17,7 +17,7 @@ public class QuestsViewModel extends ViewModel {
     return FireBaseProfileManager.getObservableTimestamp();
   }
 
-  public void createTimestampObject(long timestamp){
+  public void createTimestampObject(long timestamp) {
     FireBaseProfileManager.createQuestsTimestamp(timestamp);
   }
 }

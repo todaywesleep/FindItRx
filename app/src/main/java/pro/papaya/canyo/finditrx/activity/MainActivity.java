@@ -23,6 +23,7 @@ import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
+import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
@@ -190,6 +191,28 @@ public class MainActivity extends BaseActivity implements
           public void onError(Throwable e) {
             showSnackBar(e.getLocalizedMessage());
             logError(e);
+          }
+        });
+  }
+
+  @Override
+  public void requestRandomQuests(int questCount) {
+    FireBaseItemsManager.requestRandomUserQuests(itemsCollection, questCount)
+        .subscribe(new SingleObserver<Boolean>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+
+          }
+
+          @Override
+          public void onSuccess(Boolean aBoolean) {
+            logDebug("Quests count requested %s times successfully", questCount);
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            logError(e);
+            showSnackBar(e.getLocalizedMessage());
           }
         });
   }

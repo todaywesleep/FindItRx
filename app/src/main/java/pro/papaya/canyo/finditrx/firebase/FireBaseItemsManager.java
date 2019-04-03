@@ -74,6 +74,23 @@ public class FireBaseItemsManager {
     };
   }
 
+  public static Single<Boolean> requestRandomUserQuests(List<QuestModel> allQuests, int questCount) {
+    return new Single<Boolean>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
+        for (int i = 0; i < questCount; i++) {
+          int index = new Random().nextInt(allQuests.size());
+          QuestModel modelToUser = allQuests.get(index);
+          UserQuestsModel preparedObject = UserQuestsModel.from(modelToUser, generateReward());
+
+          FireBaseProfileManager.createQuestForUser(preparedObject);
+        }
+
+        FireBaseProfileManager.createQuestsTimestamp(new Date().getTime());
+      }
+    };
+  }
+
   private static int generateReward() {
     Random rand = new Random();
     int reward = rand.nextInt(200);

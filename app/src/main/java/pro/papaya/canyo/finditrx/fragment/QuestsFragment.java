@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.tabs.TabItem;
+
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class QuestsFragment extends BaseFragment {
 
   public interface QuestFragmentCallback {
     void requestQuests(List<UserQuestsModel> oldQuests, int questsCount);
+
+    void requestRandomQuests(int questCount);
   }
 
   @BindView(R.id.fragment_quests_rv)
@@ -81,28 +85,31 @@ public class QuestsFragment extends BaseFragment {
   }
 
   private void subscribeToTimestamp() {
-//    questsViewModel.getSingleQuestsTimeStamp()
-//        .subscribe(new SingleObserver<Long>() {
-//          @Override
-//          public void onSubscribe(Disposable d) {
-//
-//          }
-//
-//          @Override
-//          public void onSuccess(Long timestamp) {
-//            if (timestamp != null) {
+    questsViewModel.getSingleQuestsTimeStamp()
+        .subscribe(new SingleObserver<Long>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+
+          }
+
+          @Override
+          public void onSuccess(Long timestamp) {
+            Timber.d("TEST timestamp: %s", timestamp);
+            if (timestamp != null) {
 //              requestQuestsFrom(timestamp);
-//            } else {
-//              questsViewModel.createTimestampObject(new Date().getTime());
-//            }
-//          }
-//
-//          @Override
-//          public void onError(Throwable e) {
-//            showSnackBar(e.getLocalizedMessage());
-//            Timber.e(e);
-//          }
-//        });
+            } else {
+              if (callback != null) {
+                callback.requestRandomQuests(Constants.USER_MAX_QUESTS);
+              }
+            }
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            showSnackBar(e.getLocalizedMessage());
+            Timber.e(e);
+          }
+        });
   }
 
   private void requestQuestsFrom(long timestamp) {
