@@ -4,6 +4,7 @@ import java.util.List;
 
 import androidx.lifecycle.ViewModel;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 
@@ -12,7 +13,7 @@ public class QuestsViewModel extends ViewModel {
     return FireBaseProfileManager.getObservableUserTasks();
   }
 
-  public Observable<Long> getObservableQuestsTimeStamp() {
+  public Single<Long> getSingleQuestsTimeStamp() {
     return FireBaseProfileManager.getObservableTimestamp();
   }
 

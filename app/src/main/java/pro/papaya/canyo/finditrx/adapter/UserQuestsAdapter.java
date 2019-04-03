@@ -1,5 +1,6 @@
 package pro.papaya.canyo.finditrx.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +36,12 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
     return new ViewHolder(rootView);
   }
 
+  @SuppressLint("SetTextI18n")
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     UserQuestsModel model = data.get(position);
     holder.questName.setText(model.getLabel());
-    holder.questRevard.setText(model.getReward());
+    holder.questRevard.setText(Integer.toString(model.getReward()));
   }
 
   public void setData(List<UserQuestsModel> data) {

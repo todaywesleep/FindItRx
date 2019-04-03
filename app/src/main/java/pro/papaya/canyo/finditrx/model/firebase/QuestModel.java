@@ -24,6 +24,13 @@ public class QuestModel {
     return items;
   }
 
+  public static QuestModel from(UserQuestsModel userQuestsModel) {
+    return new QuestModel(
+        userQuestsModel.identifier,
+        userQuestsModel.label
+    );
+  }
+
   public QuestModel() {
   }
 
@@ -46,5 +53,23 @@ public class QuestModel {
 
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    QuestModel that = (QuestModel) o;
+
+    if (label != null ? !label.equals(that.label) : that.label != null) return false;
+    return identifier != null ? identifier.equals(that.identifier) : that.identifier == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = label != null ? label.hashCode() : 0;
+    result = 31 * result + (identifier != null ? identifier.hashCode() : 0);
+    return result;
   }
 }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.UserQuestsAdapter;
@@ -80,33 +81,28 @@ public class QuestsFragment extends BaseFragment {
   }
 
   private void subscribeToTimestamp() {
-    questsViewModel.getObservableQuestsTimeStamp()
-        .subscribe(new Observer<Long>() {
-          @Override
-          public void onSubscribe(Disposable d) {
-
-          }
-
-          @Override
-          public void onNext(Long timestamp) {
-            if (timestamp != null) {
-              requestQuestsFrom(timestamp);
-            } else {
-              questsViewModel.createTimestampObject(new Date().getTime());
-            }
-          }
-
-          @Override
-          public void onError(Throwable e) {
-            showSnackBar(e.getLocalizedMessage());
-            Timber.e(e);
-          }
-
-          @Override
-          public void onComplete() {
-
-          }
-        });
+//    questsViewModel.getSingleQuestsTimeStamp()
+//        .subscribe(new SingleObserver<Long>() {
+//          @Override
+//          public void onSubscribe(Disposable d) {
+//
+//          }
+//
+//          @Override
+//          public void onSuccess(Long timestamp) {
+//            if (timestamp != null) {
+//              requestQuestsFrom(timestamp);
+//            } else {
+//              questsViewModel.createTimestampObject(new Date().getTime());
+//            }
+//          }
+//
+//          @Override
+//          public void onError(Throwable e) {
+//            showSnackBar(e.getLocalizedMessage());
+//            Timber.e(e);
+//          }
+//        });
   }
 
   private void requestQuestsFrom(long timestamp) {

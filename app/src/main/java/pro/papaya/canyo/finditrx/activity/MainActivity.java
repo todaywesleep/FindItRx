@@ -18,6 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
@@ -28,6 +29,7 @@ import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
+import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements
     ActionPageFragment.ActionPageCallback,
@@ -172,6 +174,23 @@ public class MainActivity extends BaseActivity implements
 
   @Override
   public void requestQuests(List<UserQuestsModel> userQuests, int questsCount) {
-    mainViewModel.requestQuests(itemsCollection, userQuests, questsCount);
+    mainViewModel.requestQuests(itemsCollection, userQuests, questsCount)
+        .subscribe(new SingleObserver<Boolean>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+
+          }
+
+          @Override
+          public void onSuccess(Boolean aBoolean) {
+            logDebug("Create task success: %s", aBoolean);
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
   }
 }

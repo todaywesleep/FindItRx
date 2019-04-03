@@ -20,7 +20,7 @@ public class FireBaseProfileManager {
   private static final String TABLE_USERS = "users";
   private static final String TABLE_SETTINGS = "settings";
   private static final String TABLE_USER_QUESTS = "quests";
-  private static final String TABLE_USER_QUESTS_ID_FIELD = "id";
+  private static final String TABLE_USER_QUESTS_REWARD_FIELD = "reward";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   public static Single<Boolean> createUserWrite() {
@@ -75,16 +75,16 @@ public class FireBaseProfileManager {
     };
   }
 
-  public static Observable<Long> getObservableTimestamp() {
-    return new Observable<Long>() {
+  public static Single<Long> getObservableTimestamp() {
+    return new Single<Long>() {
       @Override
-      protected void subscribeActual(Observer<? super Long> observer) {
+      protected void subscribeActual(SingleObserver<? super Long> observer) {
         database.collection(TABLE_USERS).document(getUserId())
             .addSnapshotListener((documentSnapshot, e) -> {
               if (documentSnapshot != null) {
                 UserModel userItemModel = documentSnapshot.toObject(UserModel.class);
                 if (userItemModel != null) {
-                  observer.onNext(userItemModel.getQuestTimestamp());
+                  observer.onSuccess(userItemModel.getQuestTimestamp());
                 } else {
                   observer.onError(new Throwable("User object is null"));
                 }
@@ -146,12 +146,12 @@ public class FireBaseProfileManager {
         .addOnFailureListener(Timber::e);
   }
 
-  public static final Observable<List<UserQuestsModel>> getObservableUserTasks() {
+  public static Observable<List<UserQuestsModel>> getObservableUserTasks() {
     return new Observable<List<UserQuestsModel>>() {
       @Override
       protected void subscribeActual(Observer<? super List<UserQuestsModel>> observer) {
         database.collection(TABLE_USERS).document(getUserId())
-            .collection(TABLE_USER_QUESTS).orderBy(TABLE_USER_QUESTS_ID_FIELD)
+            .collection(TABLE_USER_QUESTS).orderBy(TABLE_USER_QUESTS_REWARD_FIELD)
             .addSnapshotListener((queryDocumentSnapshots, e) -> {
               if (queryDocumentSnapshots != null) {
                 observer.onNext(queryDocumentSnapshots.toObjects(UserQuestsModel.class));
@@ -161,6 +161,14 @@ public class FireBaseProfileManager {
             });
       }
     };
+  }
+
+  public static void createQuestForUser(UserQuestsModel quests) {
+    database.collection(TABLE_USERS)
+        .document(getUserId())
+        .collection(TABLE_USER_QUESTS)
+        .document(quests.getIdentifier())
+        .set(quests);
   }
 
   private static Single<Integer> getUsersCollectionLength() {
