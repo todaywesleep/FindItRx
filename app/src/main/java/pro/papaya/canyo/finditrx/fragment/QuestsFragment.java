@@ -96,6 +96,7 @@ public class QuestsFragment extends BaseFragment {
           public void onSuccess(Long timestamp) {
             Timber.d("TEST timestamp: %s", timestamp);
             if (timestamp != null) {
+              //TODO here
 //              requestQuestsFrom(timestamp);
             } else {
               if (callback != null) {
