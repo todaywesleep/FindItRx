@@ -4,27 +4,28 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import butterknife.BindView;
+import androidx.lifecycle.ViewModelProviders;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
-import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.model.firebase.ItemModel;
+import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
+import timber.log.Timber;
 
-public class ProfilePageFragment extends BaseFragment {
-  private static ProfilePageFragment INSTANCE;
+public class QuestsFragment extends BaseFragment {
+  public static QuestsFragment INSTANCE = null;
 
-  @BindView(R.id.profile_username)
-  TextView userName;
+  private QuestsViewModel questsViewModel;
 
-  public static ProfilePageFragment getInstance() {
+  public static QuestsFragment getInstance() {
     if (INSTANCE == null) {
-      ProfilePageFragment fragment = new ProfilePageFragment();
+      QuestsFragment fragment = new QuestsFragment();
       Bundle arguments = new Bundle();
       fragment.setArguments(arguments);
       INSTANCE = fragment;
@@ -38,7 +39,8 @@ public class ProfilePageFragment extends BaseFragment {
   public View onCreateView(@NonNull LayoutInflater inflater,
                            @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.main_fragment_profile, container, false);
+
+    View view = inflater.inflate(R.layout.main_fragment_stats, container, false);
     ButterKnife.bind(this, view);
     return view;
   }
@@ -46,30 +48,24 @@ public class ProfilePageFragment extends BaseFragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    setListeners();
-  }
 
-  private void setListeners() {
-    FireBaseProfileManager.getObservableUserName()
-        .subscribe(new Observer<UserModel>() {
+    questsViewModel = ViewModelProviders.of(this).get(QuestsViewModel.class);
+    questsViewModel.getAllLabels()
+        .subscribe(new Observer<List<ItemModel>>() {
           @Override
           public void onSubscribe(Disposable d) {
 
           }
 
           @Override
-          public void onNext(UserModel userModel) {
-            setLoading(false);
-            if (userModel != null && userModel.getNickName() != null) {
-              logDebug("User model updated");
-              userName.setText(userModel.getNickName());
-            }
+          public void onNext(List<ItemModel> itemModels) {
+            Timber.d("TEST: %s", itemModels.toString());
           }
 
           @Override
           public void onError(Throwable e) {
-            setLoading(false);
             showSnackBar(e.getLocalizedMessage());
+            logError(e);
           }
 
           @Override

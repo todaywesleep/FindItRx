@@ -34,13 +34,12 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.firebase.FireBaseDataBaseHelper;
+import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
 import pro.papaya.canyo.finditrx.view.FabItem;
 import pro.papaya.canyo.finditrx.view.FabMenu;
 import pro.papaya.canyo.finditrx.viewmodel.ActionViewModel;
-import timber.log.Timber;
 
 public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuCallback {
   public static ActionPageFragment INSTANCE = null;
@@ -221,7 +220,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
         .build();
 
     if (updateRemote) {
-      FireBaseDataBaseHelper.setFlashState(settingsModel, isEnabled)
+      FireBaseProfileManager.setFlashState(settingsModel, isEnabled)
           .subscribe(new SingleObserver<Boolean>() {
             @Override
             public void onSubscribe(Disposable d) {

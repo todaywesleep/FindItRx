@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.fragment.ProfilePageFragment;
-import pro.papaya.canyo.finditrx.fragment.StatsPageFragment;
+import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 
 public class MainPageAdapter extends FragmentPagerAdapter {
@@ -30,7 +30,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
       }
 
       case STATS_PAGE: {
-        return StatsPageFragment.getInstance();
+        return QuestsFragment.getInstance();
       }
     }
 

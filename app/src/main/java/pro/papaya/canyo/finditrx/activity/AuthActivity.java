@@ -14,8 +14,7 @@ import butterknife.ButterKnife;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.firebase.FireBaseDataBaseHelper;
-import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManger;
+import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.BaseTextWatcher;
 import pro.papaya.canyo.finditrx.utils.Constants;
@@ -274,7 +273,7 @@ public class AuthActivity extends BaseActivity {
   }
 
   private void createUserWrite() {
-    FireBaseDataBaseHelper.createUserWrite()
+    FireBaseProfileManager.createUserWrite()
         .subscribe(new SingleObserver<Boolean>() {
           @Override
           public void onSubscribe(Disposable d) {

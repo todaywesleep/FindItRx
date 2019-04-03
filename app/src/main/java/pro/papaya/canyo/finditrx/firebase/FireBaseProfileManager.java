@@ -12,7 +12,7 @@ import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
-public class FireBaseDataBaseHelper {
+public class FireBaseProfileManager {
   private static final String TABLE_USERS = "users";
   private static final String TABLE_SETTINGS = "settings";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
