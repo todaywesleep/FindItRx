@@ -1,6 +1,7 @@
 package pro.papaya.canyo.finditrx.firebase;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -36,21 +37,6 @@ public class FireBaseProfileManager {
 
     return INSTANCE;
   }
-
-  private Observable<List<UserQuestModel>> observableTasks = new Observable<List<UserQuestModel>>() {
-    @Override
-    protected void subscribeActual(Observer<? super List<UserQuestModel>> observer) {
-      database.collection(TABLE_USERS).document(getUserId())
-          .collection(TABLE_USER_QUESTS).orderBy(TABLE_USER_QUESTS_REWARD_FIELD)
-          .addSnapshotListener((queryDocumentSnapshots, e) -> {
-            if (queryDocumentSnapshots != null) {
-              observer.onNext(queryDocumentSnapshots.toObjects(UserQuestModel.class));
-            } else if (e != null) {
-              observer.onError(e);
-            }
-          });
-    }
-  };
 
   public static Single<Boolean> createUserWrite() {
     return new Single<Boolean>() {
@@ -88,12 +74,17 @@ public class FireBaseProfileManager {
     };
   }
 
-  public DocumentReference getUsernameReference() {
+  public DocumentReference getUserReference() {
     return database.collection(TABLE_USERS).document(getUserId());
   }
 
   public DocumentReference getSettingsReference() {
     return database.collection(TABLE_SETTINGS).document(getUserId());
+  }
+
+  public CollectionReference getQuestsReference() {
+    return getUserReference()
+        .collection(TABLE_USER_QUESTS);
   }
 
   public Task<Void> setFlashState(SettingsModel oldSettings, boolean isFlashEnabled) {
@@ -111,50 +102,19 @@ public class FireBaseProfileManager {
         .addOnFailureListener(Timber::e);
   }
 
-  public Observable<List<UserQuestModel>> getObservableUserTasks() {
-    return observableTasks;
-  }
+  public void setTimestamp(long timestamp) {
+    database.collection(TABLE_USERS).document(getUserId())
+        .addSnapshotListener((documentSnapshot, e) -> {
+          if (documentSnapshot != null) {
+            UserModel userModel = documentSnapshot.toObject(UserModel.class);
 
-  public Single<Long> getTimeStampEvent() {
-    return new Single<Long>() {
-      @Override
-      protected void subscribeActual(SingleObserver<? super Long> observer) {
-        database.collection(TABLE_USERS).document(getUserId())
-            .addSnapshotListener((documentSnapshot, e) -> {
-              if (documentSnapshot != null) {
-                UserModel remoteUserModel = documentSnapshot.toObject(UserModel.class);
-                if (remoteUserModel != null) {
-                  observer.onSuccess(remoteUserModel.getQuestTimestamp());
-                }
-              } else if (e != null) {
-                observer.onError(e);
-              }
-            });
-      }
-    };
-  }
+            if (userModel != null) {
+              userModel.setQuestTimestamp(timestamp);
+            }
 
-  public Single<Long> setTimestamp(long timestamp) {
-    return new Single<Long>() {
-      @Override
-      protected void subscribeActual(SingleObserver<? super Long> observer) {
-        database.collection(TABLE_USERS).document(getUserId())
-            .addSnapshotListener((documentSnapshot, e) -> {
-              if (documentSnapshot != null) {
-                UserModel userModel = documentSnapshot.toObject(UserModel.class);
-
-                if (userModel != null) {
-                  userModel.setQuestTimestamp(timestamp);
-                }
-
-                updateUserProfile(userModel);
-                observer.onSuccess(timestamp);
-              } else if (e != null) {
-                observer.onError(e);
-              }
-            });
-      }
-    };
+            updateUserProfile(userModel);
+          }
+        });
   }
 
   private void updateUserProfile(UserModel userModel) {

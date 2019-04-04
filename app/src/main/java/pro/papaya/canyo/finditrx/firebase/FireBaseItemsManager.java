@@ -49,34 +49,27 @@ public class FireBaseItemsManager {
     }
   }
 
-  public Single<Boolean> requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestCount) {
-    return new Single<Boolean>() {
-      @Override
-      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
-        long unpackedTimestamp = timestamp == null
-            ? TimeUtils.getTimestampForFullQuests()
-            : timestamp;
+  public void requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestCount){
+    long unpackedTimestamp = timestamp == null
+        ? TimeUtils.getTimestampForFullQuests()
+        : timestamp;
 
-        long timestampDifferenceInSecs = (new Date().getTime() - unpackedTimestamp) / 1000;
-        long questsToRequest = timestampDifferenceInSecs % Constants.TIME_TO_QUEST_MINS * 60;
-        questsToRequest = questsToRequest >= Constants.USER_MAX_QUESTS
-            ? Constants.USER_MAX_QUESTS
-            : questsToRequest;
-        questsToRequest -= oldQuestCount;
+    long timestampDifferenceInSecs = (new Date().getTime() - unpackedTimestamp) / 1000;
+    long questsToRequest = timestampDifferenceInSecs % Constants.TIME_TO_QUEST_MINS * 60;
+    questsToRequest = questsToRequest >= Constants.USER_MAX_QUESTS
+        ? Constants.USER_MAX_QUESTS
+        : questsToRequest;
+    questsToRequest -= oldQuestCount;
 
-        Random random = new Random();
-        for (int i = 0; i < questsToRequest; i++) {
-          UserQuestModel questModel = UserQuestModel.from(
-              availableQuests.get(random.nextInt(availableQuests.size())),
-              generateReward()
-          );
+    Random random = new Random();
+    for (int i = 0; i < questsToRequest; i++) {
+      UserQuestModel questModel = UserQuestModel.from(
+          availableQuests.get(random.nextInt(availableQuests.size())),
+          generateReward()
+      );
 
-          FireBaseProfileManager.getInstance().requestQuest(questModel);
-        }
-
-        observer.onSuccess(true);
-      }
-    };
+      FireBaseProfileManager.getInstance().requestQuest(questModel);
+    }
   }
 
   private static int generateReward() {

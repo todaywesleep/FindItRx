@@ -7,6 +7,6 @@ import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 
 public class ProfileViewModel extends ViewModel {
   public DocumentReference getUsernameReference(){
-    return FireBaseProfileManager.getInstance().getUsernameReference();
+    return FireBaseProfileManager.getInstance().getUserReference();
   }
 }

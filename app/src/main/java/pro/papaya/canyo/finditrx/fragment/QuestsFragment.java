@@ -6,6 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,13 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.UserQuestsAdapter;
-import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
+import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
@@ -77,8 +79,8 @@ public class QuestsFragment extends BaseFragment {
     adapter = new UserQuestsAdapter();
     rvActiveQuests.setAdapter(adapter);
 
-//    getTimestampEvent();
-//    subscribeToAllLabels();
+    getTimestampEvent();
+    subscribeToAllLabels();
   }
 
   public void setCallback(QuestFragmentCallback callback) {
@@ -86,48 +88,51 @@ public class QuestsFragment extends BaseFragment {
   }
 
   private void subscribeToUserQuests() {
-    questsViewModel.getObservableUserQuests()
-        .subscribe(new Observer<List<UserQuestModel>>() {
+    questsViewModel.getQuestsReference()
+        .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
           @Override
-          public void onSubscribe(Disposable d) {
-          }
-
-          @Override
-          public void onNext(List<UserQuestModel> userQuestModels) {
-            logDebug("Get user quests: %s", userQuestModels);
+          public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+            List<UserQuestModel> userQuestModels = queryDocumentSnapshots.toObjects(UserQuestModel.class);
             adapter.setData(userQuestModels);
             requestUserQuests(userQuestModels);
+            logDebug("Get user quests: %s", userQuestModels);
           }
 
           @Override
-          public void onError(Throwable e) {
+          public void onError(FirebaseFirestoreException e) {
             showSnackBar(e.getLocalizedMessage());
             logError(e);
-          }
-
-          @Override
-          public void onComplete() {
           }
         });
   }
 
   private void getTimestampEvent() {
-    FireBaseProfileManager.getInstance().getTimeStampEvent()
-        .subscribe(new SingleObserver<Long>() {
+    questsViewModel.getUserReference()
+        .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
           @Override
-          public void onSubscribe(Disposable d) {
-          }
+          public void onSuccess(DocumentSnapshot documentSnapshot) {
+            if (documentSnapshot != null) {
+              UserModel remoteUserModel = documentSnapshot.toObject(UserModel.class);
+              timestamp = null;
+              if (remoteUserModel != null) {
+                timestamp = remoteUserModel.getQuestTimestamp();
+              } else {
+                showSnackBar("User model is null");
+                logError(new Throwable("User model is null"));
+              }
+            } else {
+              showSnackBar("User model snapshot is null");
+              logError(new Throwable("User model snapshot is null"));
+            }
 
-          @Override
-          public void onSuccess(Long timestampRemote) {
-            timestamp = timestampRemote;
             subscribeToUserQuests();
           }
 
           @Override
-          public void onError(Throwable e) {
-            subscribeToUserQuests();
+          public void onError(FirebaseFirestoreException e) {
             timestamp = null;
+            subscribeToUserQuests();
+            showSnackBar(e.getLocalizedMessage());
             logError(e);
           }
         });
@@ -150,56 +155,33 @@ public class QuestsFragment extends BaseFragment {
   }
 
   private void subscribeToAllLabels() {
-//    questsViewModel.getAllLabels()
-//        .subscribe(new Observer<List<QuestModel>>() {
-//          @Override
-//          public void onSubscribe(Disposable d) {
-//          }
-//
-//          @Override
-//          public void onNext(List<QuestModel> questModels) {
-//            availableQuests.clear();
-//            availableQuests.addAll(questModels);
-//
-//            for (UserQuestModel userQuest : adapter.getData()) {
-//              availableQuests.remove(QuestModel.from(userQuest));
-//            }
-//
-//            logDebug("Items collection get: %s", questModels);
-//          }
-//
-//          @Override
-//          public void onError(Throwable e) {
-//            showSnackBar(e.getLocalizedMessage());
-//            logError(e);
-//          }
-//
-//          @Override
-//          public void onComplete() {
-//          }
-//        });
+    questsViewModel.getItemCollectionModel()
+        .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+          @Override
+          public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+            List<QuestModel> questModels = queryDocumentSnapshots.toObjects(QuestModel.class);
+            availableQuests.clear();
+            availableQuests.addAll(questModels);
+
+            for (UserQuestModel userQuest : adapter.getData()) {
+              availableQuests.remove(QuestModel.from(userQuest));
+            }
+
+            logDebug("Items collection get: %s", questModels);
+          }
+
+          @Override
+          public void onError(FirebaseFirestoreException e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
   }
 
   private void requestUserQuests(List<UserQuestModel> userQuests) {
     if (userQuests.size() < Constants.USER_MAX_QUESTS) {
-      questsViewModel.requestQuests(availableQuests, timestamp, userQuests.size())
-          .subscribe(new SingleObserver<Boolean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-            }
-
-            @Override
-            public void onSuccess(Boolean aBoolean) {
-              questsViewModel.setTimestamp(new Date().getTime());
-              logDebug("Quests successfully requested");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-              showSnackBar(e.getLocalizedMessage());
-              logError(e);
-            }
-          });
+      questsViewModel.requestQuests(availableQuests, timestamp, userQuests.size());
+      questsViewModel.setTimestamp(new Date().getTime());
     }
   }
 }

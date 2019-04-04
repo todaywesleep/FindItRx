@@ -1,25 +1,34 @@
 package pro.papaya.canyo.finditrx.viewmodel;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Query;
+
 import java.util.List;
 
 import androidx.lifecycle.ViewModel;
-import io.reactivex.Observable;
-import io.reactivex.Single;
 import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
-import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 
 public class QuestsViewModel extends ViewModel {
-  public Observable<List<UserQuestModel>> getObservableUserQuests() {
-    return FireBaseProfileManager.getInstance().getObservableUserTasks();
+  public DocumentReference getUserReference() {
+    return FireBaseProfileManager.getInstance().getUserReference();
   }
 
-  public Single<Long> setTimestamp(long timestamp) {
-    return FireBaseProfileManager.getInstance().setTimestamp(timestamp);
+  public CollectionReference getQuestsReference() {
+    return FireBaseProfileManager.getInstance().getQuestsReference();
   }
 
-  public Single<Boolean> requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestsCount) {
-    return FireBaseItemsManager.getInstance().requestQuests(availableQuests, timestamp, oldQuestsCount);
+  public Query getItemCollectionModel() {
+    return FireBaseItemsManager.getInstance().getItemsCollectionQuery();
+  }
+
+  public void setTimestamp(long timestamp) {
+    FireBaseProfileManager.getInstance().setTimestamp(timestamp);
+  }
+
+  public void requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestsCount) {
+    FireBaseItemsManager.getInstance().requestQuests(availableQuests, timestamp, oldQuestsCount);
   }
 }
