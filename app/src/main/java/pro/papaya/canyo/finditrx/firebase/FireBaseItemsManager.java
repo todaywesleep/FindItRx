@@ -4,6 +4,7 @@ package pro.papaya.canyo.finditrx.firebase;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
@@ -36,8 +37,8 @@ public class FireBaseItemsManager {
 
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-  public Task<QuerySnapshot> getItemsCollectionQuery() {
-    return database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_LABEL_FIELD).get();
+  public Query getItemsCollectionQuery() {
+    return database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_LABEL_FIELD);
   }
 
   public void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {

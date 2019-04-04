@@ -5,6 +5,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,14 +88,15 @@ public class MainActivity extends BaseActivity implements
 
   private void subscribeToViewModel() {
     mainViewModel.getItemCollectionModel()
-        .addOnSuccessListener(queryDocumentSnapshots -> {
-          List<QuestModel> questModels = queryDocumentSnapshots.toObjects(QuestModel.class);
-          itemsCollection = questModels;
-          logDebug("Items collection get: %s", questModels);
-        })
-        .addOnFailureListener(e -> {
-          showSnackBar(e.getLocalizedMessage());
-          logError(e);
+        .addSnapshotListener((queryDocumentSnapshots, e) -> {
+          if (queryDocumentSnapshots != null) {
+            List<QuestModel> questModels = queryDocumentSnapshots.toObjects(QuestModel.class);
+            itemsCollection = questModels;
+            logDebug("Items collection get: %s", questModels);
+          } else if (e != null) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
         });
   }
 

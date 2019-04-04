@@ -52,8 +52,8 @@ public class ProfilePageFragment extends BaseFragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-//    setListeners();
-//    setViewListeners();
+    setListeners();
+    setViewListeners();
   }
 
   private void setViewListeners() {

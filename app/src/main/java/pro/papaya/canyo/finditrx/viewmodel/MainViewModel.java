@@ -1,12 +1,10 @@
 package pro.papaya.canyo.finditrx.viewmodel;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Query;
 
 import java.util.List;
 
 import androidx.lifecycle.ViewModel;
-import io.reactivex.Observable;
 import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 
@@ -15,7 +13,7 @@ public class MainViewModel extends ViewModel {
     FireBaseItemsManager.getInstance().updateItemsCollection(oldItems, newItems);
   }
 
-  public Task<QuerySnapshot> getItemCollectionModel() {
+  public Query getItemCollectionModel() {
     return FireBaseItemsManager.getInstance().getItemsCollectionQuery();
   }
 }
