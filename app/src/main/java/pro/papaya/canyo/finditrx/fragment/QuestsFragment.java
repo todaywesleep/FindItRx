@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -123,9 +122,7 @@ public class QuestsFragment extends BaseFragment {
                 timestamp = null;
                 if (remoteUserModel != null) {
                   timestamp = remoteUserModel.getQuestTimestamp();
-                  if (timestamp == null) {
-                    requestUserQuests(adapter.getData());
-                  }
+                  requestUserQuests(adapter.getData());
                 } else {
                   showSnackBar("User model is null");
                   logError(new Throwable("User model is null"));
@@ -188,9 +185,11 @@ public class QuestsFragment extends BaseFragment {
 
   private void requestUserQuests(List<UserQuestModel> userQuests) {
     if (userQuests.size() < Constants.USER_MAX_QUESTS) {
-      logDebug("Request quests");
-      questsViewModel.requestQuests(availableQuests, timestamp, userQuests.size());
-      questsViewModel.setTimestamp(new Date().getTime());
+      logDebug("Try to request quest");
+      if (questsViewModel.requestQuests(availableQuests, timestamp, userQuests.size())) {
+        logDebug("Request quest");
+        questsViewModel.setTimestamp(new Date().getTime());
+      }
     }
   }
 }

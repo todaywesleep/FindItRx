@@ -28,7 +28,8 @@ public class QuestsViewModel extends ViewModel {
     FireBaseProfileManager.getInstance().setTimestamp(timestamp);
   }
 
-  public void requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestsCount) {
-    FireBaseItemsManager.getInstance().requestQuests(availableQuests, timestamp, oldQuestsCount);
+  //Returns true if quests requested
+  public boolean requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestsCount) {
+    return FireBaseItemsManager.getInstance().requestQuests(availableQuests, timestamp, oldQuestsCount);
   }
 }
