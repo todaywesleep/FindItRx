@@ -24,10 +24,10 @@ public class QuestModel {
     return items;
   }
 
-  public static QuestModel from(UserQuestsModel userQuestsModel) {
+  public static QuestModel from(UserQuestModel userQuestModel) {
     return new QuestModel(
-        userQuestsModel.identifier,
-        userQuestsModel.label
+        userQuestModel.identifier,
+        userQuestModel.label
     );
   }
 

@@ -7,6 +7,7 @@ public class UserModel {
   private Long questTimestamp;
 
   public UserModel() {
+    super();
   }
 
   public UserModel(String email, String nickName, String id, Long questTimestamp) {

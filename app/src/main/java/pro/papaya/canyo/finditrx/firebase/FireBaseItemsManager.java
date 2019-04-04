@@ -1,14 +1,24 @@
 package pro.papaya.canyo.finditrx.firebase;
 
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
+import pro.papaya.canyo.finditrx.utils.Constants;
+import pro.papaya.canyo.finditrx.utils.TimeUtils;
 
 public class FireBaseItemsManager {
   private static final String TABLE_LABELS = "labels";
@@ -26,30 +36,46 @@ public class FireBaseItemsManager {
 
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-  private Observable<List<QuestModel>> itemsCollection = new Observable<List<QuestModel>>() {
-    @Override
-    protected void subscribeActual(Observer<? super List<QuestModel>> observer) {
-      database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_LABEL_FIELD)
-          .addSnapshotListener((queryDocumentSnapshots, e) -> {
-            if (queryDocumentSnapshots != null) {
-              observer.onNext(queryDocumentSnapshots.toObjects(QuestModel.class));
-            } else if (e != null) {
-              observer.onError(e);
-            }
-          });
-    }
-  };
-
-  public Observable<List<QuestModel>> getObservableItemsCollection() {
-    return itemsCollection;
+  public Task<QuerySnapshot> getItemsCollectionQuery() {
+    return database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_LABEL_FIELD).get();
   }
 
-  public static void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
+  public void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
     for (QuestModel item : items) {
       if (oldItems.isEmpty() || !oldItems.contains(item)) {
         addItemToObjectsList(item);
       }
     }
+  }
+
+  public Single<Boolean> requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestCount) {
+    return new Single<Boolean>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
+        long unpackedTimestamp = timestamp == null
+            ? TimeUtils.getTimestampForFullQuests()
+            : timestamp;
+
+        long timestampDifferenceInSecs = (new Date().getTime() - unpackedTimestamp) / 1000;
+        long questsToRequest = timestampDifferenceInSecs % Constants.TIME_TO_QUEST_MINS * 60;
+        questsToRequest = questsToRequest >= Constants.USER_MAX_QUESTS
+            ? Constants.USER_MAX_QUESTS
+            : questsToRequest;
+        questsToRequest -= oldQuestCount;
+
+        Random random = new Random();
+        for (int i = 0; i < questsToRequest; i++) {
+          UserQuestModel questModel = UserQuestModel.from(
+              availableQuests.get(random.nextInt(availableQuests.size())),
+              generateReward()
+          );
+
+          FireBaseProfileManager.getInstance().requestQuest(questModel);
+        }
+
+        observer.onSuccess(true);
+      }
+    };
   }
 
   private static int generateReward() {

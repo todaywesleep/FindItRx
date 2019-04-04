@@ -17,8 +17,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
@@ -86,27 +84,15 @@ public class MainActivity extends BaseActivity implements
   }
 
   private void subscribeToViewModel() {
-    mainViewModel.getAllLabels()
-        .subscribe(new Observer<List<QuestModel>>() {
-          @Override
-          public void onSubscribe(Disposable d) {
-          }
-
-          @Override
-          public void onNext(List<QuestModel> questModels) {
-            itemsCollection = questModels;
-            logDebug("Items collection get: %s", questModels);
-          }
-
-          @Override
-          public void onError(Throwable e) {
-            showSnackBar(e.getLocalizedMessage());
-            logError(e);
-          }
-
-          @Override
-          public void onComplete() {
-          }
+    mainViewModel.getItemCollectionModel()
+        .addOnSuccessListener(queryDocumentSnapshots -> {
+          List<QuestModel> questModels = queryDocumentSnapshots.toObjects(QuestModel.class);
+          itemsCollection = questModels;
+          logDebug("Items collection get: %s", questModels);
+        })
+        .addOnFailureListener(e -> {
+          showSnackBar(e.getLocalizedMessage());
+          logError(e);
         });
   }
 
@@ -116,6 +102,7 @@ public class MainActivity extends BaseActivity implements
         this,
         this
     );
+
     mainViewPager.setAdapter(adapter);
     selectPage(MainViewPagerModel.CAMERA_PAGE.ordinal(), false);
     selectTab(MainViewPagerModel.CAMERA_PAGE.ordinal());

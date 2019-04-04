@@ -14,16 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 
 public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.ViewHolder> {
-  private List<UserQuestsModel> data;
+  private List<UserQuestModel> data;
 
   public UserQuestsAdapter() {
     this.data = new ArrayList<>();
   }
 
-  public UserQuestsAdapter(List<UserQuestsModel> data) {
+  public UserQuestsAdapter(List<UserQuestModel> data) {
     this.data = data;
   }
 
@@ -39,17 +39,17 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
   @SuppressLint("SetTextI18n")
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    UserQuestsModel model = data.get(position);
+    UserQuestModel model = data.get(position);
     holder.questName.setText(model.getLabel());
     holder.questRevard.setText(Integer.toString(model.getReward()));
   }
 
-  public void setData(List<UserQuestsModel> data) {
+  public void setData(List<UserQuestModel> data) {
     this.data = data;
     notifyDataSetChanged();
   }
 
-  public List<UserQuestsModel> getData() {
+  public List<UserQuestModel> getData() {
     return data;
   }
 

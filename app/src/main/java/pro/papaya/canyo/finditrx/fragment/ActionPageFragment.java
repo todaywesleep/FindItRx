@@ -97,9 +97,9 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
     actionViewModel = ViewModelProviders.of(this).get(ActionViewModel.class);
     menu.setCallback(this);
 
-    initFotoapparat();
-    subscribeToViewModel();
-    setListeners();
+//    initFotoapparat();
+//    subscribeToViewModel();
+//    setListeners();
   }
 
   @Override
@@ -111,7 +111,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   public void onPause() {
     super.onPause();
     if (callback.isCameraPermissionsGranted()) {
-      fotoapparat.stop();
+//      fotoapparat.stop();
     }
   }
 
@@ -119,7 +119,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   public void onResume() {
     super.onResume();
     if (callback.isCameraPermissionsGranted()) {
-      fotoapparat.start();
+//      fotoapparat.start();
     }
   }
 
@@ -145,43 +145,43 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   public void setListeners() {
     btnSnapshot.setOnClickListener(v -> {
       setLoading(true);
-      fotoapparat.takePicture().toPendingResult().whenAvailable(photo -> {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(photo.encodedImage, 0, photo.encodedImage.length);
-        actionViewModel.postImageTask(bitmap, photo.rotationDegrees).subscribe(
-            new SingleObserver<List<FirebaseVisionImageLabel>>() {
-              @Override
-              public void onSubscribe(Disposable d) {
-
-              }
-
-              @SuppressLint("SetTextI18n")
-              @Override
-              public void onSuccess(List<FirebaseVisionImageLabel> firebaseVisionImageLabels) {
-                scanResultContainer.removeAllViews();
-
-                for (FirebaseVisionImageLabel label : firebaseVisionImageLabels) {
-                  TextView labelContainer = new TextView(getContext());
-                  labelContainer.setText(label.getText() + " " + label.getConfidence());
-                  scanResultContainer.addView(labelContainer);
-                }
-
-                if (callback != null) {
-                  callback.snapshotTaken(QuestModel.fromCollection(firebaseVisionImageLabels));
-                }
-
-                setLoading(false);
-              }
-
-              @Override
-              public void onError(Throwable e) {
-                setLoading(false);
-                showSnackBar(e.getLocalizedMessage());
-                logError(e);
-              }
-            });
-
-        return null;
-      });
+//      fotoapparat.takePicture().toPendingResult().whenAvailable(photo -> {
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(photo.encodedImage, 0, photo.encodedImage.length);
+//        actionViewModel.postImageTask(bitmap, photo.rotationDegrees).subscribe(
+//            new SingleObserver<List<FirebaseVisionImageLabel>>() {
+//              @Override
+//              public void onSubscribe(Disposable d) {
+//
+//              }
+//
+//              @SuppressLint("SetTextI18n")
+//              @Override
+//              public void onSuccess(List<FirebaseVisionImageLabel> firebaseVisionImageLabels) {
+//                scanResultContainer.removeAllViews();
+//
+//                for (FirebaseVisionImageLabel label : firebaseVisionImageLabels) {
+//                  TextView labelContainer = new TextView(getContext());
+//                  labelContainer.setText(label.getText() + " " + label.getConfidence());
+//                  scanResultContainer.addView(labelContainer);
+//                }
+//
+//                if (callback != null) {
+//                  callback.snapshotTaken(QuestModel.fromCollection(firebaseVisionImageLabels));
+//                }
+//
+//                setLoading(false);
+//              }
+//
+//              @Override
+//              public void onError(Throwable e) {
+//                setLoading(false);
+//                showSnackBar(e.getLocalizedMessage());
+//                logError(e);
+//              }
+//            });
+//
+//        return null;
+//      });
     });
   }
 
@@ -252,29 +252,23 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   }
 
   private void initFotoapparat() {
-    if (getContext() != null && callback.isCameraPermissionsGranted()) {
-      fotoapparat = Fotoapparat
-          .with(getContext())
-          .into(cameraView)
-          .previewScaleType(ScaleType.CenterCrop)
-          .photoResolution(ResolutionSelectorsKt.highestResolution())
-          .lensPosition(LensPositionSelectorsKt.back())
-          .focusMode(SelectorsKt.firstAvailable(
-              FocusModeSelectorsKt.continuousFocusPicture(),
-              FocusModeSelectorsKt.autoFocus(),
-              FocusModeSelectorsKt.fixed()
-          ))
-//          .flash(SelectorsKt.firstAvailable(
-//              FlashSelectorsKt.autoFlash(),
+//    if (getContext() != null && callback.isCameraPermissionsGranted()) {
+//      fotoapparat = Fotoapparat
+//          .with(getContext())
+//          .into(cameraView)
+//          .previewScaleType(ScaleType.CenterCrop)
+//          .photoResolution(ResolutionSelectorsKt.highestResolution())
+//          .lensPosition(LensPositionSelectorsKt.back())
+//          .focusMode(SelectorsKt.firstAvailable(
+//              FocusModeSelectorsKt.continuousFocusPicture(),
+//              FocusModeSelectorsKt.autoFocus(),
+//              FocusModeSelectorsKt.fixed()
 //          ))
-//          .frameProcessor(frame -> {
+//          .build();
 //
-//          })
-          .build();
-
-      fotoapparat.start();
-    } else {
-      callback.requestCameraPermissions();
-    }
+//      fotoapparat.start();
+//    } else {
+//      callback.requestCameraPermissions();
+//    }
   }
 }

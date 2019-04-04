@@ -1,6 +1,7 @@
 package pro.papaya.canyo.finditrx.firebase;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
-import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
@@ -20,6 +21,7 @@ public class FireBaseProfileManager {
   private static final String TABLE_SETTINGS = "settings";
   private static final String TABLE_USER_QUESTS = "quests";
   private static final String TABLE_USER_QUESTS_REWARD_FIELD = "reward";
+  private static final String TABLE_USER_TIMESTAMP_FIELD = "questTimestamp";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
@@ -32,14 +34,14 @@ public class FireBaseProfileManager {
     return INSTANCE;
   }
 
-  private Observable<List<UserQuestsModel>> observableTasks = new Observable<List<UserQuestsModel>>() {
+  private Observable<List<UserQuestModel>> observableTasks = new Observable<List<UserQuestModel>>() {
     @Override
-    protected void subscribeActual(Observer<? super List<UserQuestsModel>> observer) {
+    protected void subscribeActual(Observer<? super List<UserQuestModel>> observer) {
       database.collection(TABLE_USERS).document(getUserId())
           .collection(TABLE_USER_QUESTS).orderBy(TABLE_USER_QUESTS_REWARD_FIELD)
           .addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (queryDocumentSnapshots != null) {
-              observer.onNext(queryDocumentSnapshots.toObjects(UserQuestsModel.class));
+              observer.onNext(queryDocumentSnapshots.toObjects(UserQuestModel.class));
             } else if (e != null) {
               observer.onError(e);
             }
@@ -136,11 +138,11 @@ public class FireBaseProfileManager {
         .addOnFailureListener(Timber::e);
   }
 
-  public Observable<List<UserQuestsModel>> getObservableUserTasks() {
+  public Observable<List<UserQuestModel>> getObservableUserTasks() {
     return observableTasks;
   }
 
-  public static Single<Long> getTimeStampEvent() {
+  public Single<Long> getTimeStampEvent() {
     return new Single<Long>() {
       @Override
       protected void subscribeActual(SingleObserver<? super Long> observer) {
@@ -157,6 +159,40 @@ public class FireBaseProfileManager {
             });
       }
     };
+  }
+
+  public Single<Long> setTimestamp(long timestamp) {
+    return new Single<Long>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Long> observer) {
+        database.collection(TABLE_USERS).document(getUserId())
+            .addSnapshotListener((documentSnapshot, e) -> {
+              if (documentSnapshot != null) {
+                UserModel userModel = documentSnapshot.toObject(UserModel.class);
+
+                if (userModel != null) {
+                  userModel.setQuestTimestamp(timestamp);
+                }
+
+                updateUserProfile(userModel);
+                observer.onSuccess(timestamp);
+              } else if (e != null) {
+                observer.onError(e);
+              }
+            });
+      }
+    };
+  }
+
+  private void updateUserProfile(UserModel userModel) {
+    database.collection(TABLE_USERS).document(getUserId())
+        .set(userModel, SetOptions.mergeFields(TABLE_USER_TIMESTAMP_FIELD));
+  }
+
+  public void requestQuest(UserQuestModel quest) {
+    Timber.d("Request quest for user: %s", quest);
+    database.collection(TABLE_USERS).document(getUserId())
+        .collection(TABLE_USER_QUESTS).add(quest);
   }
 
   private static Single<Integer> getUsersCollectionLength() {
