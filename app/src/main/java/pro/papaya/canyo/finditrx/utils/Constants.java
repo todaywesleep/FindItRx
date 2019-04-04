@@ -8,8 +8,10 @@ public final class Constants {
 
   //GLOBAL
   public static final int USER_MAX_QUESTS = 5;
-  public static final int TIME_TO_QUEST_MINS = 5;
+  public static final int TIME_TO_QUEST_MINS = 1;
   public static final String EMPTY_STRING = "";
+  public static final String TIME_UNIT_SEPARATOR = ":";
+  public static final String TABULATION = "\t";
 
   //LOG SECTION
   public static final String LOG_OPENED_BRACKET = "[";

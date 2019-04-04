@@ -26,6 +26,8 @@
     <string name="fab_auto_flash">Auto-flash</string>
     <!-- Quests fragment -->
     <string name="fragment_quests_title">Quests</string>
+    <string name="fragment_quests_remaining_time">Time to new quest:\t %02d min %02d sec</string>
+    <string name="fragment_quests_quest_max">You have maximum quests</string>
     <!-- Profile fragment -->
     <string name="fragment_profile_logout">Logout</string>
 </resources>

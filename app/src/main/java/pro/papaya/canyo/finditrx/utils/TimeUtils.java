@@ -16,4 +16,12 @@ public class TimeUtils {
   public static long secsToMillis(long secs) {
     return secs * 1000;
   }
+
+  public static long minsToMillis(long mins) {
+    return secsToMillis(minsToSecs(mins));
+  }
+
+  public static long millisToSecs(long millis) {
+    return millis / 1000;
+  }
 }

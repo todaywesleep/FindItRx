@@ -29,7 +29,7 @@ public class QuestsViewModel extends ViewModel {
   }
 
   //Returns true if quests requested
-  public boolean requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestsCount) {
+  public long requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestsCount) {
     return FireBaseItemsManager.getInstance().requestQuests(availableQuests, timestamp, oldQuestsCount);
   }
 }

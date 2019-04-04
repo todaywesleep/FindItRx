@@ -42,9 +42,7 @@ public class FireBaseItemsManager {
     }
   }
 
-  public boolean requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestCount) {
-    boolean isQuestsRequested = false;
-
+  public long requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestCount) {
     long unpackedTimestamp = timestamp == null
         ? TimeUtils.getTimestampForFullQuests()
         : timestamp;
@@ -64,11 +62,9 @@ public class FireBaseItemsManager {
       );
 
       FireBaseProfileManager.getInstance().requestQuest(questModel);
-      if (!isQuestsRequested)
-        isQuestsRequested = true;
     }
 
-    return isQuestsRequested;
+    return questsToRequest;
   }
 
   private static int generateReward() {
