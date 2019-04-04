@@ -9,7 +9,7 @@ public class QuestModel {
   protected String label;
   protected String identifier;
 
-  public static List<QuestModel> fromCollection(List<FirebaseVisionImageLabel> firebaseCollection) {
+  public static List<QuestModel> fromFirebaseCollection(List<FirebaseVisionImageLabel> firebaseCollection) {
     List<QuestModel> items = new ArrayList<>();
 
     for (FirebaseVisionImageLabel label : firebaseCollection) {
@@ -19,6 +19,16 @@ public class QuestModel {
             label.getText()
         ));
       }
+    }
+
+    return items;
+  }
+
+  public static List<QuestModel> fromUserCollection(List<UserQuestModel> userQuestModels) {
+    List<QuestModel> items = new ArrayList<>();
+
+    for (UserQuestModel questModel : userQuestModels) {
+      items.add(QuestModel.from(questModel));
     }
 
     return items;

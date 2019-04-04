@@ -160,7 +160,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
               }
 
               if (callback != null) {
-                callback.snapshotTaken(QuestModel.fromCollection(firebaseVisionImageLabels));
+                callback.snapshotTaken(QuestModel.fromFirebaseCollection(firebaseVisionImageLabels));
               }
 
               setLoading(false);

@@ -20,6 +20,7 @@ import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.TimeUtils;
+import timber.log.Timber;
 
 public class FireBaseItemsManager {
   private static final String TABLE_LABELS = "labels";
@@ -49,17 +50,16 @@ public class FireBaseItemsManager {
     }
   }
 
-  public void requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestCount){
+  public void requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestCount) {
     long unpackedTimestamp = timestamp == null
         ? TimeUtils.getTimestampForFullQuests()
         : timestamp;
 
     long timestampDifferenceInSecs = (new Date().getTime() - unpackedTimestamp) / 1000;
-    long questsToRequest = timestampDifferenceInSecs % Constants.TIME_TO_QUEST_MINS * 60;
+    long questsToRequest = timestampDifferenceInSecs / Constants.TIME_TO_QUEST_MINS * 60;
     questsToRequest = questsToRequest >= Constants.USER_MAX_QUESTS
         ? Constants.USER_MAX_QUESTS
-        : questsToRequest;
-    questsToRequest -= oldQuestCount;
+        : questsToRequest - oldQuestCount;
 
     Random random = new Random();
     for (int i = 0; i < questsToRequest; i++) {
