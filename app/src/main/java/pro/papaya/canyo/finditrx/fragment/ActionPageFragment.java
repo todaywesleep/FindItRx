@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 
 import java.util.List;
@@ -30,11 +32,9 @@ import io.fotoapparat.selector.LensPositionSelectorsKt;
 import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.selector.SelectorsKt;
 import io.fotoapparat.view.CameraView;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
+import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
@@ -97,9 +97,9 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
     actionViewModel = ViewModelProviders.of(this).get(ActionViewModel.class);
     menu.setCallback(this);
 
-//    initFotoapparat();
-//    subscribeToViewModel();
-//    setListeners();
+    initFotoapparat();
+    subscribeToViewModel();
+    setListeners();
   }
 
   @Override
@@ -111,7 +111,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   public void onPause() {
     super.onPause();
     if (callback.isCameraPermissionsGranted()) {
-//      fotoapparat.stop();
+      fotoapparat.stop();
     }
   }
 
@@ -119,7 +119,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   public void onResume() {
     super.onResume();
     if (callback.isCameraPermissionsGranted()) {
-//      fotoapparat.start();
+      fotoapparat.start();
     }
   }
 
@@ -142,75 +142,62 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
     getSettings();
   }
 
-  public void setListeners() {
+  @SuppressLint("SetTextI18n")
+  private void setListeners() {
     btnSnapshot.setOnClickListener(v -> {
       setLoading(true);
-//      fotoapparat.takePicture().toPendingResult().whenAvailable(photo -> {
-//        Bitmap bitmap = BitmapFactory.decodeByteArray(photo.encodedImage, 0, photo.encodedImage.length);
-//        actionViewModel.postImageTask(bitmap, photo.rotationDegrees).subscribe(
-//            new SingleObserver<List<FirebaseVisionImageLabel>>() {
-//              @Override
-//              public void onSubscribe(Disposable d) {
-//
-//              }
-//
-//              @SuppressLint("SetTextI18n")
-//              @Override
-//              public void onSuccess(List<FirebaseVisionImageLabel> firebaseVisionImageLabels) {
-//                scanResultContainer.removeAllViews();
-//
-//                for (FirebaseVisionImageLabel label : firebaseVisionImageLabels) {
-//                  TextView labelContainer = new TextView(getContext());
-//                  labelContainer.setText(label.getText() + " " + label.getConfidence());
-//                  scanResultContainer.addView(labelContainer);
-//                }
-//
-//                if (callback != null) {
-//                  callback.snapshotTaken(QuestModel.fromCollection(firebaseVisionImageLabels));
-//                }
-//
-//                setLoading(false);
-//              }
-//
-//              @Override
-//              public void onError(Throwable e) {
-//                setLoading(false);
-//                showSnackBar(e.getLocalizedMessage());
-//                logError(e);
-//              }
-//            });
-//
-//        return null;
-//      });
+      fotoapparat.takePicture().toPendingResult().whenAvailable(photo -> {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(photo.encodedImage, 0, photo.encodedImage.length);
+
+        actionViewModel.postImageTask(bitmap, photo.rotationDegrees)
+            .addOnSuccessListener(firebaseVisionImageLabels -> {
+              scanResultContainer.removeAllViews();
+
+              for (FirebaseVisionImageLabel label : firebaseVisionImageLabels) {
+                TextView labelContainer = new TextView(getContext());
+                labelContainer.setText(label.getText() + " " + label.getConfidence());
+                scanResultContainer.addView(labelContainer);
+              }
+
+              if (callback != null) {
+                callback.snapshotTaken(QuestModel.fromCollection(firebaseVisionImageLabels));
+              }
+
+              setLoading(false);
+            })
+            .addOnFailureListener(e -> {
+              setLoading(false);
+              showSnackBar(e.getLocalizedMessage());
+              logError(e);
+            });
+
+        return null;
+      });
     });
   }
 
   private void getSettings() {
-    actionViewModel.getSettings().subscribe(new SingleObserver<SettingsModel>() {
-      @Override
-      public void onSubscribe(Disposable d) {
-      }
+    actionViewModel.getSettingsReference()
+        .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
+          @Override
+          public void onSuccess(DocumentSnapshot documentSnapshot) {
+            SettingsModel settingsModelRemote = documentSnapshot.toObject(SettingsModel.class);
+            if (settingsModelRemote != null) {
+              applySettings(settingsModelRemote);
+              logDebug("Settings got: %s", settingsModel.toString());
+            } else {
+              actionViewModel.setStableSettings();
+              applySettings(SettingsModel.getStabSettings());
+              logDebug("Settings in null");
+            }
+          }
 
-      @Override
-      public void onSuccess(SettingsModel settingsModel) {
-        if (settingsModel != null) {
-          logDebug("Settings got: %s", settingsModel.toString());
-          applySettings(settingsModel);
-        } else {
-          logDebug("Settings in null");
-          actionViewModel.setStableSettings();
-          applySettings(SettingsModel.getStabSettings());
-        }
-      }
-
-      @Override
-      public void onError(Throwable e) {
-        if (e != null) {
-          showSnackBar(e.getLocalizedMessage());
-          logError(e);
-        }
-      }
-    });
+          @Override
+          public void onError(FirebaseFirestoreException e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
   }
 
   private void applySettings(SettingsModel settingsModel) {
@@ -231,44 +218,35 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
         .build();
 
     if (updateRemote) {
-      FireBaseProfileManager.setFlashState(settingsModel, isEnabled)
-          .subscribe(new SingleObserver<Boolean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onSuccess(Boolean aBoolean) {
-              logDebug("Settings flash updated");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-              logDebug("Settings flash update error %s", e.getLocalizedMessage());
-            }
+      actionViewModel.setFlashState(settingsModel, isEnabled)
+          .addOnSuccessListener(aVoid -> {
+            logDebug("Settings flash updated");
+          })
+          .addOnFailureListener(e -> {
+            showSnackBar(e.getLocalizedMessage());
+            logDebug("Settings flash update error %s", e.getLocalizedMessage());
           });
     }
   }
 
   private void initFotoapparat() {
-//    if (getContext() != null && callback.isCameraPermissionsGranted()) {
-//      fotoapparat = Fotoapparat
-//          .with(getContext())
-//          .into(cameraView)
-//          .previewScaleType(ScaleType.CenterCrop)
-//          .photoResolution(ResolutionSelectorsKt.highestResolution())
-//          .lensPosition(LensPositionSelectorsKt.back())
-//          .focusMode(SelectorsKt.firstAvailable(
-//              FocusModeSelectorsKt.continuousFocusPicture(),
-//              FocusModeSelectorsKt.autoFocus(),
-//              FocusModeSelectorsKt.fixed()
-//          ))
-//          .build();
-//
-//      fotoapparat.start();
-//    } else {
-//      callback.requestCameraPermissions();
-//    }
+    if (getContext() != null && callback.isCameraPermissionsGranted()) {
+      fotoapparat = Fotoapparat
+          .with(getContext())
+          .into(cameraView)
+          .previewScaleType(ScaleType.CenterCrop)
+          .photoResolution(ResolutionSelectorsKt.highestResolution())
+          .lensPosition(LensPositionSelectorsKt.back())
+          .focusMode(SelectorsKt.firstAvailable(
+              FocusModeSelectorsKt.continuousFocusPicture(),
+              FocusModeSelectorsKt.autoFocus(),
+              FocusModeSelectorsKt.fixed()
+          ))
+          .build();
+
+      fotoapparat.start();
+    } else {
+      callback.requestCameraPermissions();
+    }
   }
 }

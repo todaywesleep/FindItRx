@@ -1,5 +1,6 @@
 package pro.papaya.canyo.finditrx.firebase;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -87,38 +88,20 @@ public class FireBaseProfileManager {
     };
   }
 
-  public DocumentReference getUsernameReference(){
+  public DocumentReference getUsernameReference() {
     return database.collection(TABLE_USERS).document(getUserId());
   }
 
-  public static Single<SettingsModel> getSettings() {
-    return new Single<SettingsModel>() {
-      @Override
-      protected void subscribeActual(SingleObserver<? super SettingsModel> observer) {
-        database.collection(TABLE_SETTINGS).document(getUserId())
-            .addSnapshotListener(((documentSnapshot, e) -> {
-              if (e != null) {
-                observer.onError(e);
-              } else if (documentSnapshot != null) {
-                observer.onSuccess(documentSnapshot.toObject(SettingsModel.class));
-              }
-            }));
-      }
-    };
+  public DocumentReference getSettingsReference() {
+    return database.collection(TABLE_SETTINGS).document(getUserId());
   }
 
-  public static Single<Boolean> setFlashState(SettingsModel oldSettings, boolean isFlashEnabled) {
-    return new Single<Boolean>() {
-      @Override
-      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
-        oldSettings.setFlashEnabled(isFlashEnabled);
-        database.collection(TABLE_SETTINGS)
-            .document(getUserId())
-            .set(oldSettings)
-            .addOnSuccessListener(aVoid -> observer.onSuccess(true))
-            .addOnFailureListener(observer::onError);
-      }
-    };
+  public Task<Void> setFlashState(SettingsModel oldSettings, boolean isFlashEnabled) {
+    oldSettings.setFlashEnabled(isFlashEnabled);
+
+    return database.collection(TABLE_SETTINGS)
+        .document(getUserId())
+        .set(oldSettings);
   }
 
   public static void setStabSettings() {
