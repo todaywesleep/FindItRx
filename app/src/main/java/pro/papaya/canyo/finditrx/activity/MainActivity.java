@@ -91,16 +91,16 @@ public class MainActivity extends BaseActivity implements
     mainViewModel.getItemCollectionModel()
         .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
           @Override
-          public void onError(FirebaseFirestoreException e) {
-            showSnackBar(e.getLocalizedMessage());
-            logError(e);
-          }
-
-          @Override
           public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
             List<QuestModel> questModels = queryDocumentSnapshots.toObjects(QuestModel.class);
             itemsCollection = questModels;
             logDebug("Items collection get: %s", questModels);
+          }
+
+          @Override
+          public void onError(FirebaseFirestoreException e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
           }
         });
   }

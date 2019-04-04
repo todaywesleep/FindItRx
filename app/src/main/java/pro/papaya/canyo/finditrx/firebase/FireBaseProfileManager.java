@@ -1,6 +1,8 @@
 package pro.papaya.canyo.finditrx.firebase;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.List;
@@ -85,20 +87,8 @@ public class FireBaseProfileManager {
     };
   }
 
-  public static Observable<UserModel> getObservableUserName() {
-    return new Observable<UserModel>() {
-      @Override
-      protected void subscribeActual(Observer<? super UserModel> observer) {
-        database.collection(TABLE_USERS).document(getUserId())
-            .addSnapshotListener((documentSnapshot, e) -> {
-              if (e != null) {
-                observer.onError(e);
-              } else if (documentSnapshot != null) {
-                observer.onNext(documentSnapshot.toObject(UserModel.class));
-              }
-            });
-      }
-    };
+  public DocumentReference getUsernameReference(){
+    return database.collection(TABLE_USERS).document(getUserId());
   }
 
   public static Single<SettingsModel> getSettings() {

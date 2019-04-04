@@ -8,17 +8,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.activity.AuthActivity;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
-import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
+import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
 
 public class ProfilePageFragment extends BaseFragment {
   private static ProfilePageFragment INSTANCE;
@@ -27,6 +30,8 @@ public class ProfilePageFragment extends BaseFragment {
   TextView userName;
   @BindView(R.id.profile_logout)
   Button logout;
+
+  private ProfileViewModel profileViewModel;
 
   public static ProfilePageFragment getInstance() {
     if (INSTANCE == null) {
@@ -52,6 +57,7 @@ public class ProfilePageFragment extends BaseFragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
     setListeners();
     setViewListeners();
   }
@@ -67,31 +73,21 @@ public class ProfilePageFragment extends BaseFragment {
   }
 
   private void setListeners() {
-    FireBaseProfileManager.getObservableUserName()
-        .subscribe(new Observer<UserModel>() {
+    profileViewModel.getUsernameReference()
+        .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
           @Override
-          public void onSubscribe(Disposable d) {
-
-          }
-
-          @Override
-          public void onNext(UserModel userModel) {
-            setLoading(false);
-            if (userModel != null && userModel.getNickName() != null) {
-              logDebug("User model updated");
+          public void onSuccess(DocumentSnapshot documentSnapshot) {
+            UserModel userModel = documentSnapshot.toObject(UserModel.class);
+            if (userModel != null) {
               userName.setText(userModel.getNickName());
+              logDebug("User model updated");
             }
           }
 
           @Override
-          public void onError(Throwable e) {
+          public void onError(FirebaseFirestoreException e) {
             setLoading(false);
             showSnackBar(e.getLocalizedMessage());
-          }
-
-          @Override
-          public void onComplete() {
-
           }
         });
   }

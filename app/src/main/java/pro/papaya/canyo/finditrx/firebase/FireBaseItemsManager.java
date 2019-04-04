@@ -38,7 +38,7 @@ public class FireBaseItemsManager {
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   public Query getItemsCollectionQuery() {
-    return database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_LABEL_FIELD);
+    return database.collection(TABLE_LABELS);
   }
 
   public void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
