@@ -9,11 +9,15 @@ import pro.papaya.canyo.finditrx.model.firebase.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 
 public class FireBaseLoginManager {
-  private static final FireBaseLoginManager ourInstance = new FireBaseLoginManager();
+  private static FireBaseLoginManager INSTANCE;
   private final FirebaseAuth auth;
 
   public static FireBaseLoginManager getInstance() {
-    return ourInstance;
+    if (INSTANCE == null) {
+      INSTANCE = new FireBaseLoginManager();
+    }
+
+    return INSTANCE;
   }
 
   private FireBaseLoginManager() {
@@ -62,20 +66,20 @@ public class FireBaseLoginManager {
     };
   }
 
-  public void logout(){
+  public void logout() {
     auth.signOut();
   }
 
-  public String getUserEmail(){
-    if (auth.getCurrentUser() != null){
+  public String getUserEmail() {
+    if (auth.getCurrentUser() != null) {
       return auth.getCurrentUser().getEmail();
     }
 
     return Constants.EMPTY_STRING;
   }
 
-  public String getUserId(){
-    if (auth.getCurrentUser() != null){
+  public String getUserId() {
+    if (auth.getCurrentUser() != null) {
       return auth.getCurrentUser().getUid();
     }
 

@@ -9,6 +9,6 @@ import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
 
 public class QuestsViewModel extends ViewModel {
   public Observable<List<UserQuestsModel>> getObservableUserQuests() {
-    return FireBaseProfileManager.getObservableUserTasks();
+    return FireBaseProfileManager.getInstance().getObservableUserTasks();
   }
 }

@@ -2,7 +2,6 @@ package pro.papaya.canyo.finditrx.firebase;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -22,6 +21,31 @@ public class FireBaseProfileManager {
   private static final String TABLE_USER_QUESTS = "quests";
   private static final String TABLE_USER_QUESTS_REWARD_FIELD = "reward";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+  private static FireBaseProfileManager INSTANCE;
+
+  public static FireBaseProfileManager getInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new FireBaseProfileManager();
+    }
+
+    return INSTANCE;
+  }
+
+  private Observable<List<UserQuestsModel>> observableTasks = new Observable<List<UserQuestsModel>>() {
+    @Override
+    protected void subscribeActual(Observer<? super List<UserQuestsModel>> observer) {
+      database.collection(TABLE_USERS).document(getUserId())
+          .collection(TABLE_USER_QUESTS).orderBy(TABLE_USER_QUESTS_REWARD_FIELD)
+          .addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (queryDocumentSnapshots != null) {
+              observer.onNext(queryDocumentSnapshots.toObjects(UserQuestsModel.class));
+            } else if (e != null) {
+              observer.onError(e);
+            }
+          });
+    }
+  };
 
   public static Single<Boolean> createUserWrite() {
     return new Single<Boolean>() {
@@ -112,15 +136,21 @@ public class FireBaseProfileManager {
         .addOnFailureListener(Timber::e);
   }
 
-  public static Observable<List<UserQuestsModel>> getObservableUserTasks() {
-    return new Observable<List<UserQuestsModel>>() {
+  public Observable<List<UserQuestsModel>> getObservableUserTasks() {
+    return observableTasks;
+  }
+
+  public static Single<Long> getTimeStampEvent() {
+    return new Single<Long>() {
       @Override
-      protected void subscribeActual(Observer<? super List<UserQuestsModel>> observer) {
+      protected void subscribeActual(SingleObserver<? super Long> observer) {
         database.collection(TABLE_USERS).document(getUserId())
-            .collection(TABLE_USER_QUESTS).orderBy(TABLE_USER_QUESTS_REWARD_FIELD)
-            .addSnapshotListener((queryDocumentSnapshots, e) -> {
-              if (queryDocumentSnapshots != null) {
-                observer.onNext(queryDocumentSnapshots.toObjects(UserQuestsModel.class));
+            .addSnapshotListener((documentSnapshot, e) -> {
+              if (documentSnapshot != null) {
+                UserModel remoteUserModel = documentSnapshot.toObject(UserModel.class);
+                if (remoteUserModel != null) {
+                  observer.onSuccess(remoteUserModel.getQuestTimestamp());
+                }
               } else if (e != null) {
                 observer.onError(e);
               }

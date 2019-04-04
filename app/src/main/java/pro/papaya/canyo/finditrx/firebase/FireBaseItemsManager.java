@@ -14,22 +14,34 @@ public class FireBaseItemsManager {
   private static final String TABLE_LABELS = "labels";
   private static final String TABLE_LABELS_LABEL_FIELD = "label";
 
+  private static FireBaseItemsManager INSTANCE;
+
+  public static FireBaseItemsManager getInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new FireBaseItemsManager();
+    }
+
+    return INSTANCE;
+  }
+
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-  public static Observable<List<QuestModel>> getObservableItemsCollection() {
-    return new Observable<List<QuestModel>>() {
-      @Override
-      protected void subscribeActual(Observer<? super List<QuestModel>> observer) {
-        database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_LABEL_FIELD)
-            .addSnapshotListener((queryDocumentSnapshots, e) -> {
-              if (queryDocumentSnapshots != null) {
-                observer.onNext(queryDocumentSnapshots.toObjects(QuestModel.class));
-              } else if (e != null) {
-                observer.onError(e);
-              }
-            });
-      }
-    };
+  private Observable<List<QuestModel>> itemsCollection = new Observable<List<QuestModel>>() {
+    @Override
+    protected void subscribeActual(Observer<? super List<QuestModel>> observer) {
+      database.collection(TABLE_LABELS).orderBy(TABLE_LABELS_LABEL_FIELD)
+          .addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (queryDocumentSnapshots != null) {
+              observer.onNext(queryDocumentSnapshots.toObjects(QuestModel.class));
+            } else if (e != null) {
+              observer.onError(e);
+            }
+          });
+    }
+  };
+
+  public Observable<List<QuestModel>> getObservableItemsCollection() {
+    return itemsCollection;
   }
 
   public static void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {

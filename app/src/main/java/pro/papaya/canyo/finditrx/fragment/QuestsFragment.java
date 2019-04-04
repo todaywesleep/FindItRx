@@ -1,11 +1,11 @@
 package pro.papaya.canyo.finditrx.fragment;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -16,14 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.UserQuestsAdapter;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestsModel;
-import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
-import timber.log.Timber;
 
 public class QuestsFragment extends BaseFragment {
   public static QuestsFragment INSTANCE = null;
@@ -68,10 +65,26 @@ public class QuestsFragment extends BaseFragment {
     super.onViewCreated(view, savedInstanceState);
     questsViewModel = ViewModelProviders.of(this).get(QuestsViewModel.class);
     rvActiveQuests.setLayoutManager(new LinearLayoutManager(getContext()));
+    rvActiveQuests.addItemDecoration(getItemDecorator());
     adapter = new UserQuestsAdapter();
     rvActiveQuests.setAdapter(adapter);
 
     subscribeToUserQuests();
+  }
+
+  private RecyclerView.ItemDecoration getItemDecorator() {
+    return new RecyclerView.ItemDecoration() {
+      @Override
+      public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        super.getItemOffsets(outRect, view, parent, state);
+
+        if (parent.getChildAdapterPosition(view) == 0) {
+          outRect.top = 16;
+        }
+
+        outRect.bottom = 16;
+      }
+    };
   }
 
   public void setCallback(QuestFragmentCallback callback) {
@@ -89,10 +102,7 @@ public class QuestsFragment extends BaseFragment {
           @Override
           public void onNext(List<UserQuestsModel> userQuestsModels) {
             logDebug("Get user quests: %s", userQuestsModels);
-//            adapter.setData(userQuestsModels);
-//            if (userQuestsModels.size() < Constants.USER_MAX_QUESTS) {
-//
-//            }
+            adapter.setData(userQuestsModels);
           }
 
           @Override

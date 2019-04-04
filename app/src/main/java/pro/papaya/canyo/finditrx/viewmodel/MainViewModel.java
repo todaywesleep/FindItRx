@@ -9,7 +9,7 @@ import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 
 public class MainViewModel extends ViewModel {
   public Observable<List<QuestModel>> getAllLabels() {
-    return FireBaseItemsManager.getObservableItemsCollection();
+    return FireBaseItemsManager.getInstance().getObservableItemsCollection();
   }
 
   public void updateLabelsRemote(List<QuestModel> oldItems, List<QuestModel> newItems) {
