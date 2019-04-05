@@ -44,6 +44,7 @@ public class FireBaseItemsManager {
         .getQuestsReference()
         .get()
         .addOnSuccessListener(queryDocumentSnapshots -> {
+
           Random rand = new Random();
           QuestModel selectedQuest = availableQuests.get(rand.nextInt(availableQuests.size()));
           UserQuestModel newQuest = UserQuestModel.from(

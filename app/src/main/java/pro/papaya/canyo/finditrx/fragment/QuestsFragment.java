@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -52,7 +53,9 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   private UserQuestsAdapter adapter;
   private QuestFragmentCallback callback;
   private List<QuestModel> availableQuests = new ArrayList<>();
+
   private Long lastQuestTimestamp;
+  private ListenerRegistration timestampListener;
 
   public static QuestsFragment getInstance(QuestFragmentCallback callback) {
     if (INSTANCE == null) {
@@ -90,7 +93,6 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     rvActiveQuests.setAdapter(adapter);
 
     subscribeToAllLabels();
-    subscribeToQuestTimestamp();
     subscribeToUserQuests();
   }
 
@@ -132,6 +134,11 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
             availableQuests.clear();
             availableQuests.addAll(questModels);
 
+            if (timestampListener != null) {
+              timestampListener.remove();
+            }
+            subscribeToQuestTimestamp();
+
             logDebug("Items collection get: %s", questModels);
           }
 
@@ -144,7 +151,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   }
 
   private void subscribeToQuestTimestamp() {
-    questsViewModel.getLastRequestedQuestReference()
+    timestampListener = questsViewModel.getLastRequestedQuestReference()
         .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
           @Override
           public void onSuccess(DocumentSnapshot documentSnapshot) {
