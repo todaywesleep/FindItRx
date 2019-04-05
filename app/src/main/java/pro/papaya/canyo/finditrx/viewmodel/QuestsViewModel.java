@@ -1,5 +1,6 @@
 package pro.papaya.canyo.finditrx.viewmodel;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
@@ -13,11 +14,7 @@ import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 
 public class QuestsViewModel extends ViewModel {
-  public DocumentReference getUserReference() {
-    return FireBaseProfileManager.getInstance().getUserReference();
-  }
-
-  public CollectionReference getQuestsReference() {
+  public CollectionReference getUserQuestsReference() {
     return FireBaseProfileManager.getInstance().getQuestsReference();
   }
 
@@ -37,11 +34,7 @@ public class QuestsViewModel extends ViewModel {
     FireBaseItemsManager.getInstance().requestQuest(availableQuests);
   }
 
-  public CollectionReference getUserQuests() {
-    return FireBaseProfileManager.getInstance().getUserQuestsReference();
-  }
-
-  public DocumentReference completeQuest(UserQuestModel questModel) {
-    return null;
+  public Task<Void> completeQuest(UserQuestModel questModel) {
+    return FireBaseProfileManager.getInstance().completeQuest(questModel);
   }
 }

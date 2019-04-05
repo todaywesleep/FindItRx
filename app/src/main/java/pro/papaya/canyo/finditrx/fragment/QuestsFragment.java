@@ -98,15 +98,20 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
 
   @Override
   public void onQuestClicked(UserQuestModel quest) {
-    logDebug("Quest clicked %s", quest.getIdentifier());
+    //TODO remove after testing
+    questsViewModel.completeQuest(quest)
+        .addOnSuccessListener(aVoid -> {
+          logDebug("Quest %s successfully completed", quest.getIdentifier());
+          questsViewModel.initLastRequestedQuestTimestamp(new Date().getTime());
+        })
+        .addOnFailureListener(e -> {
+          showSnackBar(e.getLocalizedMessage());
+          logError(e);
+        });
   }
 
   public void setCallback(QuestFragmentCallback callback) {
     this.callback = callback;
-  }
-
-  public List<UserQuestModel> getUserQuests() {
-    return adapter.getData();
   }
 
   private RecyclerView.ItemDecoration getItemDecorator() {
@@ -177,7 +182,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   }
 
   private void subscribeToUserQuests() {
-    questsViewModel.getQuestsReference()
+    questsViewModel.getUserQuestsReference()
         .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
           @Override
           public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

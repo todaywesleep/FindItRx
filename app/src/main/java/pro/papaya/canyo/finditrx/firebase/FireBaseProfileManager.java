@@ -11,6 +11,7 @@ import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
@@ -108,6 +109,12 @@ public class FireBaseProfileManager {
         .set(new TimestampModel(
             time
         ));
+  }
+
+  public Task<Void> completeQuest(UserQuestModel userQuest) {
+    return getUserQuestsReference()
+        .document(userQuest.getIdentifier())
+        .delete();
   }
 
   public CollectionReference getUserQuestsReference() {
