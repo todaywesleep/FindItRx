@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity implements
           @Override
           public void onNext(List<QuestModel> questModels) {
             itemsCollection = questModels;
-            logDebug("Items collection get: %s", questModels);
+            logDebug("Items collection updated");
           }
 
           @Override

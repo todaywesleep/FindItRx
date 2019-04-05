@@ -57,6 +57,7 @@ public class FireBaseItemsManager {
   public void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
     for (QuestModel item : items) {
       if (oldItems.isEmpty() || !oldItems.contains(item)) {
+        Timber.d("Item %s has been successfully added to library!", item.getIdentifier());
         addItemToObjectsList(item);
       }
     }

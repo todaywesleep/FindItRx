@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">FindItRx</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <!-- Authorization activity -->
     <string name="auth_auth_email">E-mail</string>
     <string name="auth_password">Password</string>
@@ -28,6 +28,7 @@
     <string name="fragment_quests_title">Quests</string>
     <string name="fragment_quests_remaining_time">Time to new quest:\t %02d min %02d sec</string>
     <string name="fragment_quests_quest_max">You have maximum quests</string>
+    <string name="fragment_quests_balance">Balance: %d</string>
     <!-- Profile fragment -->
     <string name="fragment_profile_logout">Logout</string>
 </resources>

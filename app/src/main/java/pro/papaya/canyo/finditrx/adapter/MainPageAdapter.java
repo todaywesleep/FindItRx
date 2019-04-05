@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
-import pro.papaya.canyo.finditrx.fragment.ProfilePageFragment;
+import pro.papaya.canyo.finditrx.fragment.ProfileFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 
@@ -25,7 +25,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     MainViewPagerModel model = MainViewPagerModel.values()[position];
     switch (model) {
       case PROFILE_PAGE: {
-        return ProfilePageFragment.getInstance();
+        return ProfileFragment.getInstance();
       }
 
       case CAMERA_PAGE: {

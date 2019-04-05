@@ -139,7 +139,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
             availableQuests.clear();
             availableQuests.addAll(questModels);
 
-            logDebug("Items collection get: %s", questModels);
+            logDebug("Items collection updated");
           }
 
           @Override
@@ -235,7 +235,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
           tvRemainingTimeLabel.setText(remainingTimeString);
         } else {
           timer.shutdown();
-          tvRemainingTimeLabel.setText("Loading...");
+          tvRemainingTimeLabel.setText(getString(R.string.loading));
           logDebug("Request quest");
           questsViewModel.requestQuest(availableQuests);
           questsViewModel.initLastRequestedQuestTimestamp(

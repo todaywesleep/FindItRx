@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -20,19 +22,21 @@ import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
 
-public class ProfilePageFragment extends BaseFragment {
-  private static ProfilePageFragment INSTANCE;
+public class ProfileFragment extends BaseFragment {
+  private static ProfileFragment INSTANCE;
 
   @BindView(R.id.profile_username)
   TextView userName;
+  @BindView(R.id.profile_balance)
+  TextView balance;
   @BindView(R.id.profile_logout)
   Button logout;
 
   private ProfileViewModel profileViewModel;
 
-  public static ProfilePageFragment getInstance() {
+  public static ProfileFragment getInstance() {
     if (INSTANCE == null) {
-      ProfilePageFragment fragment = new ProfilePageFragment();
+      ProfileFragment fragment = new ProfileFragment();
       Bundle arguments = new Bundle();
       fragment.setArguments(arguments);
       INSTANCE = fragment;
@@ -76,7 +80,10 @@ public class ProfilePageFragment extends BaseFragment {
           public void onNext(UserModel userModel) {
             if (userModel != null) {
               userName.setText(userModel.getNickName());
-              logDebug("Username updated");
+              balance.setText(String.format(Locale.getDefault(),
+                  getString(R.string.fragment_quests_balance),
+                  userModel.getBalance()));
+              logDebug("Profile applied");
             }
           }
 
