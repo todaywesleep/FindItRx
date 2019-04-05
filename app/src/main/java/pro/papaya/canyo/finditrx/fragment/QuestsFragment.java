@@ -31,14 +31,14 @@ import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.UserQuestsAdapter;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
-import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.TimeUtils;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
 
-public class QuestsFragment extends BaseFragment {
-  public static QuestsFragment INSTANCE = null;
+public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.QuestCallback {
+  private static QuestsFragment INSTANCE = null;
 
   public interface QuestFragmentCallback {
   }
@@ -88,79 +88,24 @@ public class QuestsFragment extends BaseFragment {
     rvActiveQuests.setLayoutManager(new LinearLayoutManager(getContext()));
     rvActiveQuests.addItemDecoration(getItemDecorator());
     adapter = new UserQuestsAdapter();
+    adapter.setCallback(this);
     rvActiveQuests.setAdapter(adapter);
 
     subscribeToAllLabels();
-    subscribeToUserQuests();
+    subscribeToQuestTimestamp();
+  }
+
+  @Override
+  public void onQuestClicked(UserQuestModel quest) {
+    logDebug("Quest clicked %s", quest.getIdentifier());
   }
 
   public void setCallback(QuestFragmentCallback callback) {
     this.callback = callback;
   }
 
-  private void subscribeToUserQuests() {
-    questsViewModel.getQuestsReference()
-        .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
-          @Override
-          public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-            List<UserQuestModel> userQuestModels = queryDocumentSnapshots.toObjects(UserQuestModel.class);
-            setTimerAccordingCollection(userQuestModels);
-            adapter.setData(userQuestModels);
-            subscribeToTimestampEvent();
-            logDebug("Get user quests: %s", userQuestModels);
-          }
-
-          @Override
-          public void onError(FirebaseFirestoreException e) {
-            subscribeToTimestampEvent();
-            showSnackBar(e.getLocalizedMessage());
-            logError(e);
-          }
-        });
-  }
-
-  private void setTimerAccordingCollection(List<UserQuestModel> remoteData) {
-    if (remoteData.size() < adapter.getData().size()) {
-      initTimerMillis(TimeUtils.minsToMillis(Constants.TIME_TO_QUEST_MINS));
-    } else if (remoteData.size() >= Constants.USER_MAX_QUESTS) {
-      initTimerMillis(null);
-    } else if (timestamp != null) {
-      initTimerMillis(new Date().getTime() - timestamp);
-    }
-  }
-
-  private void subscribeToTimestampEvent() {
-    if (!isTimestampEventSubscribed) {
-      isTimestampEventSubscribed = true;
-
-      questsViewModel.getUserReference()
-          .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-              if (documentSnapshot != null) {
-                UserModel remoteUserModel = documentSnapshot.toObject(UserModel.class);
-                timestamp = null;
-                if (remoteUserModel != null) {
-                  timestamp = remoteUserModel.getQuestTimestamp();
-                  requestUserQuests(adapter.getData());
-                } else {
-                  showSnackBar("User model is null");
-                  logError(new Throwable("User model is null"));
-                }
-              } else {
-                showSnackBar("User model snapshot is null");
-                logError(new Throwable("User model snapshot is null"));
-              }
-            }
-
-            @Override
-            public void onError(FirebaseFirestoreException e) {
-              timestamp = null;
-              showSnackBar(e.getLocalizedMessage());
-              logError(e);
-            }
-          });
-    }
+  public List<UserQuestModel> getUserQuests() {
+    return adapter.getData();
   }
 
   private RecyclerView.ItemDecoration getItemDecorator() {
@@ -203,34 +148,44 @@ public class QuestsFragment extends BaseFragment {
         });
   }
 
-  private void requestUserQuests(List<UserQuestModel> userQuests) {
-    if (userQuests.size() < Constants.USER_MAX_QUESTS) {
-      logDebug("Try to request quest");
-      long requestedQuests = questsViewModel.requestQuests(
-          availableQuests,
-          timestamp,
-          userQuests.size()
-      );
-      if (requestedQuests > 0) {
-        logDebug("Request quest");
-        if (requestedQuests >= Constants.USER_MAX_QUESTS) {
-          questsViewModel.setTimestamp(new Date().getTime());
-        } else {
-          questsViewModel.setTimestamp(timestamp + TimeUtils.minsToMillis(
-              Constants.TIME_TO_QUEST_MINS * requestedQuests
-          ));
-        }
-      }
-    }
+  private void subscribeToQuestTimestamp() {
+    questsViewModel.getLastRequestedQuestReference()
+        .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
+          @Override
+          public void onSuccess(DocumentSnapshot documentSnapshot) {
+            TimestampModel timestampModel = documentSnapshot.toObject(TimestampModel.class);
+
+            if (timestampModel != null) {
+              initTimerMillis(getTimeToNextQuest(timestampModel.getLastRequestedQuestTime()));
+            } else {
+              long lastRequestedQuestTime = new Date().getTime();
+              logDebug("Init last requested quest: %s", lastRequestedQuestTime);
+              questsViewModel.initLastRequestedQuestTimestamp(lastRequestedQuestTime);
+            }
+          }
+
+          @Override
+          public void onError(FirebaseFirestoreException e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
+  }
+
+  private long getTimeToNextQuest(long timestampRemote) {
+    long timeDifference = new Date().getTime() - timestampRemote;
+    long remainingTimeToQuest = TimeUtils.minsToMillis(Constants.TIME_TO_QUEST_MINS) - timeDifference;
+    logDebug("Init timer: %s", remainingTimeToQuest);
+
+    return remainingTimeToQuest;
   }
 
   private void initTimerMillis(Long time) {
-    if (time != null) {
+    if (time != null && !adapter.isAdapterFullFilled()) {
       tvRemainingTimeLabel.setText(R.string.fragment_quests_remaining_time);
 
       ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
       AtomicLong timeToNewQuest = new AtomicLong(time);
-      logDebug("Remaining time to new quest: %s", timeToNewQuest.get());
 
       ses.scheduleAtFixedRate(() -> {
         if (timeToNewQuest.get() > 0) {
@@ -244,13 +199,6 @@ public class QuestsFragment extends BaseFragment {
           tvRemainingTimeLabel.setText(remainingTimeString);
         } else {
           ses.shutdown();
-          timestamp = new Date().getTime();
-          questsViewModel.setTimestamp(timestamp);
-          questsViewModel.requestQuests(
-              availableQuests,
-              new Date().getTime(),
-              adapter.getData().size()
-          );
           tvRemainingTimeLabel.setText("Loading...");
         }
 

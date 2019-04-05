@@ -4,28 +4,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.SetOptions;
 
-import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
+import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
-import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
 public class FireBaseProfileManager {
-  private static final String TABLE_USERS = "users";
-  private static final String TABLE_SETTINGS = "settings";
-  private static final String TABLE_USER_QUESTS = "quests";
-  private static final String TABLE_USER_QUESTS_REWARD_FIELD = "reward";
-  private static final String TABLE_USER_TIMESTAMP_FIELD = "questTimestamp";
+  private static final String COLLECTION_USERS = "users";
+  private static final String COLLECTION_SETTINGS = "settings";
+  private static final String SUBCOLLECTION_USER_QUESTS = "quests";
+  private static final String SUBCOLLECTION_TIMESTAMP = "timestamp";
+  private static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
@@ -50,18 +44,17 @@ public class FireBaseProfileManager {
 
           @Override
           public void onSuccess(Integer integer) {
-            database.collection(TABLE_USERS).document(getUserId())
+            database.collection(COLLECTION_USERS).document(getUserId())
                 .set(new UserModel(
                     FireBaseLoginManager.getInstance().getUserEmail(),
                     Constants.STOCK_NICKNAME + integer.toString(),
-                    getUserId(),
-                    null
+                    getUserId()
                 )).addOnSuccessListener(documentReference -> {
               observer.onSuccess(true);
             }).addOnFailureListener(observer::onError);
 
             //Don't track settings writing
-            database.collection(TABLE_SETTINGS).document(getUserId())
+            database.collection(COLLECTION_SETTINGS).document(getUserId())
                 .set(SettingsModel.getStabSettings());
           }
 
@@ -75,64 +68,53 @@ public class FireBaseProfileManager {
   }
 
   public DocumentReference getUserReference() {
-    return database.collection(TABLE_USERS).document(getUserId());
+    return database.collection(COLLECTION_USERS).document(getUserId());
   }
 
   public DocumentReference getSettingsReference() {
-    return database.collection(TABLE_SETTINGS).document(getUserId());
+    return database.collection(COLLECTION_SETTINGS).document(getUserId());
   }
 
   public CollectionReference getQuestsReference() {
     return getUserReference()
-        .collection(TABLE_USER_QUESTS);
+        .collection(SUBCOLLECTION_USER_QUESTS);
   }
 
   public Task<Void> setFlashState(SettingsModel oldSettings, boolean isFlashEnabled) {
     oldSettings.setFlashEnabled(isFlashEnabled);
 
-    return database.collection(TABLE_SETTINGS)
+    return database.collection(COLLECTION_SETTINGS)
         .document(getUserId())
         .set(oldSettings);
   }
 
   public static void setStabSettings() {
-    database.collection(TABLE_SETTINGS).document(getUserId())
+    database.collection(COLLECTION_SETTINGS).document(getUserId())
         .set(SettingsModel.getStabSettings())
         .addOnSuccessListener(aVoid -> Timber.d("Stab settings"))
         .addOnFailureListener(Timber::e);
   }
 
-  public void setTimestamp(long timestamp) {
-    database.collection(TABLE_USERS).document(getUserId())
-        .addSnapshotListener((documentSnapshot, e) -> {
-          if (documentSnapshot != null) {
-            UserModel userModel = documentSnapshot.toObject(UserModel.class);
-
-            if (userModel != null) {
-              userModel.setQuestTimestamp(timestamp);
-            }
-
-            updateUserProfile(userModel);
-          }
-        });
+  public DocumentReference getTimestampReference() {
+    return getUserReference()
+        .collection(SUBCOLLECTION_TIMESTAMP)
+        .document(DOCUMENT_QUEST_TIMESTAMP);
   }
 
-  private void updateUserProfile(UserModel userModel) {
-    database.collection(TABLE_USERS).document(getUserId())
-        .set(userModel, SetOptions.mergeFields(TABLE_USER_TIMESTAMP_FIELD));
-  }
-
-  public void requestQuest(UserQuestModel quest) {
-    Timber.d("Request quest for user: %s", quest);
-    database.collection(TABLE_USERS).document(getUserId())
-        .collection(TABLE_USER_QUESTS).add(quest);
+  public void initLastRequestedQuestTimestamp(long time) {
+    getUserReference()
+        .collection(SUBCOLLECTION_TIMESTAMP)
+        .document(DOCUMENT_QUEST_TIMESTAMP)
+        .set(new TimestampModel(
+            time
+        ));
   }
 
   private static Single<Integer> getUsersCollectionLength() {
     return new Single<Integer>() {
       @Override
       protected void subscribeActual(SingleObserver<? super Integer> observer) {
-        database.collection(TABLE_USERS).get()
+        database.collection(COLLECTION_USERS).get()
             .addOnSuccessListener(documentReference ->
                 observer.onSuccess(documentReference.size()))
             .addOnFailureListener(observer::onError);

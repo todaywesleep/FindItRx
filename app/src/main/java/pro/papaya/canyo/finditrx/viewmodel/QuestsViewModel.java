@@ -4,12 +4,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
 
-import java.util.List;
-
 import androidx.lifecycle.ViewModel;
 import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
-import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 
 public class QuestsViewModel extends ViewModel {
   public DocumentReference getUserReference() {
@@ -24,12 +22,15 @@ public class QuestsViewModel extends ViewModel {
     return FireBaseItemsManager.getInstance().getItemsCollectionQuery();
   }
 
-  public void setTimestamp(long timestamp) {
-    FireBaseProfileManager.getInstance().setTimestamp(timestamp);
+  public DocumentReference getLastRequestedQuestReference() {
+    return FireBaseProfileManager.getInstance().getTimestampReference();
   }
 
-  //Returns true if quests requested
-  public long requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestsCount) {
-    return FireBaseItemsManager.getInstance().requestQuests(availableQuests, timestamp, oldQuestsCount);
+  public void initLastRequestedQuestTimestamp(long time){
+    FireBaseProfileManager.getInstance().initLastRequestedQuestTimestamp(time);
+  }
+
+  public DocumentReference completeQuest(UserQuestModel questModel) {
+    return null;
   }
 }

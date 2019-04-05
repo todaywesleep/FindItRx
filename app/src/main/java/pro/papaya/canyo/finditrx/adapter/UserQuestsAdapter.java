@@ -15,12 +15,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
+import pro.papaya.canyo.finditrx.utils.Constants;
 
 public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.ViewHolder> {
+  public interface QuestCallback {
+    void onQuestClicked(UserQuestModel quest);
+  }
+
   private List<UserQuestModel> data;
+  private QuestCallback callback;
 
   public UserQuestsAdapter() {
     this.data = new ArrayList<>();
+  }
+
+  public void setCallback(QuestCallback callback) {
+    this.callback = callback;
   }
 
   public UserQuestsAdapter(List<UserQuestModel> data) {
@@ -41,7 +51,15 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     UserQuestModel model = data.get(position);
     holder.questName.setText(model.getLabel());
-    holder.questRevard.setText(Integer.toString(model.getReward()));
+    holder.questReward.setText(Integer.toString(model.getReward()));
+
+    if (!holder.hasOnClickListeners()) {
+      holder.setOnClickListener(v -> {
+        if (callback != null) {
+          callback.onQuestClicked(data.get(position));
+        }
+      });
+    }
   }
 
   public void setData(List<UserQuestModel> data) {
@@ -49,23 +67,37 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
     notifyDataSetChanged();
   }
 
-  public List<UserQuestModel> getData() {
-    return data;
-  }
-
   @Override
   public int getItemCount() {
     return data.size();
   }
 
+  public List<UserQuestModel> getData() {
+    return data;
+  }
+
+  public boolean isAdapterFullFilled() {
+    return data != null && data.size() >= Constants.USER_MAX_QUESTS;
+  }
+
   class ViewHolder extends RecyclerView.ViewHolder {
+    View rootView;
     @BindView(R.id.item_user_quest_title)
     TextView questName;
     @BindView(R.id.item_user_quest_reward)
-    TextView questRevard;
+    TextView questReward;
+
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+      rootView.setOnClickListener(onClickListener);
+    }
+
+    public boolean hasOnClickListeners() {
+      return rootView.hasOnClickListeners();
+    }
 
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
+      rootView = itemView;
       ButterKnife.bind(this, itemView);
     }
   }

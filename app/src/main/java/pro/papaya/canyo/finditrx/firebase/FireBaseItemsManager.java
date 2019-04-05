@@ -42,39 +42,6 @@ public class FireBaseItemsManager {
     }
   }
 
-  public long requestQuests(List<QuestModel> availableQuests, Long timestamp, int oldQuestCount) {
-    long unpackedTimestamp = timestamp == null
-        ? TimeUtils.getTimestampForFullQuests()
-        : timestamp;
-
-    long timestampDifferenceInSecs = (new Date().getTime() - unpackedTimestamp) / 1000;
-    long questsToRequest = timestampDifferenceInSecs / Constants.TIME_TO_QUEST_MINS / 60;
-    long restSlots = Constants.USER_MAX_QUESTS - oldQuestCount;
-    questsToRequest = questsToRequest >= Constants.USER_MAX_QUESTS
-        ? restSlots
-        : Math.min(questsToRequest, restSlots);
-
-    Random random = new Random();
-    for (int i = 0; i < questsToRequest; i++) {
-      UserQuestModel questModel = UserQuestModel.from(
-          availableQuests.get(random.nextInt(availableQuests.size())),
-          generateReward()
-      );
-
-      FireBaseProfileManager.getInstance().requestQuest(questModel);
-    }
-
-    return questsToRequest;
-  }
-
-  private static int generateReward() {
-    Random rand = new Random();
-    int reward = rand.nextInt(200);
-    reward += 1;
-
-    return reward;
-  }
-
   private static void addItemToObjectsList(QuestModel item) {
     database.collection(TABLE_LABELS).document(item.getLabel().toLowerCase()).set(item);
   }
