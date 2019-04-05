@@ -1,7 +1,6 @@
 package pro.papaya.canyo.finditrx.viewmodel;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 
 import java.util.List;
 
@@ -10,10 +9,11 @@ import io.reactivex.Observable;
 import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 
 public class QuestsViewModel extends ViewModel {
-  public Observable<List<UserQuestModel>> getObservableUserQuests() {
+  public Observable<List<UserQuestModel>> getUserQuestsObservable() {
     return FireBaseProfileManager.getInstance().getObservableQuests();
   }
 
@@ -21,8 +21,8 @@ public class QuestsViewModel extends ViewModel {
     return FireBaseItemsManager.getInstance().getAllItemsCollection();
   }
 
-  public DocumentReference getLastRequestedQuestReference() {
-    return FireBaseProfileManager.getInstance().getTimestampReference();
+  public Observable<TimestampModel> getTimestampObservable() {
+    return FireBaseProfileManager.getInstance().getObservableTimestamp();
   }
 
   public void initLastRequestedQuestTimestamp(long time) {

@@ -89,6 +89,26 @@ public class FireBaseProfileManager {
           });
     }
   };
+  private Observable<TimestampModel> timestamp = new Observable<TimestampModel>() {
+    @Override
+    protected void subscribeActual(Observer<? super TimestampModel> observer) {
+      getUserReference()
+          .collection(SUBCOLLECTION_TIMESTAMP)
+          .document(DOCUMENT_QUEST_TIMESTAMP)
+          .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+              TimestampModel timestampModel = documentSnapshot.toObject(TimestampModel.class);
+              observer.onNext(timestampModel);
+            }
+
+            @Override
+            public void onError(FirebaseFirestoreException e) {
+              observer.onError(e);
+            }
+          });
+    }
+  };
 
   public Observable<UserModel> getObservableUser() {
     return user;
@@ -100,6 +120,10 @@ public class FireBaseProfileManager {
 
   public Observable<List<UserQuestModel>> getObservableQuests() {
     return userQuests;
+  }
+
+  public Observable<TimestampModel> getObservableTimestamp() {
+    return timestamp;
   }
 
   public static FireBaseProfileManager getInstance() {
@@ -174,12 +198,6 @@ public class FireBaseProfileManager {
         .set(SettingsModel.getStabSettings())
         .addOnSuccessListener(aVoid -> Timber.d("Stab settings"))
         .addOnFailureListener(Timber::e);
-  }
-
-  public DocumentReference getTimestampReference() {
-    return getUserReference()
-        .collection(SUBCOLLECTION_TIMESTAMP)
-        .document(DOCUMENT_QUEST_TIMESTAMP);
   }
 
   public void initLastRequestedQuestTimestamp(long time) {

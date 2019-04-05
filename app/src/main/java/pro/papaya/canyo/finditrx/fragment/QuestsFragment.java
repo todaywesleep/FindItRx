@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.UserQuestsAdapter;
 import pro.papaya.canyo.finditrx.listener.CutedObserver;
-import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
@@ -154,12 +151,10 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   }
 
   private void subscribeToQuestTimestamp() {
-    timestampListener = questsViewModel.getLastRequestedQuestReference()
-        .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
+    questsViewModel.getTimestampObservable()
+        .subscribe(new CutedObserver<TimestampModel>() {
           @Override
-          public void onSuccess(DocumentSnapshot documentSnapshot) {
-            TimestampModel timestampModel = documentSnapshot.toObject(TimestampModel.class);
-
+          public void onNext(TimestampModel timestampModel) {
             if (timestampModel != null) {
               initTimerMillis(getTimeToNextQuest(timestampModel.getLastRequestedQuestTime()));
               lastQuestTimestamp = timestampModel.getLastRequestedQuestTime();
@@ -172,7 +167,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
           }
 
           @Override
-          public void onError(FirebaseFirestoreException e) {
+          public void onError(Throwable e) {
             showSnackBar(e.getLocalizedMessage());
             logError(e);
           }
@@ -180,7 +175,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   }
 
   private void subscribeToUserQuests() {
-    questsViewModel.getObservableUserQuests()
+    questsViewModel.getUserQuestsObservable()
         .subscribe(new CutedObserver<List<UserQuestModel>>() {
           @Override
           public void onNext(List<UserQuestModel> userQuestModels) {
