@@ -36,6 +36,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
@@ -181,10 +182,9 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
 
   private void getSettings() {
     actionViewModel.getSettingsReference()
-        .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
+        .subscribe(new CutedObserver<SettingsModel>() {
           @Override
-          public void onSuccess(DocumentSnapshot documentSnapshot) {
-            SettingsModel settingsModelRemote = documentSnapshot.toObject(SettingsModel.class);
+          public void onNext(SettingsModel settingsModelRemote) {
             if (settingsModelRemote != null) {
               applySettings(settingsModelRemote);
               logDebug("Settings got: %s", settingsModel.toString());
@@ -196,7 +196,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
           }
 
           @Override
-          public void onError(FirebaseFirestoreException e) {
+          public void onError(Throwable e) {
             showSnackBar(e.getLocalizedMessage());
             logError(e);
           }

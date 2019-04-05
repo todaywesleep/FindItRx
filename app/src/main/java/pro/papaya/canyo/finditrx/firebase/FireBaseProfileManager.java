@@ -48,9 +48,33 @@ public class FireBaseProfileManager {
           });
     }
   };
+  private Observable<SettingsModel> settings = new Observable<SettingsModel>() {
+    @Override
+    protected void subscribeActual(Observer<? super SettingsModel> observer) {
+      database
+          .collection(COLLECTION_SETTINGS)
+          .document(getUserId())
+          .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+              SettingsModel settingsModel = documentSnapshot.toObject(SettingsModel.class);
+              observer.onNext(settingsModel);
+            }
+
+            @Override
+            public void onError(FirebaseFirestoreException e) {
+              observer.onError(e);
+            }
+          });
+    }
+  };
 
   public Observable<UserModel> getObservableUser() {
     return user;
+  }
+
+  public Observable<SettingsModel> getObservableSettings() {
+    return settings;
   }
 
   public static FireBaseProfileManager getInstance() {
