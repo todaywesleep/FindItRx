@@ -4,6 +4,7 @@ public class UserModel {
   private String email;
   private String nickName;
   private String id;
+  private long balance = 0;
 
   public UserModel() {
     super();
@@ -13,6 +14,7 @@ public class UserModel {
     this.email = email;
     this.nickName = nickName;
     this.id = id;
+    this.balance = 0;
   }
 
   public String getEmail() {
@@ -37,5 +39,13 @@ public class UserModel {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public long getBalance() {
+    return balance;
+  }
+
+  public void setBalance(long balance) {
+    this.balance = balance;
   }
 }

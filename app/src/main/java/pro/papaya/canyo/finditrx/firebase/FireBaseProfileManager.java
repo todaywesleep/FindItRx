@@ -21,6 +21,7 @@ public class FireBaseProfileManager {
   public static final String SUBCOLLECTION_USER_QUESTS = "quests";
   private static final String SUBCOLLECTION_TIMESTAMP = "timestamp";
   public static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
+  public static final String FIELD_BALANCE = "balance";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
@@ -115,6 +116,20 @@ public class FireBaseProfileManager {
     return getUserQuestsReference()
         .document(userQuest.getIdentifier())
         .delete();
+  }
+
+  public void enrollMoney(int amount) {
+    getUserReference()
+        .get()
+        .addOnSuccessListener(documentSnapshot -> {
+          UserModel user = documentSnapshot.toObject(UserModel.class);
+          if (user != null) {
+            long newBalance = user.getBalance() + amount;
+            getUserReference().update(FIELD_BALANCE, newBalance)
+                .addOnSuccessListener(aVoid -> Timber.d("User balance update and equals %s", newBalance))
+                .addOnFailureListener(e -> Timber.d("Can't update user's balance"));
+          }
+        });
   }
 
   public CollectionReference getUserQuestsReference() {

@@ -34,6 +34,7 @@ public class QuestsViewModel extends ViewModel {
     FireBaseItemsManager.getInstance().requestQuest(availableQuests);
   }
 
+  //TODO remove after test
   public Task<Void> completeQuest(UserQuestModel questModel) {
     return FireBaseProfileManager.getInstance().completeQuest(questModel);
   }

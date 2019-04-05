@@ -32,7 +32,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
         return ActionPageFragment.getInstance(actionPageCallback);
       }
 
-      case STATS_PAGE: {
+      case QUESTS_PAGE: {
         return QuestsFragment.getInstance(fragmentCallback);
       }
     }

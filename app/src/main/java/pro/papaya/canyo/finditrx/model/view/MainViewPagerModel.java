@@ -5,7 +5,7 @@ import pro.papaya.canyo.finditrx.R;
 public enum MainViewPagerModel {
   PROFILE_PAGE(R.string.main_profile_title, R.layout.main_fragment_profile),
   CAMERA_PAGE(R.string.main_photo_title, R.layout.main_fragment_action),
-  STATS_PAGE(R.string.main_quests_title, R.layout.main_fragment_stats);
+  QUESTS_PAGE(R.string.main_quests_title, R.layout.main_fragment_stats);
 
   private int stringRes;
   private int layoutRes;

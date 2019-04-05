@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -27,8 +26,11 @@ import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
+
+import static pro.papaya.canyo.finditrx.model.view.MainViewPagerModel.QUESTS_PAGE;
 
 public class MainActivity extends BaseActivity implements
     ActionPageFragment.ActionPageCallback,
@@ -85,6 +87,16 @@ public class MainActivity extends BaseActivity implements
   @Override
   public void snapshotTaken(List<QuestModel> takenSnapshotLabels) {
     mainViewModel.updateLabelsRemote(itemsCollection, takenSnapshotLabels);
+    List<UserQuestModel> completedQuests = mainViewModel.getCompleteQuests(
+        ((QuestsFragment) adapter.getItem(QUESTS_PAGE.ordinal())).getUserQuests(),
+        takenSnapshotLabels
+    );
+
+    if (!completedQuests.isEmpty()) {
+      mainViewModel.completeQuests(
+          completedQuests
+      );
+    }
   }
 
   private void subscribeToViewModel() {

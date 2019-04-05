@@ -114,6 +114,10 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     this.callback = callback;
   }
 
+  public List<UserQuestModel> getUserQuests(){
+    return adapter.getData();
+  }
+
   private RecyclerView.ItemDecoration getItemDecorator() {
     return new RecyclerView.ItemDecoration() {
       @Override
