@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.UserQuestsAdapter;
+import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
@@ -114,7 +115,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     this.callback = callback;
   }
 
-  public List<UserQuestModel> getUserQuests(){
+  public List<UserQuestModel> getUserQuests() {
     return adapter.getData();
   }
 
@@ -135,11 +136,10 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   }
 
   private void subscribeToAllLabels() {
-    questsViewModel.getItemCollectionModel()
-        .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+    questsViewModel.getAllItemsCollection()
+        .subscribe(new CutedObserver<List<QuestModel>>() {
           @Override
-          public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-            List<QuestModel> questModels = queryDocumentSnapshots.toObjects(QuestModel.class);
+          public void onNext(List<QuestModel> questModels) {
             availableQuests.clear();
             availableQuests.addAll(questModels);
 
@@ -147,7 +147,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
           }
 
           @Override
-          public void onError(FirebaseFirestoreException e) {
+          public void onError(Throwable e) {
             showSnackBar(e.getLocalizedMessage());
             logError(e);
           }
@@ -190,7 +190,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
             if (adapter.isInitialized()) {
               if (userQuestModels.size() >= Constants.USER_MAX_QUESTS) {
                 questsViewModel.initLastRequestedQuestTimestamp(new Date().getTime());
-              } else if (adapter.getItemCount() > userQuestModels.size() && adapter.getItemCount() >= Constants.USER_MAX_QUESTS){
+              } else if (adapter.getItemCount() > userQuestModels.size() && adapter.getItemCount() >= Constants.USER_MAX_QUESTS) {
                 questsViewModel.initLastRequestedQuestTimestamp(new Date().getTime());
               }
             }
@@ -222,7 +222,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     if (time != null && !adapter.isAdapterFullFilled()) {
       tvRemainingTimeLabel.setText(R.string.fragment_quests_remaining_time);
 
-      if (timer != null){
+      if (timer != null) {
         timer.shutdown();
       }
 

@@ -1,12 +1,12 @@
 package pro.papaya.canyo.finditrx.viewmodel;
 
-import com.google.firebase.firestore.DocumentReference;
-
 import androidx.lifecycle.ViewModel;
+import io.reactivex.Observable;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
+import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 
 public class ProfileViewModel extends ViewModel {
-  public DocumentReference getUsernameReference(){
-    return FireBaseProfileManager.getInstance().getUserReference();
+  public Observable<UserModel> getObservableUser() {
+    return FireBaseProfileManager.getInstance().getObservableUser();
   }
 }

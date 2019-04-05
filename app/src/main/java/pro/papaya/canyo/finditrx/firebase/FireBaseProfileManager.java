@@ -3,11 +3,16 @@ package pro.papaya.canyo.finditrx.firebase;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
@@ -25,6 +30,28 @@ public class FireBaseProfileManager {
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
+  private Observable<UserModel> user = new Observable<UserModel>() {
+    @Override
+    protected void subscribeActual(Observer<? super UserModel> observer) {
+      getUserReference()
+          .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+              UserModel userModel = documentSnapshot.toObject(UserModel.class);
+              observer.onNext(userModel);
+            }
+
+            @Override
+            public void onError(FirebaseFirestoreException e) {
+              observer.onError(e);
+            }
+          });
+    }
+  };
+
+  public Observable<UserModel> getObservableUser() {
+    return user;
+  }
 
   public static FireBaseProfileManager getInstance() {
     if (INSTANCE == null) {

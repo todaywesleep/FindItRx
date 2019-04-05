@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -19,7 +16,7 @@ import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.activity.AuthActivity;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
-import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
+import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
 
@@ -58,7 +55,7 @@ public class ProfilePageFragment extends BaseFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
-    setListeners();
+    setSubscriptions();
     setViewListeners();
   }
 
@@ -72,20 +69,19 @@ public class ProfilePageFragment extends BaseFragment {
     });
   }
 
-  private void setListeners() {
-    profileViewModel.getUsernameReference()
-        .addSnapshotListener(new ExtendedEventListener<DocumentSnapshot>() {
+  private void setSubscriptions() {
+    profileViewModel.getObservableUser()
+        .subscribe(new CutedObserver<UserModel>() {
           @Override
-          public void onSuccess(DocumentSnapshot documentSnapshot) {
-            UserModel userModel = documentSnapshot.toObject(UserModel.class);
+          public void onNext(UserModel userModel) {
             if (userModel != null) {
               userName.setText(userModel.getNickName());
-              logDebug("User model updated");
+              logDebug("Username updated");
             }
           }
 
           @Override
-          public void onError(FirebaseFirestoreException e) {
+          public void onError(Throwable e) {
             setLoading(false);
             showSnackBar(e.getLocalizedMessage());
           }
