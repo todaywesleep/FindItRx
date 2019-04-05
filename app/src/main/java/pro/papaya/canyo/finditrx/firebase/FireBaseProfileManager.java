@@ -110,6 +110,10 @@ public class FireBaseProfileManager {
         ));
   }
 
+  public CollectionReference getUserQuestsReference() {
+    return getQuestsReference();
+  }
+
   private static Single<Integer> getUsersCollectionLength() {
     return new Single<Integer>() {
       @Override

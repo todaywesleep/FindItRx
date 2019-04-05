@@ -38,6 +38,10 @@ public class QuestsViewModel extends ViewModel {
     FireBaseItemsManager.getInstance().requestQuest(availableQuests).remove();
   }
 
+  public CollectionReference getUserQuests() {
+    return FireBaseProfileManager.getInstance().getUserQuestsReference();
+  }
+
   public DocumentReference completeQuest(UserQuestModel questModel) {
     return null;
   }

@@ -52,9 +52,6 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   private UserQuestsAdapter adapter;
   private QuestFragmentCallback callback;
   private List<QuestModel> availableQuests = new ArrayList<>();
-  private Long timestamp;
-
-  private boolean isTimestampEventSubscribed = false;
 
   public static QuestsFragment getInstance(QuestFragmentCallback callback) {
     if (INSTANCE == null) {
@@ -93,6 +90,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
 
     subscribeToAllLabels();
     subscribeToQuestTimestamp();
+    subscribeToUserQuests();
   }
 
   @Override
@@ -158,6 +156,23 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
               logDebug("Init last requested quest: %s", lastRequestedQuestTime);
               questsViewModel.initLastRequestedQuestTimestamp(lastRequestedQuestTime);
             }
+          }
+
+          @Override
+          public void onError(FirebaseFirestoreException e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
+  }
+
+  private void subscribeToUserQuests() {
+    questsViewModel.getQuestsReference()
+        .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+          @Override
+          public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+            List<UserQuestModel> userQuestModels = queryDocumentSnapshots.toObjects(UserQuestModel.class);
+            adapter.setData(userQuestModels);
           }
 
           @Override
