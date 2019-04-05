@@ -36,6 +36,7 @@ public class QuestsViewModel extends ViewModel {
 
   //TODO remove after test
   public Task<Void> completeQuest(UserQuestModel questModel) {
+    FireBaseProfileManager.getInstance().enrollMoney(questModel.getReward());
     return FireBaseProfileManager.getInstance().completeQuest(questModel);
   }
 }

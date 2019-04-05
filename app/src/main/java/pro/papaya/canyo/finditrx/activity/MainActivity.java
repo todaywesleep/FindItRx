@@ -24,6 +24,7 @@ import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
+import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
@@ -100,17 +101,16 @@ public class MainActivity extends BaseActivity implements
   }
 
   private void subscribeToViewModel() {
-    mainViewModel.getItemCollectionModel()
-        .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+    mainViewModel.getAllQuestsCollection()
+        .subscribe(new CutedObserver<List<QuestModel>>() {
           @Override
-          public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-            List<QuestModel> questModels = queryDocumentSnapshots.toObjects(QuestModel.class);
+          public void onNext(List<QuestModel> questModels) {
             itemsCollection = questModels;
             logDebug("Items collection get: %s", questModels);
           }
 
           @Override
-          public void onError(FirebaseFirestoreException e) {
+          public void onError(Throwable e) {
             showSnackBar(e.getLocalizedMessage());
             logError(e);
           }

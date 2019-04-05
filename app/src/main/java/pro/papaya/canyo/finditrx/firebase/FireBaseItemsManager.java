@@ -2,11 +2,16 @@ package pro.papaya.canyo.finditrx.firebase;
 
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 import java.util.Random;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import timber.log.Timber;
@@ -25,11 +30,30 @@ public class FireBaseItemsManager {
     return INSTANCE;
   }
 
-  private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
+  private Observable<List<QuestModel>> allItemsCollection = new Observable<List<QuestModel>>() {
+    @Override
+    protected void subscribeActual(Observer<? super List<QuestModel>> observer) {
+      database.collection(TABLE_LABELS)
+          .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+              List<QuestModel> questModels = queryDocumentSnapshots.toObjects(QuestModel.class);
+              observer.onNext(questModels);
+            }
 
-  public Query getItemsCollectionQuery() {
-    return database.collection(TABLE_LABELS);
+            @Override
+            public void onError(FirebaseFirestoreException e) {
+              observer.onError(e);
+            }
+          });
+    }
+  };
+
+  public Observable<List<QuestModel>> getAllItemsCollection() {
+    return allItemsCollection;
   }
+
+  private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   public void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
     for (QuestModel item : items) {
