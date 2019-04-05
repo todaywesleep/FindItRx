@@ -5,11 +5,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
@@ -54,13 +57,23 @@ public class FireBaseItemsManager {
 
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
-  public void updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
-    for (QuestModel item : items) {
-      if (oldItems.isEmpty() || !oldItems.contains(item)) {
-        Timber.d("Item %s has been successfully added to library!", item.getIdentifier());
-        addItemToObjectsList(item);
+  public Single<List<QuestModel>> updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
+    return new Single<List<QuestModel>>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super List<QuestModel>> observer) {
+        List<QuestModel> newQuests = new ArrayList<>();
+
+        for (QuestModel item : items) {
+          if (oldItems.isEmpty() || !oldItems.contains(item)) {
+            Timber.d("Item %s has been successfully added to library!", item.getIdentifier());
+            addItemToObjectsList(item);
+            newQuests.add(item);
+          }
+        }
+
+        observer.onSuccess(newQuests);
       }
-    }
+    };
   }
 
   public void requestQuest(List<QuestModel> availableQuests) {
@@ -82,9 +95,7 @@ public class FireBaseItemsManager {
               .addOnFailureListener(e -> Timber.d("Can't request %s quest", newQuest.getIdentifier()))
               .addOnSuccessListener(aVoid -> Timber.d("Quest %s successfully requested", newQuest.getIdentifier()));
         })
-        .addOnFailureListener(e -> {
-          Timber.e("Can't get user quest reference");
-        });
+        .addOnFailureListener(e -> Timber.e("Can't get user quest reference"));
   }
 
   private int generateReward() {

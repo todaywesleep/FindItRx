@@ -5,6 +5,7 @@ import java.util.List;
 
 import androidx.lifecycle.ViewModel;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
@@ -12,8 +13,9 @@ import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import timber.log.Timber;
 
 public class MainViewModel extends ViewModel {
-  public void updateLabelsRemote(List<QuestModel> oldItems, List<QuestModel> newItems) {
-    FireBaseItemsManager.getInstance().updateItemsCollection(oldItems, newItems);
+  //Returns new quests
+  public Single<List<QuestModel>> updateLabelsRemote(List<QuestModel> oldItems, List<QuestModel> newItems) {
+    return FireBaseItemsManager.getInstance().updateItemsCollection(oldItems, newItems);
   }
 
   public Observable<List<QuestModel>> getAllQuestsCollection() {

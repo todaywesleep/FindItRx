@@ -5,8 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +17,14 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.listener.CutedObserver;
-import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
@@ -87,7 +86,24 @@ public class MainActivity extends BaseActivity implements
 
   @Override
   public void snapshotTaken(List<QuestModel> takenSnapshotLabels) {
-    mainViewModel.updateLabelsRemote(itemsCollection, takenSnapshotLabels);
+    mainViewModel.updateLabelsRemote(itemsCollection, takenSnapshotLabels)
+        .subscribe(new SingleObserver<List<QuestModel>>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+          }
+
+          @Override
+          public void onSuccess(List<QuestModel> newQuests) {
+            logDebug("Find %s new quests", newQuests.size());
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
+
     List<UserQuestModel> completedQuests = mainViewModel.getCompleteQuests(
         ((QuestsFragment) adapter.getItem(QUESTS_PAGE.ordinal())).getUserQuests(),
         takenSnapshotLabels
