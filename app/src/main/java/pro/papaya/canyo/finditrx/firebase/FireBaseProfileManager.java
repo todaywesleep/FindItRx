@@ -6,6 +6,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -68,6 +71,24 @@ public class FireBaseProfileManager {
           });
     }
   };
+  private Observable<List<UserQuestModel>> userQuests = new Observable<List<UserQuestModel>>() {
+    @Override
+    protected void subscribeActual(Observer<? super List<UserQuestModel>> observer) {
+      getQuestsReference()
+          .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+              List<UserQuestModel> userQuestModels = queryDocumentSnapshots.toObjects(UserQuestModel.class);
+              observer.onNext(userQuestModels);
+            }
+
+            @Override
+            public void onError(FirebaseFirestoreException e) {
+              observer.onError(e);
+            }
+          });
+    }
+  };
 
   public Observable<UserModel> getObservableUser() {
     return user;
@@ -75,6 +96,10 @@ public class FireBaseProfileManager {
 
   public Observable<SettingsModel> getObservableSettings() {
     return settings;
+  }
+
+  public Observable<List<UserQuestModel>> getObservableQuests() {
+    return userQuests;
   }
 
   public static FireBaseProfileManager getInstance() {
@@ -122,10 +147,6 @@ public class FireBaseProfileManager {
 
   public DocumentReference getUserReference() {
     return database.collection(COLLECTION_USERS).document(getUserId());
-  }
-
-  public DocumentReference getSettingsReference() {
-    return database.collection(COLLECTION_SETTINGS).document(getUserId());
   }
 
   public CollectionReference getQuestsReference() {

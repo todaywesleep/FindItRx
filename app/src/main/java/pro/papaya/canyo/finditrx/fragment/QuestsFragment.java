@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -136,7 +135,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   }
 
   private void subscribeToAllLabels() {
-    questsViewModel.getAllItemsCollection()
+    questsViewModel.getAllItemsObservable()
         .subscribe(new CutedObserver<List<QuestModel>>() {
           @Override
           public void onNext(List<QuestModel> questModels) {
@@ -181,12 +180,10 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   }
 
   private void subscribeToUserQuests() {
-    questsViewModel.getUserQuestsReference()
-        .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+    questsViewModel.getObservableUserQuests()
+        .subscribe(new CutedObserver<List<UserQuestModel>>() {
           @Override
-          public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-            List<UserQuestModel> userQuestModels = queryDocumentSnapshots.toObjects(UserQuestModel.class);
-            logDebug("Quests get: %s", userQuestModels);
+          public void onNext(List<UserQuestModel> userQuestModels) {
             if (adapter.isInitialized()) {
               if (userQuestModels.size() >= Constants.USER_MAX_QUESTS) {
                 questsViewModel.initLastRequestedQuestTimestamp(new Date().getTime());
@@ -201,10 +198,11 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
               timestampListener.remove();
             }
             subscribeToQuestTimestamp();
+            logDebug("Quests get: %s", userQuestModels);
           }
 
           @Override
-          public void onError(FirebaseFirestoreException e) {
+          public void onError(Throwable e) {
             showSnackBar(e.getLocalizedMessage());
             logError(e);
           }
