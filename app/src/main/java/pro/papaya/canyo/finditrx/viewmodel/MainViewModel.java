@@ -42,7 +42,7 @@ public class MainViewModel extends ViewModel {
     return completedQuests;
   }
 
-  private void enrollMoney(int amount) {
+  public void enrollMoney(int amount) {
     FireBaseProfileManager.getInstance().enrollMoney(amount);
   }
 }

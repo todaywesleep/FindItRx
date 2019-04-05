@@ -8,6 +8,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
+import pro.papaya.canyo.finditrx.dialog.NewQuestsDialog;
 import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.listener.CutedObserver;
@@ -95,6 +97,23 @@ public class MainActivity extends BaseActivity implements
           @Override
           public void onSuccess(List<QuestModel> newQuests) {
             logDebug("Find %s new quests", newQuests.size());
+            if (!newQuests.isEmpty()) {
+              int totalReward = 0;
+              List<UserQuestModel> rewardModel = new ArrayList<>();
+              Random random = new Random();
+
+              for (QuestModel quest : newQuests) {
+                int stepReward = generateReward(random);
+                rewardModel.add(UserQuestModel.from(quest, stepReward));
+                totalReward += stepReward;
+              }
+
+              new NewQuestsDialog(
+                  MainActivity.this,
+                  rewardModel
+              ).show();
+              mainViewModel.enrollMoney(totalReward);
+            }
           }
 
           @Override
@@ -114,6 +133,13 @@ public class MainActivity extends BaseActivity implements
           completedQuests
       );
     }
+  }
+
+  private int generateReward(Random random) {
+    int result = random.nextInt(50);
+    result += 1;
+
+    return result;
   }
 
   private void subscribeToViewModel() {

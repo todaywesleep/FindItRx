@@ -31,7 +31,11 @@ public abstract class BaseDialog extends AlertDialog {
 
   protected abstract DialogInterface.OnClickListener getPositiveOnClick();
 
-  private void init() {
+  protected Dialog getDialog() {
+    return dialog;
+  }
+
+  protected void init() {
     dialog = new AlertDialog.Builder(getContext())
         .setTitle(getTitle())
         .setMessage(getMessage())
