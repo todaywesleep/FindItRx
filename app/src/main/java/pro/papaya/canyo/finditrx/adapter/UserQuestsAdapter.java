@@ -24,6 +24,7 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
 
   private List<UserQuestModel> data;
   private QuestCallback callback;
+  private boolean isInitialized = false;
 
   public UserQuestsAdapter() {
     this.data = new ArrayList<>();
@@ -62,14 +63,22 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
     }
   }
 
-  public void setData(List<UserQuestModel> data) {
-    this.data = data;
-    notifyDataSetChanged();
-  }
-
   @Override
   public int getItemCount() {
     return data.size();
+  }
+
+  public boolean isInitialized() {
+    return isInitialized;
+  }
+
+  public void setData(List<UserQuestModel> data) {
+    if (!isInitialized) {
+      isInitialized = true;
+    }
+
+    this.data = data;
+    notifyDataSetChanged();
   }
 
   public List<UserQuestModel> getData() {

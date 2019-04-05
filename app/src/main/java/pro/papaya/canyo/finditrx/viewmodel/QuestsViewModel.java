@@ -34,8 +34,7 @@ public class QuestsViewModel extends ViewModel {
   }
 
   public void requestQuest(List<QuestModel> availableQuests) {
-    //Remove snapshot listener
-    FireBaseItemsManager.getInstance().requestQuest(availableQuests).remove();
+    FireBaseItemsManager.getInstance().requestQuest(availableQuests);
   }
 
   public CollectionReference getUserQuests() {

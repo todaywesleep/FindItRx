@@ -52,6 +52,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   private UserQuestsAdapter adapter;
   private QuestFragmentCallback callback;
   private List<QuestModel> availableQuests = new ArrayList<>();
+  private Long lastQuestTimestamp;
 
   public static QuestsFragment getInstance(QuestFragmentCallback callback) {
     if (INSTANCE == null) {
@@ -151,8 +152,10 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
 
             if (timestampModel != null) {
               initTimerMillis(getTimeToNextQuest(timestampModel.getLastRequestedQuestTime()));
+              lastQuestTimestamp = timestampModel.getLastRequestedQuestTime();
             } else {
               long lastRequestedQuestTime = new Date().getTime();
+              lastQuestTimestamp = lastRequestedQuestTime;
               logDebug("Init last requested quest: %s", lastRequestedQuestTime);
               questsViewModel.initLastRequestedQuestTimestamp(lastRequestedQuestTime);
             }
@@ -172,6 +175,13 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
           @Override
           public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
             List<UserQuestModel> userQuestModels = queryDocumentSnapshots.toObjects(UserQuestModel.class);
+            logDebug("Quests get: %s", userQuestModels);
+            if (adapter.isInitialized()) {
+              if (userQuestModels.size() >= Constants.USER_MAX_QUESTS) {
+                questsViewModel.initLastRequestedQuestTimestamp(new Date().getTime());
+              }
+            }
+
             adapter.setData(userQuestModels);
           }
 
@@ -213,6 +223,9 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
           tvRemainingTimeLabel.setText("Loading...");
           logDebug("Request quest");
           questsViewModel.requestQuest(availableQuests);
+          questsViewModel.initLastRequestedQuestTimestamp(
+              lastQuestTimestamp + TimeUtils.minsToMillis(Constants.TIME_TO_QUEST_MINS)
+          );
         }
 
         timeToNewQuest.addAndGet(-1000);
