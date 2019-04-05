@@ -32,6 +32,8 @@ import io.fotoapparat.selector.LensPositionSelectorsKt;
 import io.fotoapparat.selector.ResolutionSelectorsKt;
 import io.fotoapparat.selector.SelectorsKt;
 import io.fotoapparat.view.CameraView;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
@@ -43,7 +45,8 @@ import pro.papaya.canyo.finditrx.view.FabMenu;
 import pro.papaya.canyo.finditrx.viewmodel.ActionViewModel;
 
 public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuCallback {
-  public static ActionPageFragment INSTANCE = null;
+  @SuppressLint("StaticFieldLeak")
+  private static ActionPageFragment INSTANCE = null;
 
   public interface ActionPageCallback {
     void requestCameraPermissions();
@@ -219,12 +222,22 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
 
     if (updateRemote) {
       actionViewModel.setFlashState(settingsModel, isEnabled)
-          .addOnSuccessListener(aVoid -> {
-            logDebug("Settings flash updated");
-          })
-          .addOnFailureListener(e -> {
-            showSnackBar(e.getLocalizedMessage());
-            logDebug("Settings flash update error %s", e.getLocalizedMessage());
+          .subscribe(new SingleObserver<Void>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onSuccess(Void aVoid) {
+              logDebug("Settings flash updated");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+              showSnackBar(e.getLocalizedMessage());
+              logDebug("Settings flash update error %s", e.getLocalizedMessage());
+            }
           });
     }
   }

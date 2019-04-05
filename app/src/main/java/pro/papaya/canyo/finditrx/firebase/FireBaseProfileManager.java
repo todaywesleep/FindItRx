@@ -109,12 +109,19 @@ public class FireBaseProfileManager {
         .collection(SUBCOLLECTION_USER_QUESTS);
   }
 
-  public Task<Void> setFlashState(SettingsModel oldSettings, boolean isFlashEnabled) {
-    oldSettings.setFlashEnabled(isFlashEnabled);
+  public Single<Void> setFlashState(SettingsModel oldSettings, boolean isFlashEnabled) {
+    return new Single<Void>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Void> observer) {
+        oldSettings.setFlashEnabled(isFlashEnabled);
 
-    return database.collection(COLLECTION_SETTINGS)
-        .document(getUserId())
-        .set(oldSettings);
+        database.collection(COLLECTION_SETTINGS)
+            .document(getUserId())
+            .set(oldSettings)
+            .addOnSuccessListener(aVoid -> observer.onSuccess(null))
+            .addOnFailureListener(observer::onError);
+      }
+    };
   }
 
   public static void setStabSettings() {

@@ -9,6 +9,7 @@ import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 import java.util.List;
 
 import androidx.lifecycle.ViewModel;
+import io.reactivex.Single;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.FireBaseLabeler;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
@@ -22,7 +23,8 @@ public class ActionViewModel extends ViewModel {
     FireBaseProfileManager.setStabSettings();
   }
 
-  public Task<Void> setFlashState(SettingsModel oldModel, boolean isFlashEnabled) {
+
+  public Single<Void> setFlashState(SettingsModel oldModel, boolean isFlashEnabled) {
     return FireBaseProfileManager.getInstance().setFlashState(oldModel, isFlashEnabled);
   }
 
