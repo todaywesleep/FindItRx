@@ -133,10 +133,6 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
             availableQuests.clear();
             availableQuests.addAll(questModels);
 
-            for (UserQuestModel userQuest : adapter.getData()) {
-              availableQuests.remove(QuestModel.from(userQuest));
-            }
-
             logDebug("Items collection get: %s", questModels);
           }
 
@@ -200,6 +196,8 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
         } else {
           ses.shutdown();
           tvRemainingTimeLabel.setText("Loading...");
+          logDebug("Request quest");
+          questsViewModel.requestQuest(availableQuests);
         }
 
         timeToNewQuest.addAndGet(-1000);

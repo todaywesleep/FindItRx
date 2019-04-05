@@ -17,9 +17,9 @@ import timber.log.Timber;
 public class FireBaseProfileManager {
   private static final String COLLECTION_USERS = "users";
   private static final String COLLECTION_SETTINGS = "settings";
-  private static final String SUBCOLLECTION_USER_QUESTS = "quests";
+  public static final String SUBCOLLECTION_USER_QUESTS = "quests";
   private static final String SUBCOLLECTION_TIMESTAMP = "timestamp";
-  private static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
+  public static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
