@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FindItRx</string>
+    <string name="app_name">FindIt!</string>
     <string name="loading">Loading…</string>
     <!-- Authorization activity -->
     <string name="auth_auth_email">E-mail</string>
