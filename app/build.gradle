@@ -7,13 +7,34 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        debug {
+            storeFile file(FINDIT_DEBUG_STORE_FILE)
+            storePassword FINDIT_DEBUG_STORE_PASSWORD
+            keyAlias FINDIT_DEBUG_KEY_ALIAS
+            keyPassword FINDIT_DEBUG_KEY_PASSWORD
+        }
+
+        release {
+            storeFile file(FINDIT_RELEASE_STORE_FILE)
+            storePassword FINDIT_RELEASE_STORE_PASSWORD
+            keyAlias FINDIT_RELEASE_KEY_ALIAS
+            keyPassword FINDIT_RELEASE_KEY_PASSWORD
+        }
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
+            debuggable true
         }
     }
     compileOptions {
