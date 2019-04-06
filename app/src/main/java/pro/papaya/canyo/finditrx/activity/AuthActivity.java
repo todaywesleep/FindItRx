@@ -44,6 +44,9 @@ public class AuthActivity extends BaseActivity {
   Button btnRegister;
 
   private AuthViewModel authViewModel;
+  private boolean isEmailHasErrors = true;
+  private boolean isPasswordHasErrors = true;
+  private boolean isRepeatPasswordHasErrors = true;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +114,13 @@ public class AuthActivity extends BaseActivity {
     etPassword.addTextChangedListener(new BaseTextWatcher() {
       @Override
       protected void onTextContentChanged(String s) {
-        if (!s.isEmpty() && s.length() < Constants.MIN_PASSWORD_LENGTH) {
+        if (s.length() < Constants.MIN_PASSWORD_LENGTH) {
           etPasswordLayout.setError(getString(R.string.auth_password_length_error));
-          setError(true);
         } else {
           etPasswordLayout.setErrorEnabled(false);
-          setError(false);
         }
+
+        setErrorState();
       }
     });
 
@@ -128,13 +131,13 @@ public class AuthActivity extends BaseActivity {
             ? etPassword.getText().toString()
             : Constants.EMPTY_STRING;
 
-        if (!s.isEmpty() && !s.equals(password)) {
+        if (!s.isEmpty() || !s.equals(password)) {
           etRepeatPasswordLayout.setError(getString(R.string.auth_repeat_password_error));
-          setError(true);
         } else {
           etRepeatPasswordLayout.setErrorEnabled(false);
-          setError(false);
         }
+
+        setErrorState();
       }
     });
 
@@ -143,20 +146,20 @@ public class AuthActivity extends BaseActivity {
       protected void onTextContentChanged(String s) {
         if (isEmailValid(getEmailTextString())) {
           etEmailLayout.setError(getString(R.string.auth_email_error));
-          setError(true);
         } else {
           etEmailLayout.setErrorEnabled(false);
-          setError(false);
         }
+
+        setErrorState();
       }
     });
   }
 
-  private void setError(boolean isErrorExist) {
+  private void setErrorState() {
     if (isActivityInRegistrationMode()) {
-      setRegisterButtonState(!isErrorExist);
+      setRegisterButtonState(!isEmailHasErrors && !isPasswordHasErrors && !isRepeatPasswordHasErrors);
     } else {
-      setAuthButtonState(!isErrorExist);
+      setAuthButtonState(!isEmailHasErrors && !isPasswordHasErrors);
     }
   }
 
