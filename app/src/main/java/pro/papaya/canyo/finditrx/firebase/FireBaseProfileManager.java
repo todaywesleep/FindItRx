@@ -20,6 +20,7 @@ import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
+import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
@@ -31,6 +32,7 @@ public class FireBaseProfileManager {
   public static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
   public static final String FIELD_BALANCE = "balance";
   public static final String FIELD_EXPERIENCE = "experience";
+  public static final String FIELD_LEVEL = "level";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
@@ -172,6 +174,27 @@ public class FireBaseProfileManager {
     };
   }
 
+  public Single<Void> increaseUserLevel() {
+    return new Single<Void>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Void> observer) {
+        getUserReference().get()
+            .addOnSuccessListener(documentSnapshot -> {
+              UserModel user = documentSnapshot.toObject(UserModel.class);
+              if (user != null) {
+                int newUserLevel = user.getLevel() + 1;
+                int experience = Math.abs(CalculatorUtils.getRestExperience(
+                    user.getLevel(),
+                    user.getExperience()
+                ));
+                getUserReference().update(FIELD_LEVEL, newUserLevel);
+                getUserReference().update(FIELD_EXPERIENCE, experience);
+              }
+            });
+      }
+    };
+  }
+
   public DocumentReference getUserReference() {
     return database.collection(COLLECTION_USERS).document(getUserId());
   }
@@ -232,12 +255,12 @@ public class FireBaseProfileManager {
         });
   }
 
-  public void enrollExperience(int amount){
+  public void enrollExperience(int amount) {
     getUserReference()
         .get()
         .addOnSuccessListener(documentSnapshot -> {
           UserModel user = documentSnapshot.toObject(UserModel.class);
-          if (user != null){
+          if (user != null) {
             long newExperience = user.getExperience() + amount;
             getUserReference().update(FIELD_EXPERIENCE, newExperience)
                 .addOnSuccessListener(aVoid -> Timber.d("User experience updated and equals: %s", newExperience))

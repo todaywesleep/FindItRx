@@ -19,20 +19,39 @@
         tools:text="Username" />
 
     <TextView
+        android:id="@+id/profile_level"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_username"
+        tools:text="@string/fragment_profile_level" />
+
+    <TextView
         android:id="@+id/profile_balance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_small"
         android:text="@string/fragment_quests_balance"
-        app:layout_constraintTop_toBottomOf="@id/profile_username" />
+        app:layout_constraintTop_toBottomOf="@id/profile_level" />
 
     <TextView
         android:id="@+id/profile_experience"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_small"
-        android:text="@string/fragment_quests_experience"
+        android:text="@string/fragment_profile_experience"
         app:layout_constraintTop_toBottomOf="@id/profile_balance" />
+
+    <TextView
+        android:id="@+id/profile_rest_experience"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:text="@string/fragment_profile_rest_experience"
+        app:layout_constraintTop_toBottomOf="@id/profile_experience" />
 
     <Button
         android:id="@+id/profile_logout"

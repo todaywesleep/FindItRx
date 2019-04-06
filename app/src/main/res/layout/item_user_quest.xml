@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_user_quest_item"
     android:orientation="vertical"
     android:padding="@dimen/padding_default">
 
     <TextView
+        tools:text="Name"
         android:id="@+id/item_user_quest_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,10 +21,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        tools:text="123"
         android:id="@+id/item_user_quest_reward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_user_quest_title" />
+
+    <TextView
+        tools:text="321"
+        android:id="@+id/item_user_quest_reward_exp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_user_quest_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

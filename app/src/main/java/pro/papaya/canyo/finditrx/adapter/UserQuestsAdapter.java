@@ -53,6 +53,7 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
     UserQuestModel model = data.get(position);
     holder.questName.setText(model.getLabel());
     holder.questReward.setText(Integer.toString(model.getReward()));
+    holder.questRewardExperience.setText(Integer.toString(model.getExperience()));
 
     if (!holder.hasOnClickListeners()) {
       holder.setOnClickListener(v -> {
@@ -95,6 +96,8 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
     TextView questName;
     @BindView(R.id.item_user_quest_reward)
     TextView questReward;
+    @BindView(R.id.item_user_quest_reward_exp)
+    TextView questRewardExperience;
 
     public void setOnClickListener(View.OnClickListener onClickListener) {
       rootView.setOnClickListener(onClickListener);

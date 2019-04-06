@@ -33,8 +33,10 @@
     <string name="fragment_quests_remaining_time">Time to new quest:\t %02d min %02d sec</string>
     <string name="fragment_quests_quest_max">You have maximum quests</string>
     <string name="fragment_quests_balance">Balance: %d</string>
-    <string name="fragment_quests_experience">Experience: %d</string>
     <string name="fragment_quests_level">Level: %d</string>
     <!-- Profile fragment -->
     <string name="fragment_profile_logout">Logout</string>
+    <string name="fragment_profile_level">Level: %d</string>
+    <string name="fragment_profile_experience">Experience: %d</string>
+    <string name="fragment_profile_rest_experience">Rest experience: %d</string>
 </resources>

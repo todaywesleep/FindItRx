@@ -10,8 +10,6 @@ public final class Constants {
   public static final int USER_MAX_QUESTS = 5;
   public static final int TIME_TO_QUEST_MINS = 1;
   public static final String EMPTY_STRING = "";
-  public static final String TIME_UNIT_SEPARATOR = ":";
-  public static final String TABULATION = "\t";
 
   //REWARD SECTION
   public static final int BOTTOM_BORDER_QUEST_REWARD = 20;

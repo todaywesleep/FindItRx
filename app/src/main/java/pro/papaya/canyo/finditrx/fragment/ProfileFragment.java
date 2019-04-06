@@ -15,11 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.activity.AuthActivity;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
 import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
 import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
 
 public class ProfileFragment extends BaseFragment {
@@ -27,10 +30,14 @@ public class ProfileFragment extends BaseFragment {
 
   @BindView(R.id.profile_username)
   TextView userName;
+  @BindView(R.id.profile_level)
+  TextView level;
   @BindView(R.id.profile_balance)
   TextView balance;
   @BindView(R.id.profile_experience)
   TextView experience;
+  @BindView(R.id.profile_rest_experience)
+  TextView restExperience;
   @BindView(R.id.profile_logout)
   Button logout;
 
@@ -81,13 +88,48 @@ public class ProfileFragment extends BaseFragment {
           @Override
           public void onNext(UserModel userModel) {
             if (userModel != null) {
+              int restExperienceValue = CalculatorUtils.getRestExperience(
+                  userModel.getLevel(), userModel.getExperience()
+              );
+
               userName.setText(userModel.getNickName());
               balance.setText(String.format(Locale.getDefault(),
                   getString(R.string.fragment_quests_balance),
                   userModel.getBalance()));
               experience.setText(String.format(Locale.getDefault(),
-                  getString(R.string.fragment_quests_experience),
-                  userModel.getExperience()));
+                  getString(R.string.fragment_profile_experience),
+                  userModel.getExperience())
+              );
+              level.setText(String.format(Locale.getDefault(),
+                  getString(R.string.fragment_quests_level),
+                  userModel.getLevel())
+              );
+              restExperience.setText(String.format(Locale.getDefault(),
+                  getString(R.string.fragment_profile_rest_experience),
+                  restExperienceValue)
+              );
+
+              if (restExperienceValue <= 0){
+                profileViewModel.increaseUserLevel()
+                    .subscribe(new SingleObserver<Void>() {
+                      @Override
+                      public void onSubscribe(Disposable d) {
+
+                      }
+
+                      @Override
+                      public void onSuccess(Void aVoid) {
+                        logDebug("User level increased");
+                      }
+
+                      @Override
+                      public void onError(Throwable e) {
+                        showSnackBar(e.getLocalizedMessage());
+                        logError(e);
+                      }
+                    });
+              }
+
               logDebug("Profile applied");
             }
           }

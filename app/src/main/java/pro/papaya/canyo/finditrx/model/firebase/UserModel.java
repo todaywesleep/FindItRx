@@ -6,7 +6,7 @@ public class UserModel {
   private String id;
   private long balance = 0;
   private int level = 0;
-  private long experience = 0;
+  private int experience = 0;
 
   public UserModel() {
     super();
@@ -61,11 +61,11 @@ public class UserModel {
     this.level = level;
   }
 
-  public long getExperience() {
+  public int getExperience() {
     return experience;
   }
 
-  public void setExperience(long experience) {
+  public void setExperience(int experience) {
     this.experience = experience;
   }
 }
