@@ -30,6 +30,7 @@ public class FireBaseProfileManager {
   private static final String SUBCOLLECTION_TIMESTAMP = "timestamp";
   public static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
   public static final String FIELD_BALANCE = "balance";
+  public static final String FIELD_EXPERIENCE = "experience";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
@@ -150,7 +151,9 @@ public class FireBaseProfileManager {
                 .set(new UserModel(
                     FireBaseLoginManager.getInstance().getUserEmail(),
                     Constants.STOCK_NICKNAME + integer.toString(),
-                    getUserId()
+                    getUserId(),
+                    0,
+                    0
                 )).addOnSuccessListener(documentReference -> {
               observer.onSuccess(true);
             }).addOnFailureListener(observer::onError);
@@ -225,6 +228,20 @@ public class FireBaseProfileManager {
             getUserReference().update(FIELD_BALANCE, newBalance)
                 .addOnSuccessListener(aVoid -> Timber.d("User balance update and equals %s", newBalance))
                 .addOnFailureListener(e -> Timber.d("Can't update user's balance"));
+          }
+        });
+  }
+
+  public void enrollExperience(int amount){
+    getUserReference()
+        .get()
+        .addOnSuccessListener(documentSnapshot -> {
+          UserModel user = documentSnapshot.toObject(UserModel.class);
+          if (user != null){
+            long newExperience = user.getExperience() + amount;
+            getUserReference().update(FIELD_EXPERIENCE, newExperience)
+                .addOnSuccessListener(aVoid -> Timber.d("User experience updated and equals: %s", newExperience))
+                .addOnFailureListener(aVoid -> Timber.d("Can't update user experience"));
           }
         });
   }

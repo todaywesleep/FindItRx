@@ -30,6 +30,7 @@ import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
+import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
 
 import static pro.papaya.canyo.finditrx.model.view.MainViewPagerModel.QUESTS_PAGE;
@@ -136,8 +137,8 @@ public class MainActivity extends BaseActivity implements
   }
 
   private int generateReward(Random random) {
-    int result = random.nextInt(50);
-    result += 1;
+    int result = random.nextInt(Constants.UPPER_BORDER_NEW_QUEST_REWARD - Constants.BOTTOM_BORDER_NEW_QUEST_REWARD);
+    result += 1 + Constants.BOTTOM_BORDER_NEW_QUEST_REWARD;
 
     return result;
   }

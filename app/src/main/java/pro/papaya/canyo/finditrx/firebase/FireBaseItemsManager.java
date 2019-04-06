@@ -16,6 +16,7 @@ import io.reactivex.SingleObserver;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
+import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
 public class FireBaseItemsManager {
@@ -100,8 +101,8 @@ public class FireBaseItemsManager {
 
   private int generateReward() {
     Random rand = new Random();
-    int reward = rand.nextInt(200);
-    reward += 1;
+    int reward = rand.nextInt(Constants.UPPER_BORDER_QUEST_REWARD - Constants.BOTTOM_BORDER_QUEST_REWARD);
+    reward += 1 + Constants.BOTTOM_BORDER_QUEST_REWARD;
 
     return reward;
   }

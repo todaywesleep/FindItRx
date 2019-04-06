@@ -13,6 +13,16 @@ public final class Constants {
   public static final String TIME_UNIT_SEPARATOR = ":";
   public static final String TABULATION = "\t";
 
+  //REWARD SECTION
+  public static final int BOTTOM_BORDER_QUEST_REWARD = 20;
+  public static final int UPPER_BORDER_QUEST_REWARD = 200;
+  public static final int BOTTOM_BORDER_QUEST_EXP_REWARD = 25;
+  public static final int UPPER_BORDER_QUEST_EXP_REWARD = 50;
+  public static final int BOTTOM_BORDER_NEW_QUEST_REWARD = 10;
+  public static final int UPPER_BORDER_NEW_QUEST_REWARD = 100;
+  public static final int BOTTOM_BORDER_NEW_QUEST_EXP_REWARD = 15;
+  public static final int UPPER_BORDER_NEW_QUEST_REXP_EWARD = 30;
+
   //LOG SECTION
   public static final String LOG_OPENED_BRACKET = "[";
   public static final String LOG_CLOSED_BRACKET = "]";
