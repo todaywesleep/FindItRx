@@ -45,4 +45,8 @@ public class MainViewModel extends ViewModel {
   public void enrollMoney(int amount) {
     FireBaseProfileManager.getInstance().enrollMoney(amount);
   }
+
+  public void enrollExperience(int amount) {
+    FireBaseProfileManager.getInstance().enrollExperience(amount);
+  }
 }

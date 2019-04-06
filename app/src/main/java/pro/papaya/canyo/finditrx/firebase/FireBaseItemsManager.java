@@ -87,7 +87,8 @@ public class FireBaseItemsManager {
           QuestModel selectedQuest = availableQuests.get(rand.nextInt(availableQuests.size()));
           UserQuestModel newQuest = UserQuestModel.from(
               selectedQuest,
-              generateReward()
+              generateReward(),
+              generateRewardExperience()
           );
 
           FireBaseProfileManager.getInstance().getQuestsReference()
@@ -105,6 +106,14 @@ public class FireBaseItemsManager {
     reward += 1 + Constants.BOTTOM_BORDER_QUEST_REWARD;
 
     return reward;
+  }
+
+  private int generateRewardExperience() {
+    Random rand = new Random();
+    int result = rand.nextInt(Constants.UPPER_BORDER_QUEST_EXP_REWARD - Constants.BOTTOM_BORDER_QUEST_EXP_REWARD);
+    result += 1 + Constants.BOTTOM_BORDER_QUEST_EXP_REWARD;
+
+    return result;
   }
 
   private static void addItemToObjectsList(QuestModel item) {

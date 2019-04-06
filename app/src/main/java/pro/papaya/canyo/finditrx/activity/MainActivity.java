@@ -100,13 +100,16 @@ public class MainActivity extends BaseActivity implements
             logDebug("Find %s new quests", newQuests.size());
             if (!newQuests.isEmpty()) {
               int totalReward = 0;
+              int titalRewardExperience = 0;
               List<UserQuestModel> rewardModel = new ArrayList<>();
               Random random = new Random();
 
               for (QuestModel quest : newQuests) {
                 int stepReward = generateReward(random);
-                rewardModel.add(UserQuestModel.from(quest, stepReward));
+                int stepRewardExperience = generateRewardExperience(random);
+                rewardModel.add(UserQuestModel.from(quest, stepReward, stepRewardExperience));
                 totalReward += stepReward;
+                titalRewardExperience += stepRewardExperience;
               }
 
               new NewQuestsDialog(
@@ -114,6 +117,7 @@ public class MainActivity extends BaseActivity implements
                   rewardModel
               ).show();
               mainViewModel.enrollMoney(totalReward);
+              mainViewModel.enrollExperience(titalRewardExperience);
             }
           }
 
@@ -139,6 +143,13 @@ public class MainActivity extends BaseActivity implements
   private int generateReward(Random random) {
     int result = random.nextInt(Constants.UPPER_BORDER_NEW_QUEST_REWARD - Constants.BOTTOM_BORDER_NEW_QUEST_REWARD);
     result += 1 + Constants.BOTTOM_BORDER_NEW_QUEST_REWARD;
+
+    return result;
+  }
+
+  private int generateRewardExperience(Random random) {
+    int result = random.nextInt(Constants.UPPER_BORDER_NEW_QUEST_EXP_REWARD - Constants.BOTTOM_BORDER_NEW_QUEST_EXP_REWARD);
+    result += 1 + Constants.BOTTOM_BORDER_NEW_QUEST_EXP_REWARD;
 
     return result;
   }

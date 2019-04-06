@@ -29,6 +29,8 @@ public class ProfileFragment extends BaseFragment {
   TextView userName;
   @BindView(R.id.profile_balance)
   TextView balance;
+  @BindView(R.id.profile_experience)
+  TextView experience;
   @BindView(R.id.profile_logout)
   Button logout;
 
@@ -83,6 +85,9 @@ public class ProfileFragment extends BaseFragment {
               balance.setText(String.format(Locale.getDefault(),
                   getString(R.string.fragment_quests_balance),
                   userModel.getBalance()));
+              experience.setText(String.format(Locale.getDefault(),
+                  getString(R.string.fragment_quests_experience),
+                  userModel.getExperience()));
               logDebug("Profile applied");
             }
           }
