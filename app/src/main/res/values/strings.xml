@@ -37,6 +37,6 @@
     <!-- Profile fragment -->
     <string name="fragment_profile_logout">Logout</string>
     <string name="fragment_profile_level">Level: %d</string>
-    <string name="fragment_profile_experience">Experience: %d</string>
-    <string name="fragment_profile_rest_experience">Rest experience: %d</string>
+    <string name="fragment_profile_experience">Experience</string>
+    <string name="fragment_profile_rest_experience">Rest experience</string>
 </resources>

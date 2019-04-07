@@ -1,11 +1,13 @@
 package pro.papaya.canyo.finditrx.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -34,10 +36,12 @@ public class ProfileFragment extends BaseFragment {
   TextView level;
   @BindView(R.id.profile_balance)
   TextView balance;
-  @BindView(R.id.profile_experience)
+  @BindView(R.id.profile_exp)
   TextView experience;
-  @BindView(R.id.profile_rest_experience)
+  @BindView(R.id.profile_rest_exp)
   TextView restExperience;
+  @BindView(R.id.profile_exp_progress)
+  ProgressBar expProgress;
   @BindView(R.id.profile_logout)
   Button logout;
 
@@ -85,6 +89,7 @@ public class ProfileFragment extends BaseFragment {
   private void setSubscriptions() {
     profileViewModel.getObservableUser()
         .subscribe(new CutedObserver<UserModel>() {
+          @SuppressLint("SetTextI18n")
           @Override
           public void onNext(UserModel userModel) {
             if (userModel != null) {
@@ -96,20 +101,16 @@ public class ProfileFragment extends BaseFragment {
               balance.setText(String.format(Locale.getDefault(),
                   getString(R.string.fragment_quests_balance),
                   userModel.getBalance()));
-              experience.setText(String.format(Locale.getDefault(),
-                  getString(R.string.fragment_profile_experience),
-                  userModel.getExperience())
-              );
+              experience.setText(String.valueOf(userModel.getExperience()));
               level.setText(String.format(Locale.getDefault(),
                   getString(R.string.fragment_quests_level),
                   userModel.getLevel())
               );
-              restExperience.setText(String.format(Locale.getDefault(),
-                  getString(R.string.fragment_profile_rest_experience),
-                  restExperienceValue)
-              );
+              restExperience.setText(String.valueOf(restExperienceValue));
+              expProgress.setMax(userModel.getExperience() + restExperienceValue);
+              expProgress.setProgress(userModel.getExperience());
 
-              if (restExperienceValue <= 0){
+              if (restExperienceValue <= 0) {
                 profileViewModel.increaseUserLevel()
                     .subscribe(new SingleObserver<Void>() {
                       @Override

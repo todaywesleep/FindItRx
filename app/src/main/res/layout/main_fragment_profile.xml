@@ -30,28 +30,51 @@
         tools:text="@string/fragment_profile_level" />
 
     <TextView
+        android:id="@+id/profile_exp_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_profile_experience"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_level" />
+
+    <TextView
+        android:id="@+id/profile_rest_exp_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_profile_rest_experience"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_level" />
+
+    <ProgressBar
+        android:id="@+id/profile_exp_progress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/profile_exp_label" />
+
+    <TextView
+        android:id="@+id/profile_exp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_exp_progress"
+        tools:text="123" />
+
+    <TextView
+        android:id="@+id/profile_rest_exp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_exp_progress"
+        tools:text="321" />
+
+    <TextView
         android:id="@+id/profile_balance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_small"
         android:text="@string/fragment_quests_balance"
-        app:layout_constraintTop_toBottomOf="@id/profile_level" />
-
-    <TextView
-        android:id="@+id/profile_experience"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_small"
-        android:text="@string/fragment_profile_experience"
-        app:layout_constraintTop_toBottomOf="@id/profile_balance" />
-
-    <TextView
-        android:id="@+id/profile_rest_experience"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_small"
-        android:text="@string/fragment_profile_rest_experience"
-        app:layout_constraintTop_toBottomOf="@id/profile_experience" />
+        app:layout_constraintTop_toBottomOf="@id/profile_exp" />
 
     <Button
         android:id="@+id/profile_logout"
