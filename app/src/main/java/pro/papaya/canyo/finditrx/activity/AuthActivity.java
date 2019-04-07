@@ -144,7 +144,7 @@ public class AuthActivity extends BaseActivity {
     etEmail.addTextChangedListener(new BaseTextWatcher() {
       @Override
       protected void onTextContentChanged(String s) {
-        if (isEmailValid(getEmailTextString())) {
+        if (!isEmailValid(getEmailTextString())) {
           etEmailLayout.setError(getString(R.string.auth_email_error));
         } else {
           etEmailLayout.setErrorEnabled(false);
@@ -157,9 +157,15 @@ public class AuthActivity extends BaseActivity {
 
   private void setErrorState() {
     if (isActivityInRegistrationMode()) {
-      setRegisterButtonState(!isEmailHasErrors && !isPasswordHasErrors && !isRepeatPasswordHasErrors);
+      setRegisterButtonState(
+          !etEmailLayout.isErrorEnabled() && !getEmailTextString().isEmpty()
+              && !etPasswordLayout.isErrorEnabled() && !getPasswordTextString().isEmpty()
+              && !etRepeatPasswordLayout.isErrorEnabled() && !getRepPasswordTextString().isEmpty()
+      );
     } else {
-      setAuthButtonState(!isEmailHasErrors && !isPasswordHasErrors);
+      setAuthButtonState(!etEmailLayout.isErrorEnabled() && !getEmailTextString().isEmpty()
+          && !etPasswordLayout.isErrorEnabled() && !getPasswordTextString().isEmpty()
+      );
     }
   }
 
@@ -182,7 +188,7 @@ public class AuthActivity extends BaseActivity {
   }
 
   private boolean isEmailValid(String email) {
-    return !email.isEmpty() && !StringUtils.isEmailValid(email);
+    return StringUtils.isEmailValid(email);
   }
 
   private boolean isRegistrationDataValid() {
@@ -190,7 +196,6 @@ public class AuthActivity extends BaseActivity {
     String password = getPasswordTextString();
     String repeatPassword = getRepPasswordTextString();
     return isEmailValid(email)
-        && !password.isEmpty()
         && password.length() >= Constants.MIN_PASSWORD_LENGTH
         && repeatPassword.equals(password);
   }
@@ -199,7 +204,6 @@ public class AuthActivity extends BaseActivity {
     String email = getEmailTextString();
     String password = getPasswordTextString();
     return isEmailValid(email)
-        && !password.isEmpty()
         && password.length() >= Constants.MIN_PASSWORD_LENGTH;
   }
 
@@ -248,7 +252,7 @@ public class AuthActivity extends BaseActivity {
           public void onError(Throwable e) {
             setLoading(false);
             showSnackBar(e.getLocalizedMessage());
-            logDebug("SignIn failed with error: %s", e.getMessage());
+            logError(e);
           }
         });
   }

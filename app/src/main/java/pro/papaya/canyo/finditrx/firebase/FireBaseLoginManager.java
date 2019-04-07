@@ -7,6 +7,7 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import pro.papaya.canyo.finditrx.model.firebase.FireBaseResponseModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
+import timber.log.Timber;
 
 public class FireBaseLoginManager {
   private static FireBaseLoginManager INSTANCE;
@@ -38,6 +39,7 @@ public class FireBaseLoginManager {
   }
 
   public Single<FireBaseResponseModel> signInRemote(String email, String password) {
+    Timber.d("TEST %s %s", email, password);
     return new Single<FireBaseResponseModel>() {
       @Override
       protected void subscribeActual(SingleObserver<? super FireBaseResponseModel> observer) {
