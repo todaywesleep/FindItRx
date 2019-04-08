@@ -24,7 +24,7 @@ import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
 import pro.papaya.canyo.finditrx.dialog.NewQuestsDialog;
-import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
+import pro.papaya.canyo.finditrx.fragment.ActionFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
@@ -36,7 +36,7 @@ import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
 import static pro.papaya.canyo.finditrx.model.view.MainViewPagerModel.QUESTS_PAGE;
 
 public class MainActivity extends BaseActivity implements
-    ActionPageFragment.ActionPageCallback,
+    ActionFragment.ActionFragmentCallback,
     QuestsFragment.QuestFragmentCallback {
   private final static int CAMERA_PERMISSION_CODE = 1000;
 

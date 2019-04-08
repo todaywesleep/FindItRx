@@ -3,21 +3,23 @@ package pro.papaya.canyo.finditrx.adapter;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import pro.papaya.canyo.finditrx.fragment.ActionPageFragment;
+import pro.papaya.canyo.finditrx.fragment.ActionFragment;
 import pro.papaya.canyo.finditrx.fragment.ProfileFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 
 public class MainPageAdapter extends FragmentPagerAdapter {
-  private ActionPageFragment.ActionPageCallback actionPageCallback;
-  private QuestsFragment.QuestFragmentCallback fragmentCallback;
+  private ProfileFragment profileFragment;
+  private ActionFragment actionFragment;
+  private QuestsFragment questFragment;
 
   public MainPageAdapter(FragmentManager fm,
-                         ActionPageFragment.ActionPageCallback actionPageCallback,
-                         QuestsFragment.QuestFragmentCallback fragmentCallback) {
+                         ActionFragment.ActionFragmentCallback actionFragmentCallback,
+                         QuestsFragment.QuestFragmentCallback questFragmentCallback) {
     super(fm);
-    this.actionPageCallback = actionPageCallback;
-    this.fragmentCallback = fragmentCallback;
+    this.profileFragment = ProfileFragment.getNewInstance();
+    this.actionFragment = ActionFragment.getNewInstanse(actionFragmentCallback);
+    this.questFragment = QuestsFragment.getNewInstance(questFragmentCallback);
   }
 
   @Override
@@ -25,15 +27,15 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     MainViewPagerModel model = MainViewPagerModel.values()[position];
     switch (model) {
       case PROFILE_PAGE: {
-        return ProfileFragment.getInstance();
+        return profileFragment;
       }
 
       case CAMERA_PAGE: {
-        return ActionPageFragment.getInstance(actionPageCallback);
+        return actionFragment;
       }
 
       case QUESTS_PAGE: {
-        return QuestsFragment.getInstance(fragmentCallback);
+        return questFragment;
       }
     }
 
@@ -46,6 +48,6 @@ public class MainPageAdapter extends FragmentPagerAdapter {
   }
 
   public void refreshActionFragment() {
-    ActionPageFragment.getInstance(actionPageCallback).refresh();
+    actionFragment.refresh();
   }
 }

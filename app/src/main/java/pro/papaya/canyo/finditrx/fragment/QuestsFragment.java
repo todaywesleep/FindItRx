@@ -36,8 +36,6 @@ import pro.papaya.canyo.finditrx.utils.TimeUtils;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
 
 public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.QuestCallback {
-  private static QuestsFragment INSTANCE = null;
-
   public interface QuestFragmentCallback {
   }
 
@@ -55,18 +53,13 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   private ListenerRegistration timestampListener;
   private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 
-  public static QuestsFragment getInstance(QuestFragmentCallback callback) {
-    if (INSTANCE == null) {
-      QuestsFragment fragment = new QuestsFragment();
-      Bundle arguments = new Bundle();
-      fragment.setCallback(callback);
-      fragment.setArguments(arguments);
-      INSTANCE = fragment;
-    } else if (callback != INSTANCE.callback) {
-      INSTANCE.setCallback(callback);
-    }
+  public static QuestsFragment getNewInstance(QuestFragmentCallback callback) {
+    QuestsFragment fragment = new QuestsFragment();
+    Bundle arguments = new Bundle();
+    fragment.setCallback(callback);
+    fragment.setArguments(arguments);
 
-    return INSTANCE;
+    return fragment;
   }
 
   @Nullable

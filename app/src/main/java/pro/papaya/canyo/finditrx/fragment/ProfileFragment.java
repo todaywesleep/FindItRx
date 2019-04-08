@@ -28,8 +28,6 @@ import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
 import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
 
 public class ProfileFragment extends BaseFragment {
-  private static ProfileFragment INSTANCE;
-
   @BindView(R.id.profile_username)
   TextView userName;
   @BindView(R.id.profile_level)
@@ -47,15 +45,12 @@ public class ProfileFragment extends BaseFragment {
 
   private ProfileViewModel profileViewModel;
 
-  public static ProfileFragment getInstance() {
-    if (INSTANCE == null) {
-      ProfileFragment fragment = new ProfileFragment();
-      Bundle arguments = new Bundle();
-      fragment.setArguments(arguments);
-      INSTANCE = fragment;
-    }
+  public static ProfileFragment getNewInstance() {
+    ProfileFragment fragment = new ProfileFragment();
+    Bundle arguments = new Bundle();
+    fragment.setArguments(arguments);
 
-    return INSTANCE;
+    return fragment;
   }
 
   @Nullable

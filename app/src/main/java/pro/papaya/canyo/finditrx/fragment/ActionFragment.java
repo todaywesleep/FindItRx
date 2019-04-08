@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 
 import java.util.List;
@@ -37,7 +35,6 @@ import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.listener.CutedObserver;
-import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
@@ -45,11 +42,8 @@ import pro.papaya.canyo.finditrx.view.FabItem;
 import pro.papaya.canyo.finditrx.view.FabMenu;
 import pro.papaya.canyo.finditrx.viewmodel.ActionViewModel;
 
-public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuCallback {
-  @SuppressLint("StaticFieldLeak")
-  private static ActionPageFragment INSTANCE = null;
-
-  public interface ActionPageCallback {
+public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallback {
+  public interface ActionFragmentCallback {
     void requestCameraPermissions();
 
     boolean isCameraPermissionsGranted();
@@ -69,20 +63,15 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   Button btnSnapshot;
 
   private Fotoapparat fotoapparat;
-  private ActionPageCallback callback;
+  private ActionFragmentCallback callback;
   private ActionViewModel actionViewModel;
   private SettingsModel settingsModel = SettingsModel.getStabSettings();
 
-  public static ActionPageFragment getInstance(ActionPageCallback callback) {
-    if (INSTANCE == null) {
-      ActionPageFragment fragment = new ActionPageFragment();
-      fragment.setCallback(callback);
-      INSTANCE = fragment;
-    } else if (callback != INSTANCE.callback) {
-      INSTANCE.setCallback(callback);
-    }
+  public static ActionFragment getNewInstanse(ActionFragmentCallback callback) {
+    ActionFragment fragment = new ActionFragment();
+    fragment.setCallback(callback);
 
-    return INSTANCE;
+    return fragment;
   }
 
   @Nullable
@@ -97,6 +86,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     ButterKnife.bind(this, view);
     actionViewModel = ViewModelProviders.of(this).get(ActionViewModel.class);
     menu.setCallback(this);
@@ -114,7 +104,9 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   @Override
   public void onPause() {
     super.onPause();
-    if (callback.isCameraPermissionsGranted()) {
+    if (callback != null
+        && fotoapparat != null
+        && callback.isCameraPermissionsGranted()) {
       fotoapparat.stop();
     }
   }
@@ -122,7 +114,9 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   @Override
   public void onResume() {
     super.onResume();
-    if (callback.isCameraPermissionsGranted()) {
+    if (callback != null
+        && fotoapparat != null
+        && callback.isCameraPermissionsGranted()) {
       fotoapparat.start();
     }
   }
@@ -134,7 +128,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
     }
   }
 
-  public void setCallback(ActionPageCallback callback) {
+  public void setCallback(ActionFragmentCallback callback) {
     this.callback = callback;
   }
 
@@ -225,7 +219,6 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
           .subscribe(new SingleObserver<Void>() {
             @Override
             public void onSubscribe(Disposable d) {
-
             }
 
             @Override
@@ -243,7 +236,9 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
   }
 
   private void initFotoapparat() {
-    if (getContext() != null && callback.isCameraPermissionsGranted()) {
+    if (getContext() != null
+        && callback != null
+        && callback.isCameraPermissionsGranted()) {
       fotoapparat = Fotoapparat
           .with(getContext())
           .into(cameraView)
@@ -258,7 +253,7 @@ public class ActionPageFragment extends BaseFragment implements FabMenu.FabMenuC
           .build();
 
       fotoapparat.start();
-    } else {
+    } else if (callback != null) {
       callback.requestCameraPermissions();
     }
   }
