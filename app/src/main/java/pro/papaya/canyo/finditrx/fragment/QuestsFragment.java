@@ -53,7 +53,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
 
   private Long lastQuestTimestamp;
   private ListenerRegistration timestampListener;
-  private ScheduledExecutorService timer;
+  private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 
   public static QuestsFragment getInstance(QuestFragmentCallback callback) {
     if (INSTANCE == null) {
@@ -156,7 +156,17 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
           @Override
           public void onNext(TimestampModel timestampModel) {
             if (timestampModel != null) {
-              initTimerMillis(getTimeToNextQuest(timestampModel.getLastRequestedQuestTime()));
+              long timeToNextQuest = getTimeToNextQuest(timestampModel.getLastRequestedQuestTime());
+              long fullTimeToQuest = TimeUtils.minsToMillis(Constants.TIME_TO_QUEST_MINS);
+
+              if (timeToNextQuest >= 0 && timeToNextQuest <= fullTimeToQuest) {
+                initTimerMillis(timeToNextQuest);
+              } else if (timeToNextQuest < 0 && !adapter.isAdapterFullFilled()) {
+                tvRemainingTimeLabel.setText(getString(R.string.loading));
+              } else {
+                initTimerMillis(null);
+              }
+
               lastQuestTimestamp = timestampModel.getLastRequestedQuestTime();
             } else {
               long lastRequestedQuestTime = new Date().getTime();
@@ -180,10 +190,11 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
           @Override
           public void onNext(List<UserQuestModel> userQuestModels) {
             if (adapter.isInitialized()) {
-              if (userQuestModels.size() >= Constants.USER_MAX_QUESTS) {
+              if (userQuestModels.size() >= Constants.USER_MAX_QUESTS
+                  || (adapter.getItemCount() > userQuestModels.size()
+                  && adapter.getItemCount() >= Constants.USER_MAX_QUESTS)) {
                 questsViewModel.initLastRequestedQuestTimestamp(new Date().getTime());
-              } else if (adapter.getItemCount() > userQuestModels.size() && adapter.getItemCount() >= Constants.USER_MAX_QUESTS) {
-                questsViewModel.initLastRequestedQuestTimestamp(new Date().getTime());
+                initTimerMillis(null);
               }
             }
 
@@ -215,10 +226,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     if (time != null && !adapter.isAdapterFullFilled()) {
       tvRemainingTimeLabel.setText(R.string.fragment_quests_remaining_time);
 
-      if (timer != null) {
-        timer.shutdown();
-      }
-
+      timer.shutdown();
       timer = Executors.newSingleThreadScheduledExecutor();
       AtomicLong timeToNewQuest = new AtomicLong(time);
       logDebug("Init timer: %s", time);
@@ -247,6 +255,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
       }, 0, 1, TimeUnit.SECONDS);
     } else {
       tvRemainingTimeLabel.setText(getString(R.string.fragment_quests_quest_max));
+      timer.shutdown();
     }
   }
 }
