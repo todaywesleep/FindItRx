@@ -3,12 +3,15 @@ package pro.papaya.canyo.finditrx.adapter;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import pro.papaya.canyo.finditrx.fragment.ActionFragment;
 import pro.papaya.canyo.finditrx.fragment.ProfileFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
+import timber.log.Timber;
 
-public class MainPageAdapter extends FragmentPagerAdapter {
+public class MainPageAdapter extends FragmentStatePagerAdapter {
   private ProfileFragment profileFragment;
   private ActionFragment actionFragment;
   private QuestsFragment questFragment;
@@ -18,8 +21,14 @@ public class MainPageAdapter extends FragmentPagerAdapter {
                          QuestsFragment.QuestFragmentCallback questFragmentCallback) {
     super(fm);
     this.profileFragment = ProfileFragment.getNewInstance();
-    this.actionFragment = ActionFragment.getNewInstanse(actionFragmentCallback);
+    this.actionFragment = ActionFragment.getNewInstance(actionFragmentCallback);
     this.questFragment = QuestsFragment.getNewInstance(questFragmentCallback);
+  }
+
+  public void update(ActionFragment.ActionFragmentCallback actionFragmentCallback,
+                     QuestsFragment.QuestFragmentCallback questFragmentCallback){
+    actionFragment.setCallback(actionFragmentCallback);
+    questFragment.setCallback(questFragmentCallback);
   }
 
   @Override

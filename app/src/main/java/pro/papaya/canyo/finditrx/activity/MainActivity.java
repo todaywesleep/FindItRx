@@ -32,6 +32,7 @@ import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.viewmodel.MainViewModel;
+import timber.log.Timber;
 
 import static pro.papaya.canyo.finditrx.model.view.MainViewPagerModel.QUESTS_PAGE;
 
@@ -100,7 +101,7 @@ public class MainActivity extends BaseActivity implements
             logDebug("Find %s new quests", newQuests.size());
             if (!newQuests.isEmpty()) {
               int totalReward = 0;
-              int titalRewardExperience = 0;
+              int totalRewardExperience = 0;
               List<UserQuestModel> rewardModel = new ArrayList<>();
               Random random = new Random();
 
@@ -109,7 +110,7 @@ public class MainActivity extends BaseActivity implements
                 int stepRewardExperience = generateRewardExperience(random);
                 rewardModel.add(UserQuestModel.from(quest, stepReward, stepRewardExperience));
                 totalReward += stepReward;
-                titalRewardExperience += stepRewardExperience;
+                totalRewardExperience += stepRewardExperience;
               }
 
               new NewQuestsDialog(
@@ -117,7 +118,7 @@ public class MainActivity extends BaseActivity implements
                   rewardModel
               ).show();
               mainViewModel.enrollMoney(totalReward);
-              mainViewModel.enrollExperience(titalRewardExperience);
+              mainViewModel.enrollExperience(totalRewardExperience);
             }
           }
 

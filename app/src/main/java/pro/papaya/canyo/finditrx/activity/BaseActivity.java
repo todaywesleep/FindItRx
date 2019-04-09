@@ -2,7 +2,6 @@ package pro.papaya.canyo.finditrx.activity;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
