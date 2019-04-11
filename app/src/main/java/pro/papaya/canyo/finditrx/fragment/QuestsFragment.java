@@ -58,6 +58,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     Bundle arguments = new Bundle();
     fragment.setCallback(callback);
     fragment.setArguments(arguments);
+    fragment.setRetainInstance(true);
 
     return fragment;
   }
@@ -156,6 +157,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
                 initTimerMillis(timeToNextQuest);
               } else if (timeToNextQuest < 0 && !adapter.isAdapterFullFilled()) {
                 tvRemainingTimeLabel.setText(getString(R.string.loading));
+                questsViewModel.requestQuest(availableQuests);
               } else {
                 initTimerMillis(null);
               }

@@ -24,4 +24,8 @@ public class TimeUtils {
   public static long millisToSecs(long millis) {
     return millis / 1000;
   }
+
+  public static long millisToMins(long millis) {
+    return millisToSecs(millis) / 60;
+  }
 }

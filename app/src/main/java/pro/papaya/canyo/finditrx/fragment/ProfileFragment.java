@@ -49,6 +49,7 @@ public class ProfileFragment extends BaseFragment {
     ProfileFragment fragment = new ProfileFragment();
     Bundle arguments = new Bundle();
     fragment.setArguments(arguments);
+    fragment.setRetainInstance(true);
 
     return fragment;
   }
