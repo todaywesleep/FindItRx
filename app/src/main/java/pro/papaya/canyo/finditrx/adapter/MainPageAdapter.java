@@ -3,6 +3,7 @@ package pro.papaya.canyo.finditrx.adapter;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import pro.papaya.canyo.finditrx.activity.MainActivity;
 import pro.papaya.canyo.finditrx.fragment.ActionFragment;
 import pro.papaya.canyo.finditrx.fragment.ProfileFragment;
 import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
@@ -14,12 +15,11 @@ public class MainPageAdapter extends FragmentPagerAdapter {
   private QuestsFragment questFragment;
 
   public MainPageAdapter(FragmentManager fm,
-                         ActionFragment.ActionFragmentCallback actionFragmentCallback,
-                         QuestsFragment.QuestFragmentCallback questFragmentCallback) {
+                         MainActivity fragmentsCallback) {
     super(fm);
-    this.profileFragment = ProfileFragment.getNewInstance();
-    this.actionFragment = ActionFragment.getNewInstance(actionFragmentCallback);
-    this.questFragment = QuestsFragment.getNewInstance(questFragmentCallback);
+    this.profileFragment = ProfileFragment.getNewInstance(fragmentsCallback);
+    this.actionFragment = ActionFragment.getNewInstance(fragmentsCallback);
+    this.questFragment = QuestsFragment.getNewInstance(fragmentsCallback);
   }
 
   @Override

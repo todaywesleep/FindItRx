@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -135,6 +136,27 @@ public class FireBaseProfileManager {
     }
 
     return INSTANCE;
+  }
+
+  public Single<List<UserModel>> getUsers() {
+    return new Single<List<UserModel>>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super List<UserModel>> observer) {
+        database.collection(COLLECTION_USERS)
+            .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot querySnapshot) {
+                List<UserModel> userModels = new ArrayList<>(querySnapshot.toObjects(UserModel.class));
+                observer.onSuccess(userModels);
+              }
+
+              @Override
+              public void onError(FirebaseFirestoreException e) {
+                observer.onError(e);
+              }
+            });
+      }
+    };
   }
 
   public static Single<Boolean> createUserWrite() {

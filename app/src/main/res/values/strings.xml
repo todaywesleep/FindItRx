@@ -36,6 +36,7 @@
     <string name="fragment_quests_level">Level: %d</string>
     <!-- Profile fragment -->
     <string name="fragment_profile_logout">Logout</string>
+    <string name="fragment_profile_leader_board">Leader board</string>
     <string name="fragment_profile_level">Level: %d</string>
     <string name="fragment_profile_experience">Experience</string>
     <string name="fragment_profile_rest_experience">Rest experience</string>

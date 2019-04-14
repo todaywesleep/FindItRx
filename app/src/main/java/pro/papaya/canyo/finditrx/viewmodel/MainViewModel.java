@@ -9,6 +9,7 @@ import io.reactivex.Single;
 import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import timber.log.Timber;
 
@@ -40,6 +41,10 @@ public class MainViewModel extends ViewModel {
     }
 
     return completedQuests;
+  }
+
+  public Single<List<UserModel>> getUsersCollection(){
+    return FireBaseProfileManager.getInstance().getUsers();
   }
 
   public void enrollMoney(int amount) {

@@ -28,6 +28,10 @@ import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
 import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
 
 public class ProfileFragment extends BaseFragment {
+  public interface ProfileFragmentCallback {
+    void onLeaderBoardRequest();
+  }
+
   @BindView(R.id.profile_username)
   TextView userName;
   @BindView(R.id.profile_level)
@@ -42,14 +46,18 @@ public class ProfileFragment extends BaseFragment {
   ProgressBar expProgress;
   @BindView(R.id.profile_logout)
   Button logout;
+  @BindView(R.id.profile_leader_board)
+  Button leaderBoard;
 
   private ProfileViewModel profileViewModel;
+  private ProfileFragmentCallback callback;
 
-  public static ProfileFragment getNewInstance() {
+  public static ProfileFragment getNewInstance(ProfileFragmentCallback callback) {
     ProfileFragment fragment = new ProfileFragment();
     Bundle arguments = new Bundle();
     fragment.setArguments(arguments);
     fragment.setRetainInstance(true);
+    fragment.setCallback(callback);
 
     return fragment;
   }
@@ -72,6 +80,10 @@ public class ProfileFragment extends BaseFragment {
     setViewListeners();
   }
 
+  private void setCallback(ProfileFragmentCallback callback) {
+    this.callback = callback;
+  }
+
   private void setViewListeners() {
     logout.setOnClickListener(v -> {
       FireBaseLoginManager.getInstance().logout();
@@ -79,6 +91,12 @@ public class ProfileFragment extends BaseFragment {
       Intent navigationIntent = new Intent(getContext(), AuthActivity.class);
       navigationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
       startActivity(navigationIntent);
+    });
+
+    leaderBoard.setOnClickListener(v -> {
+      if (callback != null){
+        callback.onLeaderBoardRequest();
+      }
     });
   }
 

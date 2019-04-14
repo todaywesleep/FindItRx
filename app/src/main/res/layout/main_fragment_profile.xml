@@ -77,6 +77,16 @@
         app:layout_constraintTop_toBottomOf="@id/profile_exp" />
 
     <Button
+        android:id="@+id/profile_leader_board"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_profile_leader_board"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/profile_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/profile_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
