@@ -38,12 +38,6 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/leader_board_level_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/leader_board_level_tab" />
-
-        <com.google.android.material.tabs.TabItem
             android:id="@+id/leader_board_experience_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -3,44 +3,37 @@ package pro.papaya.canyo.finditrx.adapter.viewpager;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import pro.papaya.canyo.finditrx.activity.MainActivity;
-import pro.papaya.canyo.finditrx.fragment.main.ActionFragment;
-import pro.papaya.canyo.finditrx.fragment.main.ProfileFragment;
-import pro.papaya.canyo.finditrx.fragment.main.QuestsFragment;
+import pro.papaya.canyo.finditrx.fragment.leaderboard.ExperienceFragment;
+import pro.papaya.canyo.finditrx.fragment.leaderboard.MoneyFragment;
+import pro.papaya.canyo.finditrx.fragment.leaderboard.NewSubjectsFragment;
 import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
-import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 
 public class LeaderBoardPagerAdapter extends FragmentPagerAdapter {
-  private ProfileFragment profileFragment;
-  private ActionFragment actionFragment;
-  private QuestsFragment questFragment;
+  private ExperienceFragment experienceFragment;
+  private MoneyFragment moneyFragment;
+  private NewSubjectsFragment newSubjectsFragment;
 
-  public LeaderBoardPagerAdapter(FragmentManager fm,
-                                 MainActivity fragmentsCallback) {
+  public LeaderBoardPagerAdapter(FragmentManager fm) {
     super(fm);
-    this.profileFragment = ProfileFragment.getNewInstance(fragmentsCallback);
-    this.actionFragment = ActionFragment.getNewInstance(fragmentsCallback);
-    this.questFragment = QuestsFragment.getNewInstance(fragmentsCallback);
+    this.experienceFragment = ExperienceFragment.getNewInstance();
+    this.moneyFragment = MoneyFragment.getNewInstance();
+    this.newSubjectsFragment = NewSubjectsFragment.getNewInstance();
   }
 
   @Override
   public Fragment getItem(int position) {
     LeaderBoardPagerModel model = LeaderBoardPagerModel.values()[position];
     switch (model) {
-      case LEVEL_PAGE: {
-        return profileFragment;
-      }
-
       case EXPERIENCE_PAGE: {
-        return actionFragment;
+        return experienceFragment;
       }
 
       case MONEY_PAGE: {
-        return questFragment;
+        return moneyFragment;
       }
 
       case NEW_SUBJECTS_PAGE: {
-        return questFragment;
+        return newSubjectsFragment;
       }
     }
 
@@ -49,10 +42,6 @@ public class LeaderBoardPagerAdapter extends FragmentPagerAdapter {
 
   @Override
   public int getCount() {
-    return MainViewPagerModel.values().length;
-  }
-
-  public void refreshActionFragment() {
-    actionFragment.refresh();
+    return LeaderBoardPagerModel.values().length;
   }
 }
