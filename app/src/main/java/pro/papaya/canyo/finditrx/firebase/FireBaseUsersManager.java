@@ -11,6 +11,7 @@ import io.reactivex.Observer;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
+import pro.papaya.canyo.finditrx.utils.Constants;
 
 public final class FireBaseUsersManager {
   private static final String COLLECTION_USERS = "users";
@@ -36,6 +37,7 @@ public final class FireBaseUsersManager {
       protected void subscribeActual(Observer<? super List<UserModel>> observer) {
         database.collection(COLLECTION_USERS)
             .orderBy(requiredField)
+            .limit(Constants.LEADER_BOARD_LIMIT)
             .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
               @Override
               public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

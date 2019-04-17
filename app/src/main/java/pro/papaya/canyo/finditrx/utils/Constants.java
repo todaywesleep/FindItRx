@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 public final class Constants {
   //DATABASE
+  public static final int LEADER_BOARD_LIMIT = 100;
   public static final String STOCK_NICKNAME = "Newbie#";
 
   //GLOBAL
