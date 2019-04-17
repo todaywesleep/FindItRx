@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.adapter.UserQuestsAdapter;
+import pro.papaya.canyo.finditrx.adapter.recycler.UserQuestsAdapter;
 import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;

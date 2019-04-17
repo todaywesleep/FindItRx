@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
+import pro.papaya.canyo.finditrx.adapter.viewpager.MainPagerAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
 import pro.papaya.canyo.finditrx.dialog.NewQuestsDialog;
 import pro.papaya.canyo.finditrx.fragment.main.ActionFragment;
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity implements
   TabLayout tabLayout;
 
   private MainViewModel mainViewModel;
-  private MainPageAdapter adapter;
+  private MainPagerAdapter adapter;
   private List<QuestModel> itemsCollection = new ArrayList<>();
 
   @Override
@@ -176,7 +176,7 @@ public class MainActivity extends BaseActivity implements
   }
 
   private void initViews() {
-    adapter = new MainPageAdapter(
+    adapter = new MainPagerAdapter(
         getSupportFragmentManager(),
         this
     );

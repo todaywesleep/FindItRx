@@ -1,4 +1,4 @@
-package pro.papaya.canyo.finditrx.adapter;
+package pro.papaya.canyo.finditrx.adapter.recycler;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -16,7 +16,6 @@ import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
-import timber.log.Timber;
 
 public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.ViewHolder> {
   public interface QuestCallback {
