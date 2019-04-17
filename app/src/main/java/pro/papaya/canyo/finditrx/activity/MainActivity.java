@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity implements
               ).show();
               mainViewModel.enrollMoney(totalReward);
               mainViewModel.enrollExperience(totalRewardExperience);
+              mainViewModel.addFoundQusets(newQuests);
             }
           }
 

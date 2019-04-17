@@ -17,6 +17,7 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
+import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
@@ -30,6 +31,7 @@ public class FireBaseProfileManager {
   private static final String COLLECTION_SETTINGS = "settings";
   public static final String SUBCOLLECTION_USER_QUESTS = "quests";
   private static final String SUBCOLLECTION_TIMESTAMP = "timestamp";
+  private static final String SUBCOLLECTION_FOUND_SUBJECTS = "found_subjects";
   public static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
   public static final String FIELD_BALANCE = "balance";
   public static final String FIELD_EXPERIENCE = "experience";
@@ -289,6 +291,17 @@ public class FireBaseProfileManager {
                 .addOnFailureListener(aVoid -> Timber.d("Can't update user experience"));
           }
         });
+  }
+
+  public void addSubjectsFound(List<QuestModel> quests) {
+    if (quests != null && !quests.isEmpty()) {
+      for (QuestModel quest : quests) {
+        getUserReference()
+            .collection(SUBCOLLECTION_FOUND_SUBJECTS)
+            .document(quest.getIdentifier())
+            .set(quest);
+      }
+    }
   }
 
   public CollectionReference getUserQuestsReference() {

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/main_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/main_tab_navigator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/leader_board_tab_navigator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/leader_board_level_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/leader_board_level_tab" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/leader_board_experience_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_profile_experience" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/leader_board_money_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/leader_board_money_tab" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/leader_board_new_subject_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/leader_board_subjects_tab" />
+    </com.google.android.material.tabs.TabLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
