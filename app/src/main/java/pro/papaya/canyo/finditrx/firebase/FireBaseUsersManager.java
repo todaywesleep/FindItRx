@@ -2,6 +2,7 @@ package pro.papaya.canyo.finditrx.firebase;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public final class FireBaseUsersManager {
       @Override
       protected void subscribeActual(Observer<? super List<UserModel>> observer) {
         database.collection(COLLECTION_USERS)
-            .orderBy(requiredField)
+            .orderBy(requiredField, Query.Direction.DESCENDING)
             .limit(Constants.LEADER_BOARD_LIMIT)
             .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
               @Override

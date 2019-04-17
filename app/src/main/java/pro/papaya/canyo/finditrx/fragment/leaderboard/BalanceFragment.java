@@ -22,6 +22,7 @@ public class BalanceFragment extends BaseLeaderBoardFragment {
       @Override
       public void onNext(List<UserModel> userModels) {
         adapter.setData(userModels);
+        logDebug("Balance models here");
       }
 
       @Override

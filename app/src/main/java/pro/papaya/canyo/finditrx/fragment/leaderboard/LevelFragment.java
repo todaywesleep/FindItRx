@@ -20,6 +20,7 @@ public class LevelFragment extends BaseLeaderBoardFragment {
       @Override
       public void onNext(List<UserModel> userModels) {
         adapter.setData(userModels);
+        logDebug("Level models here");
       }
 
       @Override

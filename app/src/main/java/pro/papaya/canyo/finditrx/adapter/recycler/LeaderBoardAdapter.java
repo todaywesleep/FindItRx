@@ -50,6 +50,8 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
   public void setData(List<UserModel> newData) {
     data.clear();
     data.addAll(newData);
+
+    notifyDataSetChanged();
   }
 
   class ViewHolder extends RecyclerView.ViewHolder {
