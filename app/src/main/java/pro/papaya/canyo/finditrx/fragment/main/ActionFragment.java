@@ -34,7 +34,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
-import pro.papaya.canyo.finditrx.listener.CutedObserver;
+import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
@@ -176,7 +176,7 @@ public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallb
 
   private void getSettings() {
     actionViewModel.getSettingsReference()
-        .subscribe(new CutedObserver<SettingsModel>() {
+        .subscribe(new ShortObserver<SettingsModel>() {
           @Override
           public void onNext(SettingsModel settingsModelRemote) {
             if (settingsModelRemote != null) {

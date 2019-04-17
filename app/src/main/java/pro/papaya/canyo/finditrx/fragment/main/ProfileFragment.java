@@ -22,7 +22,7 @@ import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.activity.AuthActivity;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
-import pro.papaya.canyo.finditrx.listener.CutedObserver;
+import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
 import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
@@ -102,7 +102,7 @@ public class ProfileFragment extends BaseFragment {
 
   private void setSubscriptions() {
     profileViewModel.getObservableUser()
-        .subscribe(new CutedObserver<UserModel>() {
+        .subscribe(new ShortObserver<UserModel>() {
           @SuppressLint("SetTextI18n")
           @Override
           public void onNext(UserModel userModel) {

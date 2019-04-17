@@ -28,7 +28,7 @@ import pro.papaya.canyo.finditrx.dialog.NewQuestsDialog;
 import pro.papaya.canyo.finditrx.fragment.main.ActionFragment;
 import pro.papaya.canyo.finditrx.fragment.main.ProfileFragment;
 import pro.papaya.canyo.finditrx.fragment.main.QuestsFragment;
-import pro.papaya.canyo.finditrx.listener.CutedObserver;
+import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
@@ -160,7 +160,7 @@ public class MainActivity extends BaseActivity implements
 
   private void subscribeToViewModel() {
     mainViewModel.getAllQuestsCollection()
-        .subscribe(new CutedObserver<List<QuestModel>>() {
+        .subscribe(new ShortObserver<List<QuestModel>>() {
           @Override
           public void onNext(List<QuestModel> questModels) {
             itemsCollection = questModels;

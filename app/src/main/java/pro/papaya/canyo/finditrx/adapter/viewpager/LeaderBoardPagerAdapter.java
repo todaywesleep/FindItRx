@@ -4,19 +4,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import pro.papaya.canyo.finditrx.fragment.leaderboard.LevelFragment;
-import pro.papaya.canyo.finditrx.fragment.leaderboard.MoneyFragment;
+import pro.papaya.canyo.finditrx.fragment.leaderboard.BalanceFragment;
 import pro.papaya.canyo.finditrx.fragment.leaderboard.NewSubjectsFragment;
 import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 
 public class LeaderBoardPagerAdapter extends FragmentPagerAdapter {
   private LevelFragment levelFragment;
-  private MoneyFragment moneyFragment;
+  private BalanceFragment balanceFragment;
   private NewSubjectsFragment newSubjectsFragment;
 
   public LeaderBoardPagerAdapter(FragmentManager fm) {
     super(fm);
     this.levelFragment = LevelFragment.getNewInstance();
-    this.moneyFragment = MoneyFragment.getNewInstance();
+    this.balanceFragment = BalanceFragment.getNewInstance();
     this.newSubjectsFragment = NewSubjectsFragment.getNewInstance();
   }
 
@@ -29,7 +29,7 @@ public class LeaderBoardPagerAdapter extends FragmentPagerAdapter {
       }
 
       case MONEY_PAGE: {
-        return moneyFragment;
+        return balanceFragment;
       }
 
       case NEW_SUBJECTS_PAGE: {

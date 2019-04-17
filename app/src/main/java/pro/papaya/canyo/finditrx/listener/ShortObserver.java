@@ -3,7 +3,7 @@ package pro.papaya.canyo.finditrx.listener;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public abstract class CutedObserver<T> implements Observer<T> {
+public abstract class ShortObserver<T> implements Observer<T> {
   @Override
   public void onSubscribe(Disposable d) {
 

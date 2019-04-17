@@ -6,18 +6,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.adapter.recycler.LeaderBoardAdapter;
+import pro.papaya.canyo.finditrx.firebase.FireBaseUsersManager;
 import pro.papaya.canyo.finditrx.fragment.main.BaseFragment;
+import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 
-public class BaseLeaderBoardFragment extends BaseFragment {
+public abstract class BaseLeaderBoardFragment extends BaseFragment {
   @BindView(R.id.leader_board_recycler)
   RecyclerView recyclerView;
+
+  protected LeaderBoardPagerModel model;
+  protected LeaderBoardAdapter adapter;
+
+  protected abstract Observer<List<UserModel>> getObserver();
+
+  public BaseLeaderBoardFragment() {
+    if (this instanceof LevelFragment) {
+      model = LeaderBoardPagerModel.LEVEL_PAGE;
+    } else if (this instanceof BalanceFragment) {
+      model = LeaderBoardPagerModel.MONEY_PAGE;
+    } else {
+      model = LeaderBoardPagerModel.NEW_SUBJECTS_PAGE;
+    }
+  }
 
   @Nullable
   @Override
@@ -25,13 +47,22 @@ public class BaseLeaderBoardFragment extends BaseFragment {
     View view = inflater.inflate(R.layout.fragment_leader_board_base, container, false);
     ButterKnife.bind(this, view);
     initViews();
+    subscribeToModel();
 
     return view;
   }
 
   protected void initViews() {
+    adapter = new LeaderBoardAdapter();
+
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.addItemDecoration(getItemDecorator());
+    recyclerView.setAdapter(adapter);
+  }
+
+  protected void subscribeToModel() {
+    FireBaseUsersManager.getInstance().getUsersCollection(model)
+        .subscribe(getObserver());
   }
 
   private RecyclerView.ItemDecoration getItemDecorator() {

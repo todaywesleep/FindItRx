@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.recycler.UserQuestsAdapter;
-import pro.papaya.canyo.finditrx.listener.CutedObserver;
+import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
@@ -127,7 +127,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
 
   private void subscribeToAllLabels() {
     questsViewModel.getAllItemsObservable()
-        .subscribe(new CutedObserver<List<QuestModel>>() {
+        .subscribe(new ShortObserver<List<QuestModel>>() {
           @Override
           public void onNext(List<QuestModel> questModels) {
             availableQuests.clear();
@@ -146,7 +146,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
 
   private void subscribeToQuestTimestamp() {
     questsViewModel.getTimestampObservable()
-        .subscribe(new CutedObserver<TimestampModel>() {
+        .subscribe(new ShortObserver<TimestampModel>() {
           @Override
           public void onNext(TimestampModel timestampModel) {
             if (timestampModel != null) {
@@ -181,7 +181,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
 
   private void subscribeToUserQuests() {
     questsViewModel.getUserQuestsObservable()
-        .subscribe(new CutedObserver<List<UserQuestModel>>() {
+        .subscribe(new ShortObserver<List<UserQuestModel>>() {
           @Override
           public void onNext(List<UserQuestModel> userQuestModels) {
             if (adapter.isInitialized()) {

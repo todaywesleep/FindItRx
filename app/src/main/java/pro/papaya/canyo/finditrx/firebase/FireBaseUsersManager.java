@@ -1,16 +1,21 @@
 package pro.papaya.canyo.finditrx.firebase;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
+import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
+import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 
 public final class FireBaseUsersManager {
   private static final String COLLECTION_USERS = "users";
+  private static final String FIELD_LEVEL = "level";
+  private static final String FIELD_BALANCE = "balance";
 
   private static FireBaseUsersManager INSTANCE;
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -23,13 +28,39 @@ public final class FireBaseUsersManager {
     return INSTANCE;
   }
 
-  public Observable<List<QuestModel>> getUsersCollection(LeaderBoardPagerModel model) {
-    
-    return new Observable<List<QuestModel>>() {
-      @Override
-      protected void subscribeActual(Observer<? super List<QuestModel>> observer) {
+  public Observable<List<UserModel>> getUsersCollection(LeaderBoardPagerModel model) {
+    String requiredField = getFieldFromModel(model);
 
+    return new Observable<List<UserModel>>() {
+      @Override
+      protected void subscribeActual(Observer<? super List<UserModel>> observer) {
+        database.collection(COLLECTION_USERS)
+            .orderBy(requiredField)
+            .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+              @Override
+              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<UserModel> users = queryDocumentSnapshots.toObjects(UserModel.class);
+                observer.onNext(users);
+              }
+
+              @Override
+              public void onError(FirebaseFirestoreException e) {
+                observer.onError(e);
+              }
+            });
       }
     };
+  }
+
+  private String getFieldFromModel(LeaderBoardPagerModel model) {
+    switch (model) {
+      case LEVEL_PAGE: {
+        return FIELD_LEVEL;
+      }
+
+      default: {
+        return FIELD_BALANCE;
+      }
+    }
   }
 }

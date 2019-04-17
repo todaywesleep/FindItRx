@@ -6,9 +6,9 @@ import io.reactivex.Observer;
 import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 
-public class NewSubjectsFragment extends BaseLeaderBoardFragment {
-  public static NewSubjectsFragment getNewInstance() {
-    NewSubjectsFragment fragment = new NewSubjectsFragment();
+public class BalanceFragment extends BaseLeaderBoardFragment {
+  public static BalanceFragment getNewInstance() {
+    BalanceFragment fragment = new BalanceFragment();
     fragment.setRetainInstance(true);
 //    Bundle arguments = new Bundle();
 //    fragment.setArguments(arguments);
@@ -21,12 +21,13 @@ public class NewSubjectsFragment extends BaseLeaderBoardFragment {
     return new ShortObserver<List<UserModel>>() {
       @Override
       public void onNext(List<UserModel> userModels) {
-
+        adapter.setData(userModels);
       }
 
       @Override
       public void onError(Throwable e) {
-
+        showSnackBar(e.getLocalizedMessage());
+        logError(e);
       }
     };
   }
