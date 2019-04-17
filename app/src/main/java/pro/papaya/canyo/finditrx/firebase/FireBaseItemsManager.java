@@ -23,6 +23,7 @@ public class FireBaseItemsManager {
   private static final String TABLE_LABELS = "labels";
   private static final String TABLE_LABELS_LABEL_FIELD = "label";
 
+  private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
   private static FireBaseItemsManager INSTANCE;
 
   public static FireBaseItemsManager getInstance() {
@@ -55,8 +56,6 @@ public class FireBaseItemsManager {
   public Observable<List<QuestModel>> getAllItemsCollection() {
     return allItemsCollection;
   }
-
-  private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   public Single<List<QuestModel>> updateItemsCollection(List<QuestModel> oldItems, List<QuestModel> items) {
     return new Single<List<QuestModel>>() {
