@@ -35,7 +35,7 @@ public abstract class BaseLeaderBoardFragment extends BaseFragment {
     if (this instanceof LevelFragment) {
       model = LeaderBoardPagerModel.LEVEL_PAGE;
     } else if (this instanceof BalanceFragment) {
-      model = LeaderBoardPagerModel.MONEY_PAGE;
+      model = LeaderBoardPagerModel.BALANCE_PAGE;
     } else {
       model = LeaderBoardPagerModel.NEW_SUBJECTS_PAGE;
     }
@@ -53,7 +53,7 @@ public abstract class BaseLeaderBoardFragment extends BaseFragment {
   }
 
   protected void initViews() {
-    adapter = new LeaderBoardAdapter();
+    adapter = new LeaderBoardAdapter(model);
 
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.addItemDecoration(getItemDecorator());

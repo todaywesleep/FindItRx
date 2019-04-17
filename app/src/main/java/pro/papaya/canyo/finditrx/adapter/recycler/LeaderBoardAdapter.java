@@ -15,10 +15,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
+import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 import timber.log.Timber;
 
 public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.ViewHolder> {
   private List<UserModel> data = new ArrayList<>();
+  private LeaderBoardPagerModel model;
+
+  public LeaderBoardAdapter(LeaderBoardPagerModel model) {
+    this.model = model;
+  }
 
   @NonNull
   @Override
@@ -35,7 +41,7 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     UserModel model = data.get(position);
     holder.userIdx.setText(Integer.toString(position + 1));
     holder.userName.setText(model.getNickName());
-    holder.score.setText(Integer.toString(model.getLevel()));
+    holder.score.setText(getRequiredScore(model));
 
     holder.setOnClickListener(v -> {
       Timber.d("TEST item %s clicked", model.getNickName());
@@ -52,6 +58,17 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     data.addAll(newData);
 
     notifyDataSetChanged();
+  }
+
+  private String getRequiredScore(UserModel model) {
+    switch (this.model) {
+      case LEVEL_PAGE: {
+        return Integer.toString(model.getLevel());
+      }
+      default: {
+        return Long.toString(model.getBalance());
+      }
+    }
   }
 
   class ViewHolder extends RecyclerView.ViewHolder {

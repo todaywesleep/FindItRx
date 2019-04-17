@@ -28,7 +28,7 @@ public class LeaderBoardPagerAdapter extends FragmentPagerAdapter {
         return levelFragment;
       }
 
-      case MONEY_PAGE: {
+      case BALANCE_PAGE: {
         return balanceFragment;
       }
 

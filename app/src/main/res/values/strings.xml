@@ -42,7 +42,7 @@
     <string name="fragment_profile_rest_experience">Rest experience</string>
     <!-- Leader board activity -->
     <string name="leader_board_title">Leader board</string>
-    <string name="leader_board_experience_tab">Experience</string>
+    <string name="leader_board_level_tab">Level</string>
     <string name="leader_board_money_tab">Money</string>
     <string name="leader_board_subjects_tab">New subjects</string>
 </resources>

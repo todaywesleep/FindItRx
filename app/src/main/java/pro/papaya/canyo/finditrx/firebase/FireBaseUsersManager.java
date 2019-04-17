@@ -13,6 +13,7 @@ import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
+import timber.log.Timber;
 
 public final class FireBaseUsersManager {
   private static final String COLLECTION_USERS = "users";
@@ -32,6 +33,7 @@ public final class FireBaseUsersManager {
 
   public Observable<List<UserModel>> getUsersCollection(LeaderBoardPagerModel model) {
     String requiredField = getFieldFromModel(model);
+    Timber.d("TEST %s", requiredField);
 
     return new Observable<List<UserModel>>() {
       @Override
