@@ -1,4 +1,4 @@
-package pro.papaya.canyo.finditrx.fragment;
+package pro.papaya.canyo.finditrx.fragment.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package pro.papaya.canyo.finditrx.fragment;
+package pro.papaya.canyo.finditrx.fragment.main;
 
 import android.graphics.Rect;
 import android.os.Bundle;

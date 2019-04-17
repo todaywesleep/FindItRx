@@ -7,15 +7,16 @@ import pro.papaya.canyo.finditrx.activity.MainActivity;
 import pro.papaya.canyo.finditrx.fragment.main.ActionFragment;
 import pro.papaya.canyo.finditrx.fragment.main.ProfileFragment;
 import pro.papaya.canyo.finditrx.fragment.main.QuestsFragment;
+import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 
-public class MainPageAdapter extends FragmentPagerAdapter {
+public class LeaderBoardAdapter extends FragmentPagerAdapter {
   private ProfileFragment profileFragment;
   private ActionFragment actionFragment;
   private QuestsFragment questFragment;
 
-  public MainPageAdapter(FragmentManager fm,
-                         MainActivity fragmentsCallback) {
+  public LeaderBoardAdapter(FragmentManager fm,
+                            MainActivity fragmentsCallback) {
     super(fm);
     this.profileFragment = ProfileFragment.getNewInstance(fragmentsCallback);
     this.actionFragment = ActionFragment.getNewInstance(fragmentsCallback);
@@ -24,17 +25,21 @@ public class MainPageAdapter extends FragmentPagerAdapter {
 
   @Override
   public Fragment getItem(int position) {
-    MainViewPagerModel model = MainViewPagerModel.values()[position];
+    LeaderBoardPagerModel model = LeaderBoardPagerModel.values()[position];
     switch (model) {
-      case PROFILE_PAGE: {
+      case LEVEL_PAGE: {
         return profileFragment;
       }
 
-      case CAMERA_PAGE: {
+      case EXPERIENCE_PAGE: {
         return actionFragment;
       }
 
-      case QUESTS_PAGE: {
+      case MONEY_PAGE: {
+        return questFragment;
+      }
+
+      case NEW_SUBJECTS_PAGE: {
         return questFragment;
       }
     }

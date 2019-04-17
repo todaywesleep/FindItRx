@@ -1,4 +1,4 @@
-package pro.papaya.canyo.finditrx.fragment;
+package pro.papaya.canyo.finditrx.fragment.main;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -42,7 +41,6 @@ import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
 import pro.papaya.canyo.finditrx.view.FabItem;
 import pro.papaya.canyo.finditrx.view.FabMenu;
 import pro.papaya.canyo.finditrx.viewmodel.ActionViewModel;
-import timber.log.Timber;
 
 public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallback {
   public interface ActionFragmentCallback {

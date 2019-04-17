@@ -55,7 +55,7 @@ public class MainViewModel extends ViewModel {
     FireBaseProfileManager.getInstance().enrollExperience(amount);
   }
 
-  public void addFoundQusets(List<QuestModel> quests){
+  public void addFoundQuests(List<QuestModel> quests){
     FireBaseProfileManager.getInstance().addSubjectsFound(quests);
   }
 }

@@ -1,4 +1,4 @@
-package pro.papaya.canyo.finditrx.fragment;
+package pro.papaya.canyo.finditrx.fragment.main;
 
 import android.os.Bundle;
 import android.view.View;

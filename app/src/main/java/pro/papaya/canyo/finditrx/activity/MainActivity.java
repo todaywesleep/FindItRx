@@ -1,6 +1,7 @@
 package pro.papaya.canyo.finditrx.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -24,12 +25,11 @@ import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.MainPageAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
 import pro.papaya.canyo.finditrx.dialog.NewQuestsDialog;
-import pro.papaya.canyo.finditrx.fragment.ActionFragment;
-import pro.papaya.canyo.finditrx.fragment.ProfileFragment;
-import pro.papaya.canyo.finditrx.fragment.QuestsFragment;
+import pro.papaya.canyo.finditrx.fragment.main.ActionFragment;
+import pro.papaya.canyo.finditrx.fragment.main.ProfileFragment;
+import pro.papaya.canyo.finditrx.fragment.main.QuestsFragment;
 import pro.papaya.canyo.finditrx.listener.CutedObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
-import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.model.view.MainViewPagerModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity implements
               ).show();
               mainViewModel.enrollMoney(totalReward);
               mainViewModel.enrollExperience(totalRewardExperience);
-              mainViewModel.addFoundQusets(newQuests);
+              mainViewModel.addFoundQuests(newQuests);
             }
           }
 
@@ -235,23 +235,25 @@ public class MainActivity extends BaseActivity implements
 
   @Override
   public void onLeaderBoardRequest() {
-    mainViewModel.getUsersCollection()
-        .subscribe(new SingleObserver<List<UserModel>>() {
-          @Override
-          public void onSubscribe(Disposable d) {
-
-          }
-
-          @Override
-          public void onSuccess(List<UserModel> userModels) {
-            logDebug("Users taken: %s", userModels);
-          }
-
-          @Override
-          public void onError(Throwable e) {
-            logError(e);
-            showSnackBar(e.getLocalizedMessage());
-          }
-        });
+    Intent leaderBoardIntent = new Intent(MainActivity.this, LeaderBoardActivity.class);
+    startActivity(leaderBoardIntent);
+//    mainViewModel.getUsersCollection()
+//        .subscribe(new SingleObserver<List<UserModel>>() {
+//          @Override
+//          public void onSubscribe(Disposable d) {
+//
+//          }
+//
+//          @Override
+//          public void onSuccess(List<UserModel> userModels) {
+//            logDebug("Users taken: %s", userModels);
+//          }
+//
+//          @Override
+//          public void onError(Throwable e) {
+//            logError(e);
+//            showSnackBar(e.getLocalizedMessage());
+//          }
+//        });
   }
 }
