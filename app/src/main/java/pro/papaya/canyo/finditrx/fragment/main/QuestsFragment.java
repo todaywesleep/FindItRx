@@ -80,7 +80,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     questsViewModel = ViewModelProviders.of(this).get(QuestsViewModel.class);
     rvActiveQuests.setLayoutManager(new LinearLayoutManager(getContext()));
     rvActiveQuests.addItemDecoration(getItemDecorator());
-    adapter = new UserQuestsAdapter();
+    adapter = new UserQuestsAdapter(getContext());
     adapter.setCallback(this);
     rvActiveQuests.setAdapter(adapter);
 

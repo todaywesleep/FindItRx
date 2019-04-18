@@ -15,12 +15,16 @@ public final class Constants {
   //REWARD SECTION
   public static final int BOTTOM_BORDER_QUEST_REWARD = 20;
   public static final int UPPER_BORDER_QUEST_REWARD = 200;
-  public static final int BOTTOM_BORDER_QUEST_EXP_REWARD = 25;
+  public static final int BOTTOM_BORDER_QUEST_EXP_REWARD = 10;
   public static final int UPPER_BORDER_QUEST_EXP_REWARD = 50;
   public static final int BOTTOM_BORDER_NEW_QUEST_REWARD = 10;
   public static final int UPPER_BORDER_NEW_QUEST_REWARD = 100;
   public static final int BOTTOM_BORDER_NEW_QUEST_EXP_REWARD = 15;
   public static final int UPPER_BORDER_NEW_QUEST_EXP_REWARD = 30;
+
+  public static final int QUEST_RARITY_STEPS = 5;
+  public static final int RARITY_PRICE_STEP = (UPPER_BORDER_QUEST_REWARD - BOTTOM_BORDER_QUEST_REWARD) / QUEST_RARITY_STEPS;
+  public static final int BOTTOM_RARITY_BORDER = BOTTOM_BORDER_QUEST_REWARD + RARITY_PRICE_STEP;
 
   //LOG SECTION
   public static final String LOG_OPENED_BRACKET = "[";

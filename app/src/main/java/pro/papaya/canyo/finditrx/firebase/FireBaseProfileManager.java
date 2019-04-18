@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class FireBaseProfileManager {
   public static final String FIELD_BALANCE = "balance";
   public static final String FIELD_EXPERIENCE = "experience";
   public static final String FIELD_LEVEL = "level";
+  public static final String FIELD_REWARD = "reward";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
@@ -81,6 +83,7 @@ public class FireBaseProfileManager {
     @Override
     protected void subscribeActual(Observer<? super List<UserQuestModel>> observer) {
       getQuestsReference()
+          .orderBy(FIELD_REWARD, Query.Direction.DESCENDING)
           .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

@@ -1,6 +1,8 @@
 package pro.papaya.canyo.finditrx.adapter.recycler;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
+import pro.papaya.canyo.finditrx.model.local.QuestRarity;
 import pro.papaya.canyo.finditrx.utils.Constants;
 
 public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.ViewHolder> {
@@ -25,9 +30,11 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
   private List<UserQuestModel> data;
   private QuestCallback callback;
   private boolean isInitialized = false;
+  private Context context;
 
-  public UserQuestsAdapter() {
+  public UserQuestsAdapter(Context context) {
     this.data = new ArrayList<>();
+    this.context = context;
   }
 
   public void setCallback(QuestCallback callback) {
@@ -51,6 +58,9 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     UserQuestModel model = data.get(position);
+    QuestRarity rarity = QuestRarity.getRarity(model.getReward());
+    GradientDrawable bgShape = (GradientDrawable) holder.rootView.getBackground();
+    bgShape.setColor(ContextCompat.getColor(context, rarity.getColor()));
     holder.questName.setText(model.getLabel());
     holder.questReward.setText(Integer.toString(model.getReward()));
     holder.questRewardExperience.setText(Integer.toString(model.getExperience()));
