@@ -8,11 +8,20 @@
 
     <TextView
         android:id="@+id/item_leader_board_user_idx"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/leader_board_card_height"
+        android:layout_height="@dimen/leader_board_card_height"
+        android:gravity="center"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1." />
+
+    <ImageView
+        android:id="@+id/item_leader_board_user_idx_img"
+        android:layout_width="@dimen/leader_board_card_height"
+        android:layout_height="@dimen/leader_board_card_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/item_leader_board_user_name"

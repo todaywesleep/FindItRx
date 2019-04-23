@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,6 +20,10 @@ import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 import timber.log.Timber;
 
 public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.ViewHolder> {
+  private final static int FIRST_PLACE_IDX = 0;
+  private final static int SECOND_PLACE_IDX = 1;
+  private final static int THIRD_PLACE_IDX = 2;
+
   private List<UserModel> data = new ArrayList<>();
   private LeaderBoardPagerModel model;
 
@@ -42,7 +47,7 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     holder.userIdx.setText(Integer.toString(position + 1));
     holder.userName.setText(model.getNickName());
     holder.score.setText(getRequiredScore(model));
-
+    applyImage(holder, position);
     holder.setOnClickListener(v -> {
       Timber.d("TEST item %s clicked", model.getNickName());
     });
@@ -58,6 +63,30 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     data.addAll(newData);
 
     notifyDataSetChanged();
+  }
+
+  private void applyImage(@NonNull ViewHolder holder, int position){
+    switch (position){
+      case FIRST_PLACE_IDX:{
+        holder.scoreImage.setImageResource(R.drawable.ic_gold_medal);
+        break;
+      }
+
+      case SECOND_PLACE_IDX:{
+        holder.scoreImage.setImageResource(R.drawable.ic_silver_medal);
+        break;
+      }
+
+      case THIRD_PLACE_IDX: {
+        holder.scoreImage.setImageResource(R.drawable.ic_bronze_medal);
+        break;
+      }
+
+      default:{
+        holder.userIdx.setVisibility(View.VISIBLE);
+        break;
+      }
+    }
   }
 
   private String getRequiredScore(UserModel model) {
@@ -82,6 +111,8 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     TextView userName;
     @BindView(R.id.item_leader_board_score)
     TextView score;
+    @BindView(R.id.item_leader_board_user_idx_img)
+    ImageView scoreImage;
 
     public void setOnClickListener(View.OnClickListener onClickListener) {
       rootView.setOnClickListener(onClickListener);

@@ -3,4 +3,6 @@
     <dimen name="elevation_base">8dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_default">16dp</dimen>
+
+    <dimen name="leader_board_card_height">32dp</dimen>
 </resources>
