@@ -65,6 +65,9 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
       case LEVEL_PAGE: {
         return Integer.toString(model.getLevel());
       }
+      case NEW_SUBJECTS_PAGE: {
+        return Integer.toString(model.getFoundedSubjects());
+      }
       default: {
         return Long.toString(model.getBalance());
       }

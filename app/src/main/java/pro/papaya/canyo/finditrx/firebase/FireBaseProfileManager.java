@@ -1,5 +1,6 @@
 package pro.papaya.canyo.finditrx.firebase;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,6 +37,7 @@ public class FireBaseProfileManager {
   public static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
   public static final String FIELD_BALANCE = "balance";
   public static final String FIELD_EXPERIENCE = "experience";
+  public static final String FIELD_FOUNDED_SUBJECTS = "foundedSubjects";
   public static final String FIELD_LEVEL = "level";
   public static final String FIELD_REWARD = "reward";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -304,6 +306,27 @@ public class FireBaseProfileManager {
             .document(quest.getIdentifier())
             .set(quest);
       }
+
+      getUserReference().collection(SUBCOLLECTION_FOUND_SUBJECTS)
+          .get().addOnSuccessListener(queryDocumentSnapshots -> {
+        int oldFindAmount = 0;
+            if (queryDocumentSnapshots != null) {
+              oldFindAmount = queryDocumentSnapshots.size();
+            }
+
+            int finalOldFindAmount = oldFindAmount;
+            getUserReference()
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                  UserModel user = documentSnapshot.toObject(UserModel.class);
+                  if (user != null) {
+                    long newFoundedSubjects = finalOldFindAmount + quests.size();
+                    getUserReference().update(FIELD_FOUNDED_SUBJECTS, newFoundedSubjects)
+                        .addOnSuccessListener(aVoid -> Timber.d("User founded subjects updated and equals: %s", newFoundedSubjects))
+                        .addOnFailureListener(aVoid -> Timber.d("Can't update user founded subjects"));
+                  }
+                });
+          });
     }
   }
 

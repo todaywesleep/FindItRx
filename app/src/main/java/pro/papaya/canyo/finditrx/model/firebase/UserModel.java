@@ -6,6 +6,7 @@ public class UserModel {
   private String id;
   private long balance = 0;
   private int level = 0;
+  private int foundedSubjects = 0;
   private int experience = 0;
 
   public UserModel() {
@@ -67,5 +68,13 @@ public class UserModel {
 
   public void setExperience(int experience) {
     this.experience = experience;
+  }
+
+  public int getFoundedSubjects() {
+    return foundedSubjects;
+  }
+
+  public void setFoundedSubjects(int foundedSubjects) {
+    this.foundedSubjects = foundedSubjects;
   }
 }

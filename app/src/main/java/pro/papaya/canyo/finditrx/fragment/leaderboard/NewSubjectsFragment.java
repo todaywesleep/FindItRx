@@ -21,12 +21,13 @@ public class NewSubjectsFragment extends BaseLeaderBoardFragment {
     return new ShortObserver<List<UserModel>>() {
       @Override
       public void onNext(List<UserModel> userModels) {
-
+        adapter.setData(userModels);
       }
 
       @Override
       public void onError(Throwable e) {
-
+        showSnackBar(e.getLocalizedMessage());
+        logError(e);
       }
     };
   }

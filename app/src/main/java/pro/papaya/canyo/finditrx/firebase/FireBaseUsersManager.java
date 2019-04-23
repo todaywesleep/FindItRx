@@ -19,6 +19,7 @@ public final class FireBaseUsersManager {
   private static final String COLLECTION_USERS = "users";
   private static final String FIELD_LEVEL = "level";
   private static final String FIELD_BALANCE = "balance";
+  private static final String FIELD_FOUNDED_SUBJECTS = "foundedSubjects";
 
   private static FireBaseUsersManager INSTANCE;
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -33,7 +34,6 @@ public final class FireBaseUsersManager {
 
   public Observable<List<UserModel>> getUsersCollection(LeaderBoardPagerModel model) {
     String requiredField = getFieldFromModel(model);
-    Timber.d("TEST %s", requiredField);
 
     return new Observable<List<UserModel>>() {
       @Override
@@ -61,6 +61,10 @@ public final class FireBaseUsersManager {
     switch (model) {
       case LEVEL_PAGE: {
         return FIELD_LEVEL;
+      }
+
+      case NEW_SUBJECTS_PAGE: {
+        return FIELD_FOUNDED_SUBJECTS;
       }
 
       default: {
