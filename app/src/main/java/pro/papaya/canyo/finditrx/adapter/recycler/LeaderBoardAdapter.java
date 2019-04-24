@@ -84,6 +84,7 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
 
       default:{
         holder.userIdx.setVisibility(View.VISIBLE);
+        holder.scoreImage.setVisibility(View.GONE);
         break;
       }
     }
