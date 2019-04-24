@@ -3,17 +3,18 @@ package pro.papaya.canyo.finditrx.adapter.recycler;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +23,12 @@ import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.model.local.QuestRarity;
 import pro.papaya.canyo.finditrx.utils.Constants;
 
+import static pro.papaya.canyo.finditrx.utils.Constants.CLOSED_BOLD_TAG;
+import static pro.papaya.canyo.finditrx.utils.Constants.OPENED_BOLD_TAG;
+
 public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.ViewHolder> {
+  private final static int CARD_BACKGROUND_ALPHA = 100;
+
   public interface QuestCallback {
     void onQuestClicked(UserQuestModel quest);
   }
@@ -58,18 +64,39 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     UserQuestModel model = data.get(position);
-    QuestRarity rarity = QuestRarity.getRarity(model.getReward());
-    GradientDrawable bgShape = (GradientDrawable) holder.rootView.getBackground();
-    bgShape.setColor(ContextCompat.getColor(context, rarity.getColor()));
+    applyCardColor(holder, model);
     holder.questName.setText(model.getLabel());
-    holder.questReward.setText(Integer.toString(model.getReward()));
-    holder.questRewardExperience.setText(Integer.toString(model.getExperience()));
+    setupReward(
+        R.string.fragment_quests_coins,
+        model.getReward(),
+        holder.questReward
+    );
+    setupReward(
+        R.string.fragment_quests_exp,
+        model.getExperience(),
+        holder.questRewardExperience
+    );
 
     holder.setOnClickListener(v -> {
       if (callback != null) {
         callback.onQuestClicked(data.get(position));
       }
     });
+  }
+
+  private void setupReward(int rewardRes, Integer value, TextView view) {
+    String labelRes = OPENED_BOLD_TAG
+        .concat(context.getString(rewardRes))
+        .concat(CLOSED_BOLD_TAG);
+
+    view.setText(Html.fromHtml(labelRes.concat(value.toString())));
+  }
+
+  private void applyCardColor(@NonNull ViewHolder holder, UserQuestModel model) {
+    QuestRarity rarity = QuestRarity.getRarity(model.getReward());
+    GradientDrawable bgShape = (GradientDrawable) holder.rootView.getBackground();
+    bgShape.setColor(ContextCompat.getColor(context, rarity.getColor()));
+    bgShape.setAlpha(CARD_BACKGROUND_ALPHA);
   }
 
   @Override
@@ -113,7 +140,7 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
 
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
-      rootView = itemView;
+      rootView = itemView.findViewById(R.id.item_user_quest_root);
       ButterKnife.bind(this, itemView);
     }
   }

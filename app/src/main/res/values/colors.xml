@@ -20,8 +20,8 @@
 
     <!-- Rarity -->
     <color name="common_quest_color">#B6B6B6</color>
-    <color name="uncommon_quest_color">#4CAF50</color>
-    <color name="rare_quest_color">#2196F3</color>
-    <color name="mythic_quest_color">#9C27B0</color>
+    <color name="uncommon_quest_color">#06C40E</color>
+    <color name="rare_quest_color">#006FC5</color>
+    <color name="mythic_quest_color">#A100C5</color>
     <color name="legendary_quest_color">#FF9800</color>
 </resources>

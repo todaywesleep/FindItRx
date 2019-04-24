@@ -12,6 +12,10 @@ public final class Constants {
   public static final int TIME_TO_QUEST_MINS = 1;
   public static final String EMPTY_STRING = "";
 
+  //TEXT SECTION
+  public static final String OPENED_BOLD_TAG = "<b>";
+  public static final String CLOSED_BOLD_TAG = "</b>";
+
   //REWARD SECTION
   public static final int BOTTOM_BORDER_QUEST_REWARD = 20;
   public static final int UPPER_BORDER_QUEST_REWARD = 200;

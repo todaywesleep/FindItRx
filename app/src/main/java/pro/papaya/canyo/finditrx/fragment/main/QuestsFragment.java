@@ -7,7 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.firestore.ListenerRegistration;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,15 +23,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.recycler.UserQuestsAdapter;
+import pro.papaya.canyo.finditrx.controller.SwipeController;
 import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
@@ -50,7 +51,6 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   private List<QuestModel> availableQuests = new ArrayList<>();
 
   private Long lastQuestTimestamp;
-  private ListenerRegistration timestampListener;
   private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 
   public static QuestsFragment getNewInstance(QuestFragmentCallback callback) {
@@ -69,7 +69,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
                            @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    View view = inflater.inflate(R.layout.main_fragment_stats, container, false);
+    View view = inflater.inflate(R.layout.main_fragment_quests, container, false);
     ButterKnife.bind(this, view);
     return view;
   }
@@ -78,14 +78,22 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     questsViewModel = ViewModelProviders.of(this).get(QuestsViewModel.class);
+
+    setUpViews();
+    subscribeToAllLabels();
+    subscribeToUserQuests();
+  }
+
+  private void setUpViews() {
     rvActiveQuests.setLayoutManager(new LinearLayoutManager(getContext()));
     rvActiveQuests.addItemDecoration(getItemDecorator());
     adapter = new UserQuestsAdapter(getContext());
     adapter.setCallback(this);
     rvActiveQuests.setAdapter(adapter);
 
-    subscribeToAllLabels();
-    subscribeToUserQuests();
+    SwipeController swipeController = new SwipeController();
+    ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+    itemTouchhelper.attachToRecyclerView(rvActiveQuests);
   }
 
   @Override
@@ -116,11 +124,10 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
         super.getItemOffsets(outRect, view, parent, state);
 
         if (parent.getChildAdapterPosition(view) == 0) {
-          //TODO move into dimens
-          outRect.top = 16;
+          outRect.top = getResources().getDimensionPixelSize(R.dimen.padding_default);
         }
 
-        outRect.bottom = 16;
+        outRect.bottom = getResources().getDimensionPixelSize(R.dimen.padding_default);
       }
     };
   }
@@ -195,9 +202,6 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
 
             adapter.setData(userQuestModels);
 
-            if (timestampListener != null) {
-              timestampListener.remove();
-            }
             subscribeToQuestTimestamp();
             logDebug("Quests get: %s", userQuestModels);
           }
