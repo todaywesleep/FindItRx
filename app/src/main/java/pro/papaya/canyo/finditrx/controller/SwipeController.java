@@ -1,25 +1,53 @@
 package pro.papaya.canyo.finditrx.controller;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.view.MotionEvent;
+import android.view.View;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
-import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE;
+import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.utils.BitmapUtils;
+
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
-import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
 
 public class SwipeController extends ItemTouchHelper.Callback {
+  private final static float RADIUS_FROM_WIDTH_PERCENTAGE =  0.15f;
+
   private boolean swipeBack = false;
+  private Context context;
+  private Paint controlPaint;
+  private Paint backgroundPaint;
+
+  public SwipeController(Context context) {
+    this.context = context;
+    setupControlPaint();
+    setupBackgroundPaint();
+  }
+
+  private void setupControlPaint() {
+    controlPaint = new Paint();
+    controlPaint.setColor(ContextCompat.getColor(context, R.color.quest_card_control));
+  }
+
+  private void setupBackgroundPaint() {
+    backgroundPaint = new Paint();
+    backgroundPaint.setColor(ContextCompat.getColor(context, R.color.quest_card_background));
+  }
 
   @Override
   public int getMovementFlags(@NotNull RecyclerView recyclerView,
                               @NotNull RecyclerView.ViewHolder viewHolder) {
-    return makeMovementFlags(0, LEFT | RIGHT);
+    return makeMovementFlags(0, LEFT);
   }
 
   @Override
@@ -51,10 +79,30 @@ public class SwipeController extends ItemTouchHelper.Callback {
                           float dX, float dY,
                           int actionState, boolean isCurrentlyActive) {
 
-    if (actionState == ACTION_STATE_SWIPE) {
-      setTouchListener(recyclerView);
+    Bitmap icon;
+    if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+
+      View itemView = viewHolder.itemView;
+      float height = (float) itemView.getBottom() - (float) itemView.getTop();
+      float width = height / 3;
+
+      if (dX < 0) {
+        RectF iconDest = new RectF(
+            (float) itemView.getRight() - 2 * width,
+            (float) itemView.getTop() + width,
+            (float) itemView.getRight() - width,
+            (float) itemView.getBottom() - width
+        );
+        float backgroundRadius = width - width * RADIUS_FROM_WIDTH_PERCENTAGE;
+        float backgroundTop = itemView.getTop() + width * 1.5f;
+        float backgroundLeft = itemView.getRight() - width * 1.5f;
+
+        c.drawCircle(backgroundLeft, backgroundTop, backgroundRadius, backgroundPaint);
+        icon = BitmapUtils.getBitmapFromVectorDrawable(context, R.drawable.ic_repeat);
+        c.drawBitmap(icon, null, iconDest, controlPaint);
+      }
     }
-    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    super.onChildDraw(c, recyclerView, viewHolder, dX / 5, dY, actionState, isCurrentlyActive);
   }
 
   @SuppressLint("ClickableViewAccessibility")

@@ -1,5 +1,6 @@
 package pro.papaya.canyo.finditrx.fragment.main;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.TimeUtils;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
+import timber.log.Timber;
 
 public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.QuestCallback {
   public interface QuestFragmentCallback {
@@ -91,7 +93,12 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     adapter.setCallback(this);
     rvActiveQuests.setAdapter(adapter);
 
-    SwipeController swipeController = new SwipeController();
+    Context applicationContext = null;
+    if (getActivity() != null && getActivity().getApplicationContext() != null){
+      applicationContext = getActivity().getApplicationContext();
+    }
+
+    SwipeController swipeController = new SwipeController(applicationContext);
     ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
     itemTouchhelper.attachToRecyclerView(rvActiveQuests);
   }

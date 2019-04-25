@@ -1,15 +1,22 @@
 package pro.papaya.canyo.finditrx.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
+import android.graphics.drawable.Drawable;
+
+import androidx.core.content.ContextCompat;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 import io.fotoapparat.preview.Frame;
+import timber.log.Timber;
 
 public final class BitmapUtils {
   public static Bitmap getBitmapFromFrame(Frame frame) {
@@ -33,11 +40,28 @@ public final class BitmapUtils {
     return readBitmap;
   }
 
-  public static Bitmap rotateBitmap(Bitmap src, int degrees){
+  public static Bitmap rotateBitmap(Bitmap src, int degrees) {
     Matrix matrix = new Matrix();
     matrix.postRotate(degrees);
 
     src = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, false);
     return src;
+  }
+
+  public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+    Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+    Bitmap bitmap = null;
+
+    try {
+      bitmap = Bitmap.createBitmap(Objects.requireNonNull(drawable).getIntrinsicWidth(),
+          drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+      Canvas canvas = new Canvas(bitmap);
+      drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+      drawable.draw(canvas);
+    } catch (NullPointerException e) {
+      Timber.e(e);
+    }
+
+    return bitmap;
   }
 }

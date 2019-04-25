@@ -24,4 +24,8 @@
     <color name="rare_quest_color">#006FC5</color>
     <color name="mythic_quest_color">#A100C5</color>
     <color name="legendary_quest_color">#FF9800</color>
+
+    <!-- Quest cards -->
+    <color name="quest_card_control">#000000</color>
+    <color name="quest_card_background">#C0C0C0</color>
 </resources>
