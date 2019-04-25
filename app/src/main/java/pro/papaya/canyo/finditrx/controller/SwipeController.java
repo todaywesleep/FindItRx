@@ -21,7 +21,7 @@ import pro.papaya.canyo.finditrx.utils.BitmapUtils;
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 
 public class SwipeController extends ItemTouchHelper.Callback {
-  private final static float RADIUS_FROM_WIDTH_PERCENTAGE =  0.15f;
+  private final static float RADIUS_FROM_WIDTH_PERCENTAGE = 0.15f;
 
   private boolean swipeBack = false;
   private Context context;
@@ -78,9 +78,8 @@ public class SwipeController extends ItemTouchHelper.Callback {
                           @NotNull RecyclerView.ViewHolder viewHolder,
                           float dX, float dY,
                           int actionState, boolean isCurrentlyActive) {
-
-    Bitmap icon;
     if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+      Bitmap icon;
 
       View itemView = viewHolder.itemView;
       float height = (float) itemView.getBottom() - (float) itemView.getTop();
@@ -102,13 +101,27 @@ public class SwipeController extends ItemTouchHelper.Callback {
         c.drawBitmap(icon, null, iconDest, controlPaint);
       }
     }
-    super.onChildDraw(c, recyclerView, viewHolder, dX / 5, dY, actionState, isCurrentlyActive);
+
+    super.onChildDraw(c, recyclerView, viewHolder, dX / 4, dY, actionState, isCurrentlyActive);
   }
 
   @SuppressLint("ClickableViewAccessibility")
-  private void setTouchListener(RecyclerView recyclerView) {
+  private void setTouchListener(final Canvas c,
+                                final RecyclerView recyclerView,
+                                final RecyclerView.ViewHolder viewHolder,
+                                final float dX, final float dY,
+                                final int actionState, final boolean isCurrentlyActive) {
     recyclerView.setOnTouchListener((v, event) -> {
-      swipeBack = event.getAction() == MotionEvent.ACTION_CANCEL || event.getAction() == MotionEvent.ACTION_UP;
+      if (event.getAction() == MotionEvent.ACTION_UP) {
+        swipeBack = true;
+        View itemView = viewHolder.itemView;
+        float height = (float) itemView.getBottom() - (float) itemView.getTop();
+        float width = height / 3;
+
+        super.onChildDraw(c, recyclerView, viewHolder, (float) itemView.getRight() - 2 * width, dY, actionState, isCurrentlyActive);
+        recyclerView.setOnTouchListener((v1, event1) -> false);
+        swipeBack = false;
+      }
       return false;
     });
   }
