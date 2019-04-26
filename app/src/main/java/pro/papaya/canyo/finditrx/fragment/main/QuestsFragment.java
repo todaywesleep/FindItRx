@@ -36,7 +36,6 @@ import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.TimeUtils;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
-import timber.log.Timber;
 
 public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.QuestCallback {
   public interface QuestFragmentCallback {
@@ -94,11 +93,11 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
     rvActiveQuests.setAdapter(adapter);
 
     Context applicationContext = null;
-    if (getActivity() != null && getActivity().getApplicationContext() != null){
+    if (getActivity() != null && getActivity().getApplicationContext() != null) {
       applicationContext = getActivity().getApplicationContext();
     }
 
-    SwipeController swipeController = new SwipeController(applicationContext);
+    SwipeController swipeController = new SwipeController(applicationContext, rvActiveQuests);
     ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
     itemTouchhelper.attachToRecyclerView(rvActiveQuests);
   }
