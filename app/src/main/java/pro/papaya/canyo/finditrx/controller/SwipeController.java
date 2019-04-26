@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -51,7 +52,7 @@ public class SwipeController extends ItemTouchHelper.Callback {
   private GestureDetector gestureDetector;
   private RecyclerView recyclerView;
 
-  private boolean swipeBack = false;
+  private boolean swipeInProgress = false;
   private int swipedPos = -1;
   private Context context;
   private Paint controlPaint;
@@ -114,11 +115,6 @@ public class SwipeController extends ItemTouchHelper.Callback {
 
   @Override
   public int convertToAbsoluteDirection(int flags, int layoutDirection) {
-    if (swipeBack) {
-      swipeBack = false;
-      return 0;
-    }
-
     return super.convertToAbsoluteDirection(flags, layoutDirection);
   }
 
@@ -129,6 +125,7 @@ public class SwipeController extends ItemTouchHelper.Callback {
                           float dX, float dY,
                           int actionState, boolean isCurrentlyActive) {
     int position = viewHolder.getAdapterPosition();
+    float dx = dX;
 
     if (position < 0) {
       swipedPos = position;
@@ -157,14 +154,19 @@ public class SwipeController extends ItemTouchHelper.Callback {
               icon,
               iconDest,
               backgroundPaint,
-              pos -> Timber.d("TEST %s item clicked", pos)));
+              pos -> {
+                Toast.makeText(context, "Item " + pos + " clicked", Toast.LENGTH_SHORT).show();
+              }));
         }
+
 
         drawButtons(c, backgroundRadius, iconDest, backgroundLocation);
       }
+
+      dx = isCurrentlyActive ? dX - itemView.getLeft() : dX / 4;
     }
 
-    super.onChildDraw(c, recyclerView, viewHolder, dX / 4, dY, actionState, isCurrentlyActive);
+    super.onChildDraw(c, recyclerView, viewHolder, dx, dY, actionState, isCurrentlyActive);
   }
 
   public void drawButtons(Canvas c, float backgroundRadius, RectF iconDest, PointF backgroundLocation) {
