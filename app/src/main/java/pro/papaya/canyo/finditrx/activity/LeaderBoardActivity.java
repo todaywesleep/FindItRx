@@ -1,9 +1,10 @@
 package pro.papaya.canyo.finditrx.activity;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -12,14 +13,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.viewpager.LeaderBoardPagerAdapter;
+import timber.log.Timber;
 
 public class LeaderBoardActivity extends BaseActivity {
-  @BindView(R.id.leader_board_toolbar)
-  Toolbar toolbar;
   @BindView(R.id.leader_board_view_pager)
   ViewPager viewPager;
   @BindView(R.id.leader_board_tab_navigator)
   TabLayout tabLayout;
+  @BindView(R.id.leader_board_back)
+  ImageButton back;
 
   private LeaderBoardPagerAdapter pagerAdapter;
 
@@ -29,9 +31,18 @@ public class LeaderBoardActivity extends BaseActivity {
 
     setContentView(R.layout.activity_leader_board);
     ButterKnife.bind(this);
-    configureToolbar();
+//    TODO Uncomment to setup toolbar
+//    configureToolbar();
+    setUpViews();
     configureViewPager();
     setListeners();
+  }
+
+  private void setUpViews(){
+    back.setOnClickListener(v -> {
+      Timber.d("TEST back");
+      finish();
+    });
   }
 
   private void configureViewPager() {
@@ -80,6 +91,6 @@ public class LeaderBoardActivity extends BaseActivity {
   }
 
   private void configureToolbar() {
-    toolbar.setNavigationOnClickListener(v -> finish());
+//    toolbar.setNavigationOnClickListener(v -> finish());
   }
 }
