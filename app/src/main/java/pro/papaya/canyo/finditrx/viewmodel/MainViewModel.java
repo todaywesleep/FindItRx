@@ -35,7 +35,7 @@ public class MainViewModel extends ViewModel {
     List<UserQuestModel> completedQuests = new ArrayList<>();
 
     for (UserQuestModel quest : userQuests) {
-      if (foundAnswers.contains(QuestModel.from(quest))) {
+      if (foundAnswers.contains(quest)) {
         completedQuests.add(quest);
       }
     }

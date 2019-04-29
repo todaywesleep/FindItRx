@@ -38,6 +38,7 @@ import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.TimeUtils;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
+import timber.log.Timber;
 
 public class QuestsFragment extends BaseFragment implements
     UserQuestsAdapter.QuestCallback, SwipeController.ChangeButtonClick {
@@ -121,7 +122,8 @@ public class QuestsFragment extends BaseFragment implements
   @Override
   public void onItemClick(int position) {
     setLoading(true);
-    questsViewModel.rejectQuest(adapter.getData().get(position))
+    UserQuestModel questModel = adapter.getData().get(position);
+    questsViewModel.rejectQuest(questModel)
         .subscribe(new SingleObserver<Boolean>() {
           @Override
           public void onSubscribe(Disposable d) {
@@ -131,13 +133,13 @@ public class QuestsFragment extends BaseFragment implements
           @Override
           public void onSuccess(Boolean aBoolean) {
             setLoading(false);
+            logDebug("Quest %s was successfully rejected", questModel);
           }
 
           @Override
           public void onError(Throwable e) {
             setLoading(false);
             showSnackBar(e.getLocalizedMessage());
-
             logError(e);
           }
         });

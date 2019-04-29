@@ -28,7 +28,7 @@ public final class Constants {
 
   public static final int QUEST_RARITY_STEPS = 5;
   public static final int RARITY_PRICE_STEP = (UPPER_BORDER_QUEST_REWARD - BOTTOM_BORDER_QUEST_REWARD) / QUEST_RARITY_STEPS;
-  public static final int BOTTOM_RARITY_BORDER = BOTTOM_BORDER_QUEST_REWARD + RARITY_PRICE_STEP;
+  public static final int BOTTOM_RARITY_BORDER = BOTTOM_BORDER_QUEST_REWARD;
 
   //LOG SECTION
   public static final String LOG_OPENED_BRACKET = "[";
