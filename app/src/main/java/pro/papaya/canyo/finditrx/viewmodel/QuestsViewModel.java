@@ -1,10 +1,9 @@
 package pro.papaya.canyo.finditrx.viewmodel;
 
-import com.google.android.gms.tasks.Task;
+import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import androidx.lifecycle.ViewModel;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
@@ -34,14 +33,7 @@ public class QuestsViewModel extends ViewModel {
     FireBaseItemsManager.getInstance().requestQuest(availableQuests);
   }
 
-  public Single<Boolean> rejectQuest(QuestModel questToReject){
+  public Single<Boolean> rejectQuest(QuestModel questToReject) {
     return FireBaseItemsManager.getInstance().rejectQuest(questToReject);
-  }
-
-  //TODO remove after test
-  public Task<Void> completeQuest(UserQuestModel questModel) {
-    FireBaseProfileManager.getInstance().enrollMoney(questModel.getReward());
-    FireBaseProfileManager.getInstance().enrollExperience(questModel.getExperience());
-    return FireBaseProfileManager.getInstance().completeQuest(questModel);
   }
 }

@@ -92,10 +92,6 @@ public class QuestInformationDialog extends Dialog {
 
   private void setUpViewAccordingRarity() {
     QuestRarity rarityModel = QuestRarity.getRarity(userQuestModel.getReward());
-//    TODO uncomment to set color whole card
-//    GradientDrawable bgShape = (GradientDrawable) root.getBackground();
-//    bgShape.setColor(ContextCompat.getColor(getContext(), rarity.getColor()));
-
     String rarityString = questRarity.getRarityString();
     String original = getContext().getString(
         R.string.quest_info_rarity,

@@ -9,14 +9,27 @@
 
     <TextView
         android:id="@+id/profile_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
         android:textAlignment="center"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/profile_edit_nickname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/profile_edit_nickname"
         tools:text="Username" />
+
+    <ImageButton
+        android:id="@+id/profile_edit_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_small"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/padding_small"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintStart_toEndOf="@id/profile_username"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/profile_level"

@@ -14,14 +14,17 @@ public abstract class BaseDialog extends AlertDialog {
 
   protected BaseDialog(Context context) {
     super(context);
+    init();
   }
 
   protected BaseDialog(Context context, int themeResId) {
     super(context, themeResId);
+    init();
   }
 
   protected BaseDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
     super(context, cancelable, cancelListener);
+    init();
   }
 
   protected abstract String getTitle();

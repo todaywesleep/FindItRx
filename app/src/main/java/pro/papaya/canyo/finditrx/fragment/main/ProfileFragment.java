@@ -7,27 +7,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.activity.AuthActivity;
+import pro.papaya.canyo.finditrx.dialog.ChangeNicknameDialog;
+import pro.papaya.canyo.finditrx.dialog.NotEnoughMoneyDialog;
 import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
 import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
+import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
 
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends BaseFragment
+    implements ChangeNicknameDialog.ChangeNicknameDialogCallback {
   public interface ProfileFragmentCallback {
     void onLeaderBoardRequest();
   }
@@ -48,9 +54,12 @@ public class ProfileFragment extends BaseFragment {
   Button logout;
   @BindView(R.id.profile_leader_board)
   Button leaderBoard;
+  @BindView(R.id.profile_edit_nickname)
+  ImageButton editProfileName;
 
   private ProfileViewModel profileViewModel;
   private ProfileFragmentCallback callback;
+  private UserModel currentUserModel;
 
   public static ProfileFragment getNewInstance(ProfileFragmentCallback callback) {
     ProfileFragment fragment = new ProfileFragment();
@@ -76,8 +85,55 @@ public class ProfileFragment extends BaseFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+    initViews();
     setSubscriptions();
     setViewListeners();
+  }
+
+  @Override
+  public void onPayClick(String newUserName) {
+    setLoading(true);
+
+    if (currentUserModel != null) {
+      if (currentUserModel.getBalance() > Constants.PRICE_CHANGE_NICKNAME) {
+        profileViewModel.changeNickName(newUserName)
+            .subscribe(new SingleObserver<Void>() {
+              @Override
+              public void onSubscribe(Disposable d) {
+              }
+
+              @Override
+              public void onSuccess(Void aVoid) {
+                setLoading(false);
+                logDebug("Nickname changed to %s", newUserName);
+              }
+
+              @Override
+              public void onError(Throwable e) {
+                setLoading(false);
+                showSnackBar(e.getLocalizedMessage());
+                logError(e);
+              }
+            });
+      } else {
+        setLoading(false);
+        new NotEnoughMoneyDialog(getContext()).show();
+      }
+    } else {
+      setLoading(false);
+      showSnackBar("User model is null");
+      logError(new Throwable("User model is null"));
+    }
+  }
+
+  private void initViews() {
+    editProfileName.setOnClickListener(v -> {
+      if (getContext() != null) {
+        new ChangeNicknameDialog(getContext(),
+            userName.getText().toString(),
+            this).show();
+      }
+    });
   }
 
   private void setCallback(ProfileFragmentCallback callback) {
@@ -94,7 +150,7 @@ public class ProfileFragment extends BaseFragment {
     });
 
     leaderBoard.setOnClickListener(v -> {
-      if (callback != null){
+      if (callback != null) {
         callback.onLeaderBoardRequest();
       }
     });
@@ -107,10 +163,10 @@ public class ProfileFragment extends BaseFragment {
           @Override
           public void onNext(UserModel userModel) {
             if (userModel != null) {
+              currentUserModel = userModel;
               int restExperienceValue = CalculatorUtils.getRestExperience(
                   userModel.getLevel(), userModel.getExperience()
               );
-
               userName.setText(userModel.getNickName());
               balance.setText(String.format(Locale.getDefault(),
                   getString(R.string.fragment_quests_balance),

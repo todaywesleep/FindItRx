@@ -11,6 +11,8 @@
     <string name="auth_register">Register</string>
     <!-- Authorization activity error -->
     <string name="auth_password_length_error">Required password can\'t be at least 6 digits</string>
+    <string name="auth_nickname_length_error">Nickname can\'t be at least 2 digits</string>
+    <string name="auth_nickname_equals_error">You should enter different nickname</string>
     <string name="auth_repeat_password_error">Passwords does not match</string>
     <string name="auth_email_error">Please enter correct email</string>
     <!-- Main Activity -->
@@ -61,4 +63,13 @@
     <string name="quest_info_rarity">Quest rarity: %s</string>
     <string name="quest_info_reject">Reject this quest</string>
     <string name="quest_info_close">Close</string>
+    <!-- Change nickname dialog -->
+    <string name="change_nick_title">Enter new nickname</string>
+    <string name="change_nick_placeholder">Nickname</string>
+    <string name="change_nick_change">Change nickname and pay %d coins</string>
+    <string name="change_nick_close">Close</string>
+    <!-- Not enough coins dialog -->
+    <string name="not_enough_coins_title">Oh no…</string>
+    <string name="not_enough_coins_message">You do not have enough coins. FindIt and come later.</string>
+    <string name="not_enough_coins_positive">OK</string>
 </resources>

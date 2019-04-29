@@ -3,6 +3,9 @@ package pro.papaya.canyo.finditrx.utils;
 import java.util.regex.Pattern;
 
 public final class Constants {
+  //SHOP
+  public static final int PRICE_CHANGE_NICKNAME = 500;
+
   //DATABASE
   public static final int LEADER_BOARD_LIMIT = 100;
   public static final String STOCK_NICKNAME = "Newbie#";
@@ -38,6 +41,7 @@ public final class Constants {
 
   //LOGIN SCREEN
   public static final int MIN_PASSWORD_LENGTH = 6;
+  public static final int MIN_NICKNAME_LENGTH = 2;
   public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
       Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 }

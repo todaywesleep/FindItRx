@@ -14,4 +14,8 @@ public class ProfileViewModel extends ViewModel {
   public Single<Void> increaseUserLevel() {
     return FireBaseProfileManager.getInstance().increaseUserLevel();
   }
+
+  public Single<Void> changeNickName(String newNick){
+    return FireBaseProfileManager.getInstance().changeUserNickname(newNick);
+  }
 }

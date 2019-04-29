@@ -24,6 +24,7 @@ import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
+import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
 public class FireBaseProfileManager {
@@ -34,6 +35,7 @@ public class FireBaseProfileManager {
   private static final String SUBCOLLECTION_FOUND_SUBJECTS = "found_subjects";
   public static final String DOCUMENT_QUEST_TIMESTAMP = "last_requested_quest_time";
   public static final String FIELD_BALANCE = "balance";
+  public static final String FIELD_NICKNAME = "nickName";
   public static final String FIELD_EXPERIENCE = "experience";
   public static final String FIELD_FOUNDED_SUBJECTS = "foundedSubjects";
   public static final String FIELD_LEVEL = "level";
@@ -220,6 +222,27 @@ public class FireBaseProfileManager {
                 getUserReference().update(FIELD_EXPERIENCE, experience);
               }
             });
+      }
+    };
+  }
+
+  public Single<Void> changeUserNickname(String userName) {
+    return new Single<Void>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Void> observer) {
+        getUserReference()
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+              UserModel user = documentSnapshot.toObject(UserModel.class);
+              if (user != null) {
+                long newBalance = user.getBalance() - Constants.PRICE_CHANGE_NICKNAME;
+                getUserReference().update(FIELD_BALANCE, newBalance);
+                getUserReference().update(FIELD_NICKNAME, userName);
+              }
+
+              observer.onSuccess(null);
+            })
+            .addOnFailureListener(observer::onError);
       }
     };
   }
