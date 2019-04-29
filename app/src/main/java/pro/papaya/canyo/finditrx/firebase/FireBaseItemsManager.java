@@ -99,6 +99,20 @@ public class FireBaseItemsManager {
         .addOnFailureListener(e -> Timber.e("Can't get user quest reference"));
   }
 
+  public Single<Boolean> rejectQuest(QuestModel questToReject) {
+    return new Single<Boolean>() {
+      @Override
+      protected void subscribeActual(SingleObserver<? super Boolean> observer) {
+        FireBaseProfileManager.getInstance()
+            .getQuestsReference()
+            .document(questToReject.getIdentifier())
+            .delete()
+            .addOnSuccessListener(aVoid -> observer.onSuccess(true))
+            .addOnFailureListener(observer::onError);
+      }
+    };
+  }
+
   private int generateReward() {
     Random rand = new Random();
     int reward = rand.nextInt(Constants.UPPER_BORDER_QUEST_REWARD - Constants.BOTTOM_BORDER_QUEST_REWARD);

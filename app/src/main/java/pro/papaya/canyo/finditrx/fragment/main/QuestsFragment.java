@@ -26,6 +26,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.recycler.UserQuestsAdapter;
 import pro.papaya.canyo.finditrx.controller.SwipeController;
@@ -37,7 +39,8 @@ import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.TimeUtils;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
 
-public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.QuestCallback {
+public class QuestsFragment extends BaseFragment implements
+    UserQuestsAdapter.QuestCallback, SwipeController.ChangeButtonClick {
   public interface QuestFragmentCallback {
   }
 
@@ -97,7 +100,7 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
       applicationContext = getActivity().getApplicationContext();
     }
 
-    SwipeController swipeController = new SwipeController(applicationContext, rvActiveQuests);
+    SwipeController swipeController = new SwipeController(applicationContext, rvActiveQuests, this);
     ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
     itemTouchhelper.attachToRecyclerView(rvActiveQuests);
   }
@@ -112,6 +115,31 @@ public class QuestsFragment extends BaseFragment implements UserQuestsAdapter.Qu
         .addOnFailureListener(e -> {
           showSnackBar(e.getLocalizedMessage());
           logError(e);
+        });
+  }
+
+  @Override
+  public void onItemClick(int position) {
+    setLoading(true);
+    questsViewModel.rejectQuest(adapter.getData().get(position))
+        .subscribe(new SingleObserver<Boolean>() {
+          @Override
+          public void onSubscribe(Disposable d) {
+
+          }
+
+          @Override
+          public void onSuccess(Boolean aBoolean) {
+            setLoading(false);
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            setLoading(false);
+            showSnackBar(e.getLocalizedMessage());
+
+            logError(e);
+          }
         });
   }
 

@@ -25,7 +25,6 @@ import java.util.Map;
 
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.utils.BitmapUtils;
-import timber.log.Timber;
 
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 
@@ -52,16 +51,17 @@ public class SwipeController extends ItemTouchHelper.Callback {
   private GestureDetector gestureDetector;
   private RecyclerView recyclerView;
 
-  private boolean swipeInProgress = false;
   private int swipedPos = -1;
   private Context context;
   private Paint controlPaint;
   private Paint backgroundPaint;
+  private ChangeButtonClick callback;
 
   @SuppressLint("ClickableViewAccessibility")
-  public SwipeController(Context context, RecyclerView recyclerView) {
+  public SwipeController(Context context, RecyclerView recyclerView, ChangeButtonClick callback) {
     this.context = context;
     this.recyclerView = recyclerView;
+    this.callback = callback;
     setupControlPaint();
     setupBackgroundPaint();
     gestureDetector = new GestureDetector(context, gestureListener);
@@ -154,19 +154,14 @@ public class SwipeController extends ItemTouchHelper.Callback {
               icon,
               iconDest,
               backgroundPaint,
-              pos -> {
-                Toast.makeText(context, "Item " + pos + " clicked", Toast.LENGTH_SHORT).show();
-              }));
+              pos -> callback.onItemClick(position)));
         }
-
 
         drawButtons(c, backgroundRadius, iconDest, backgroundLocation);
       }
-
-      dx = isCurrentlyActive ? dX - itemView.getLeft() : dX / 4;
     }
 
-    super.onChildDraw(c, recyclerView, viewHolder, dx, dY, actionState, isCurrentlyActive);
+    super.onChildDraw(c, recyclerView, viewHolder, dX / 4, dY, actionState, isCurrentlyActive);
   }
 
   public void drawButtons(Canvas c, float backgroundRadius, RectF iconDest, PointF backgroundLocation) {

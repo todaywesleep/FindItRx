@@ -6,6 +6,7 @@ import java.util.List;
 
 import androidx.lifecycle.ViewModel;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import pro.papaya.canyo.finditrx.firebase.FireBaseItemsManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
@@ -31,6 +32,10 @@ public class QuestsViewModel extends ViewModel {
 
   public void requestQuest(List<QuestModel> availableQuests) {
     FireBaseItemsManager.getInstance().requestQuest(availableQuests);
+  }
+
+  public Single<Boolean> rejectQuest(QuestModel questToReject){
+    return FireBaseItemsManager.getInstance().rejectQuest(questToReject);
   }
 
   //TODO remove after test
