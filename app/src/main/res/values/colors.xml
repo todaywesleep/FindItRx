@@ -25,6 +25,12 @@
     <color name="mythic_quest_color">#A100C5</color>
     <color name="legendary_quest_color">#FF9800</color>
 
+    <!-- Rating -->
+    <color name="rating_gold">#FFD500</color>
+    <color name="rating_silver">#ACACAC</color>
+    <color name="rating_bronze">#FF6600</color>
+    <color name="rating_common">#000000</color>
+
     <!-- Quest cards -->
     <color name="quest_card_control">#000000</color>
     <color name="quest_card_background">#C0C0C0</color>

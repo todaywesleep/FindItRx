@@ -1,34 +1,44 @@
 package pro.papaya.canyo.finditrx.adapter.recycler;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
+import pro.papaya.canyo.finditrx.utils.Constants;
+import pro.papaya.canyo.finditrx.utils.PixelUtils;
 import timber.log.Timber;
 
 public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.ViewHolder> {
   private final static int FIRST_PLACE_IDX = 0;
   private final static int SECOND_PLACE_IDX = 1;
   private final static int THIRD_PLACE_IDX = 2;
+  private final static int CARD_STROKE_WIDTH = 2;
+  private final static int CARD_STROKE_WIDTH_BIG = 4;
 
   private List<UserModel> data = new ArrayList<>();
   private LeaderBoardPagerModel model;
+  private Context context;
 
-  public LeaderBoardAdapter(LeaderBoardPagerModel model) {
+  public LeaderBoardAdapter(LeaderBoardPagerModel model, Context context) {
     this.model = model;
+    this.context = context;
   }
 
   @NonNull
@@ -44,10 +54,10 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
   @SuppressLint("SetTextI18n")
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     UserModel model = data.get(position);
-    holder.userIdx.setText(Integer.toString(position + 1));
+    holder.userIdx.setText(Integer.toString(position + 1).concat(Constants.DOT));
     holder.userName.setText(model.getNickName());
     holder.score.setText(getRequiredScore(model));
-    applyImage(holder, position);
+    applyCardStyle(holder, position);
     holder.setOnClickListener(v -> {
       Timber.d("TEST item %s clicked", model.getNickName());
     });
@@ -65,29 +75,43 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     notifyDataSetChanged();
   }
 
-  private void applyImage(@NonNull ViewHolder holder, int position){
-    switch (position){
-      case FIRST_PLACE_IDX:{
+  private void applyCardStyle(@NonNull ViewHolder holder, int position) {
+    GradientDrawable drawable = (GradientDrawable) holder.rootView.getBackground();
+    int strokeColorResource = R.color.rating_common;
+    int widthDp = CARD_STROKE_WIDTH;
+
+    switch (position) {
+      case FIRST_PLACE_IDX: {
         holder.scoreImage.setImageResource(R.drawable.ic_gold_medal);
+        strokeColorResource = R.color.rating_gold;
+        widthDp = CARD_STROKE_WIDTH_BIG;
         break;
       }
 
-      case SECOND_PLACE_IDX:{
+      case SECOND_PLACE_IDX: {
         holder.scoreImage.setImageResource(R.drawable.ic_silver_medal);
+        strokeColorResource = R.color.rating_silver;
+        widthDp = CARD_STROKE_WIDTH_BIG;
         break;
       }
 
       case THIRD_PLACE_IDX: {
         holder.scoreImage.setImageResource(R.drawable.ic_bronze_medal);
+        strokeColorResource = R.color.rating_bronze;
+        widthDp = CARD_STROKE_WIDTH_BIG;
         break;
       }
 
-      default:{
+      default: {
         holder.userIdx.setVisibility(View.VISIBLE);
         holder.scoreImage.setVisibility(View.GONE);
         break;
       }
     }
+
+    drawable.setStroke(PixelUtils.dipToPx(context, widthDp), ContextCompat.getColor(
+        context, strokeColorResource
+    ));
   }
 
   private String getRequiredScore(UserModel model) {

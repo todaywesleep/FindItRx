@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_user_leader_board"
     android:padding="@dimen/padding_default">
 
     <TextView
@@ -11,6 +12,7 @@
         android:layout_width="@dimen/leader_board_card_height"
         android:layout_height="@dimen/leader_board_card_height"
         android:gravity="center"
+        android:textStyle="bold"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -131,7 +131,7 @@ public class AuthActivity extends BaseActivity {
             ? etPassword.getText().toString()
             : Constants.EMPTY_STRING;
 
-        if (!s.isEmpty() || !s.equals(password)) {
+        if (!s.equals(password)) {
           etRepeatPasswordLayout.setError(getString(R.string.auth_repeat_password_error));
         } else {
           etRepeatPasswordLayout.setErrorEnabled(false);

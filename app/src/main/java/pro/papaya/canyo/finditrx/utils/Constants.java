@@ -11,6 +11,7 @@ public final class Constants {
   public static final int USER_MAX_QUESTS = 5;
   public static final int TIME_TO_QUEST_MINS = 1;
   public static final String EMPTY_STRING = "";
+  public static final String DOT = ".";
 
   //TEXT SECTION
   public static final String OPENED_BOLD_TAG = "<b>";

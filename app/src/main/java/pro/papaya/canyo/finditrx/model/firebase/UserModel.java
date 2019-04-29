@@ -1,5 +1,8 @@
 package pro.papaya.canyo.finditrx.model.firebase;
 
+import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
+import pro.papaya.canyo.finditrx.utils.Constants;
+
 public class UserModel {
   private String email;
   private String nickName;
@@ -20,6 +23,16 @@ public class UserModel {
     this.balance = 0;
     this.level = 0;
     this.experience = 0;
+  }
+
+  public static UserModel getStabUser(String userEmail, int userIdx, String userId) {
+    return new UserModel(
+        userEmail,
+        Constants.STOCK_NICKNAME + userIdx,
+        userId,
+        0,
+        0
+    );
   }
 
   public String getEmail() {

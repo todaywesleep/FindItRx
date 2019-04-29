@@ -1,6 +1,5 @@
 package pro.papaya.canyo.finditrx.firebase;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,7 +24,6 @@ import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
-import pro.papaya.canyo.finditrx.utils.Constants;
 import timber.log.Timber;
 
 public class FireBaseProfileManager {
@@ -179,19 +177,21 @@ public class FireBaseProfileManager {
           @Override
           public void onSuccess(Integer integer) {
             database.collection(COLLECTION_USERS).document(getUserId())
-                .set(new UserModel(
+                .set(UserModel.getStabUser(
                     FireBaseLoginManager.getInstance().getUserEmail(),
-                    Constants.STOCK_NICKNAME + integer.toString(),
-                    getUserId(),
-                    0,
-                    0
-                )).addOnSuccessListener(documentReference -> {
-              observer.onSuccess(true);
-            }).addOnFailureListener(observer::onError);
+                    integer,
+                    getUserId()
+                ))
+                .addOnSuccessListener(documentReference -> {
+                  observer.onSuccess(true);
+                }).addOnFailureListener(observer::onError);
 
+            database.collection(COLLECTION_USERS).document(getUserId())
+                .collection(SUBCOLLECTION_FOUND_SUBJECTS);
             //Don't track settings writing
             database.collection(COLLECTION_SETTINGS).document(getUserId())
                 .set(SettingsModel.getStabSettings());
+
           }
 
           @Override
@@ -310,23 +310,23 @@ public class FireBaseProfileManager {
       getUserReference().collection(SUBCOLLECTION_FOUND_SUBJECTS)
           .get().addOnSuccessListener(queryDocumentSnapshots -> {
         int oldFindAmount = 0;
-            if (queryDocumentSnapshots != null) {
-              oldFindAmount = queryDocumentSnapshots.size();
-            }
+        if (queryDocumentSnapshots != null) {
+          oldFindAmount = queryDocumentSnapshots.size();
+        }
 
-            int finalOldFindAmount = oldFindAmount;
-            getUserReference()
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                  UserModel user = documentSnapshot.toObject(UserModel.class);
-                  if (user != null) {
-                    long newFoundedSubjects = finalOldFindAmount + quests.size();
-                    getUserReference().update(FIELD_FOUNDED_SUBJECTS, newFoundedSubjects)
-                        .addOnSuccessListener(aVoid -> Timber.d("User founded subjects updated and equals: %s", newFoundedSubjects))
-                        .addOnFailureListener(aVoid -> Timber.d("Can't update user founded subjects"));
-                  }
-                });
-          });
+        int finalOldFindAmount = oldFindAmount;
+        getUserReference()
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+              UserModel user = documentSnapshot.toObject(UserModel.class);
+              if (user != null) {
+                long newFoundedSubjects = finalOldFindAmount + quests.size();
+                getUserReference().update(FIELD_FOUNDED_SUBJECTS, newFoundedSubjects)
+                    .addOnSuccessListener(aVoid -> Timber.d("User founded subjects updated and equals: %s", newFoundedSubjects))
+                    .addOnFailureListener(aVoid -> Timber.d("Can't update user founded subjects"));
+              }
+            });
+      });
     }
   }
 

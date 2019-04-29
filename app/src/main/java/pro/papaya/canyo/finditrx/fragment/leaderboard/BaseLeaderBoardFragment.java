@@ -54,7 +54,7 @@ public abstract class BaseLeaderBoardFragment extends BaseFragment {
   }
 
   protected void initViews() {
-    adapter = new LeaderBoardAdapter(model);
+    adapter = new LeaderBoardAdapter(model, getContext());
 
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.addItemDecoration(getItemDecorator());
@@ -71,13 +71,15 @@ public abstract class BaseLeaderBoardFragment extends BaseFragment {
       @Override
       public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
+        int defaultOffset = getResources().getDimensionPixelSize(R.dimen.padding_default);
 
         if (parent.getChildAdapterPosition(view) == 0) {
-          //TODO move into dimens
-          outRect.top = 16;
+          outRect.top = defaultOffset;
         }
 
-        outRect.bottom = 16;
+        outRect.bottom = defaultOffset;
+        outRect.left = defaultOffset;
+        outRect.right = defaultOffset;
       }
     };
   }
