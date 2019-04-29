@@ -25,6 +25,7 @@ import java.util.Map;
 
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.utils.BitmapUtils;
+import timber.log.Timber;
 
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 
@@ -66,7 +67,6 @@ public class SwipeController extends ItemTouchHelper.Callback {
     setupBackgroundPaint();
     gestureDetector = new GestureDetector(context, gestureListener);
     recyclerView.setOnTouchListener((view, e) -> {
-      Point point = new Point((int) e.getRawX(), (int) e.getRawY());
       RecyclerView.ViewHolder swipedViewHolder = recyclerView.findViewHolderForAdapterPosition(swipedPos);
 
       if (swipedViewHolder != null) {
@@ -75,8 +75,7 @@ public class SwipeController extends ItemTouchHelper.Callback {
         swipedItem.getGlobalVisibleRect(rect);
 
         if (e.getAction() == MotionEvent.ACTION_DOWN || e.getAction() == MotionEvent.ACTION_UP || e.getAction() == MotionEvent.ACTION_MOVE) {
-          if (rect.top < point.y && rect.bottom > point.y)
-            gestureDetector.onTouchEvent(e);
+          gestureDetector.onTouchEvent(e);
         }
         return false;
       }
