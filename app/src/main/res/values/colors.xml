@@ -19,11 +19,11 @@
     <color name="fabEnabledTitleColor">#000000</color>
 
     <!-- Rarity -->
-    <color name="common_quest_color">#B6B6B6</color>
-    <color name="uncommon_quest_color">#06C40E</color>
-    <color name="rare_quest_color">#006FC5</color>
-    <color name="mythic_quest_color">#A100C5</color>
-    <color name="legendary_quest_color">#FF9800</color>
+    <color name="common_quest_color">#E2E2E2</color>
+    <color name="uncommon_quest_color">#9DE8A0</color>
+    <color name="rare_quest_color">#83B1DA</color>
+    <color name="mythic_quest_color">#C77CDB</color>
+    <color name="legendary_quest_color">#F3C680</color>
 
     <!-- Rating -->
     <color name="rating_gold">#FFD500</color>

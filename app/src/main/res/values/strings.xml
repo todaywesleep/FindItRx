@@ -53,4 +53,12 @@
     <string name="reject_quest_dialog_message">Are you sure that you want skip \"%s\" quest?</string>
     <string name="reject_quest_dialog_positive">Yes</string>
     <string name="reject_quest_dialog_negative">No</string>
+    <!-- Quest info dialog -->
+    <string name="quest_info_title">%s Quest</string>
+    <string name="quest_info_rewards">When you complete this quest you\'ll receive following rewards: </string>
+    <string name="quest_info_reward_exp">Experience: %d</string>
+    <string name="quest_info_reward_coins">Coins: %d</string>
+    <string name="quest_info_rarity">Quest rarity: %s</string>
+    <string name="quest_info_reject">Reject this quest</string>
+    <string name="quest_info_close">Close</string>
 </resources>

@@ -31,6 +31,7 @@ import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.recycler.UserQuestsAdapter;
 import pro.papaya.canyo.finditrx.controller.SwipeController;
+import pro.papaya.canyo.finditrx.dialog.QuestInformationDialog;
 import pro.papaya.canyo.finditrx.dialog.RejectQuestConfirmationDialog;
 import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
@@ -41,7 +42,9 @@ import pro.papaya.canyo.finditrx.utils.TimeUtils;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
 
 public class QuestsFragment extends BaseFragment implements
-    UserQuestsAdapter.QuestCallback, SwipeController.ChangeButtonClick {
+    UserQuestsAdapter.QuestCallback,
+    SwipeController.ChangeButtonClick,
+    QuestInformationDialog.QuestInformationDialogCallback {
   public interface QuestFragmentCallback {
   }
 
@@ -108,15 +111,13 @@ public class QuestsFragment extends BaseFragment implements
 
   @Override
   public void onQuestClicked(UserQuestModel quest) {
-    //TODO remove after testing
-    questsViewModel.completeQuest(quest)
-        .addOnSuccessListener(aVoid -> {
-          logDebug("Quest %s successfully completed", quest.getIdentifier());
-        })
-        .addOnFailureListener(e -> {
-          showSnackBar(e.getLocalizedMessage());
-          logError(e);
-        });
+    if (getContext() != null) {
+      new QuestInformationDialog(
+          getContext(),
+          quest,
+          this
+      ).show();
+    }
   }
 
   @Override
@@ -128,6 +129,11 @@ public class QuestsFragment extends BaseFragment implements
           dialog.dismiss();
           rejectQuest(questModel);
         }).show();
+  }
+
+  @Override
+  public void onRejectPress(UserQuestModel model) {
+    rejectQuest(model);
   }
 
   private void rejectQuest(QuestModel questModel) {

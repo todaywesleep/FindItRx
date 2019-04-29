@@ -27,8 +27,6 @@ import static pro.papaya.canyo.finditrx.utils.Constants.CLOSED_BOLD_TAG;
 import static pro.papaya.canyo.finditrx.utils.Constants.OPENED_BOLD_TAG;
 
 public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.ViewHolder> {
-  private final static int CARD_BACKGROUND_ALPHA = 100;
-
   public interface QuestCallback {
     void onQuestClicked(UserQuestModel quest);
   }
@@ -96,7 +94,6 @@ public class UserQuestsAdapter extends RecyclerView.Adapter<UserQuestsAdapter.Vi
     QuestRarity rarity = QuestRarity.getRarity(model.getReward());
     GradientDrawable bgShape = (GradientDrawable) holder.rootView.getBackground();
     bgShape.setColor(ContextCompat.getColor(context, rarity.getColor()));
-    bgShape.setAlpha(CARD_BACKGROUND_ALPHA);
   }
 
   @Override

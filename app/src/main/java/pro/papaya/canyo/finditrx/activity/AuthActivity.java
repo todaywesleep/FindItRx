@@ -44,9 +44,6 @@ public class AuthActivity extends BaseActivity {
   Button btnRegister;
 
   private AuthViewModel authViewModel;
-  private boolean isEmailHasErrors = true;
-  private boolean isPasswordHasErrors = true;
-  private boolean isRepeatPasswordHasErrors = true;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
