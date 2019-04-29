@@ -182,6 +182,7 @@ public class MainActivity extends BaseActivity implements
         this
     );
 
+    mainViewPager.setOffscreenPageLimit(adapter.getCount());
     mainViewPager.setAdapter(adapter);
     selectPage(MainViewPagerModel.CAMERA_PAGE.ordinal(), false);
     selectTab(MainViewPagerModel.CAMERA_PAGE.ordinal());

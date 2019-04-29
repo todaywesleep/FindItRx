@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 
 import java.util.List;
@@ -60,7 +62,7 @@ public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallb
   @BindView(R.id.scan_result)
   LinearLayout scanResultContainer;
   @BindView(R.id.snapshot_btn)
-  Button btnSnapshot;
+  FloatingActionButton btnSnapshot;
 
   private Fotoapparat fotoapparat;
   private ActionFragmentCallback callback;
