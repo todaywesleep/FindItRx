@@ -5,14 +5,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -25,7 +23,6 @@ import java.util.Map;
 
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.utils.BitmapUtils;
-import timber.log.Timber;
 
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 
