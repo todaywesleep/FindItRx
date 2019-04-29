@@ -31,6 +31,7 @@ import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.recycler.UserQuestsAdapter;
 import pro.papaya.canyo.finditrx.controller.SwipeController;
+import pro.papaya.canyo.finditrx.dialog.RejectQuestConfirmationDialog;
 import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.TimestampModel;
@@ -38,7 +39,6 @@ import pro.papaya.canyo.finditrx.model.firebase.UserQuestModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
 import pro.papaya.canyo.finditrx.utils.TimeUtils;
 import pro.papaya.canyo.finditrx.viewmodel.QuestsViewModel;
-import timber.log.Timber;
 
 public class QuestsFragment extends BaseFragment implements
     UserQuestsAdapter.QuestCallback, SwipeController.ChangeButtonClick {
@@ -121,8 +121,17 @@ public class QuestsFragment extends BaseFragment implements
 
   @Override
   public void onItemClick(int position) {
-    setLoading(true);
     UserQuestModel questModel = adapter.getData().get(position);
+    new RejectQuestConfirmationDialog(getContext(),
+        questModel,
+        (dialog, which) -> {
+          dialog.dismiss();
+          rejectQuest(questModel);
+        }).show();
+  }
+
+  private void rejectQuest(QuestModel questModel) {
+    setLoading(true);
     questsViewModel.rejectQuest(questModel)
         .subscribe(new SingleObserver<Boolean>() {
           @Override

@@ -48,4 +48,9 @@
     <string name="leader_board_money_tab">Money</string>
     <string name="leader_board_subjects_tab">New subjects</string>
     <string name="leader_board_type">Leaders in \"%s\" category</string>
+    <!-- Reject quest confirmation dialog -->
+    <string name="reject_quest_dialog_title">Warning</string>
+    <string name="reject_quest_dialog_message">Are you sure that you want skip \"%s\" quest?</string>
+    <string name="reject_quest_dialog_positive">Yes</string>
+    <string name="reject_quest_dialog_negative">No</string>
 </resources>
