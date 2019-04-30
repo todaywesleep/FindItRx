@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/authBackground"
     android:orientation="vertical"
     android:padding="@dimen/padding_default"
     tools:context=".activity.AuthActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/padding_default"
+            android:src="@drawable/logo" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/auth_content_holder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,21 +35,22 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/auth_et_email_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/MaterialLight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:inputType="textEmailAddress"
                 android:id="@+id/auth_et_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/auth_auth_email" />
+                android:hint="@string/auth_auth_email"
+                android:inputType="textEmailAddress"
+                android:textColor="@android:color/white" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/auth_et_password_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/MaterialLight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small">
@@ -42,12 +60,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/auth_password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@android:color/white" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/auth_et_repeat_password_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/MaterialLight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small"
@@ -62,17 +81,19 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:enabled="false"
             android:id="@+id/auth_bth_login"
-            style="@style/BaseButton"
+            style="@style/BaseAuthButton"
             android:layout_marginTop="@dimen/padding_small"
-            android:text="@string/auth_login" />
+            android:enabled="false"
+            android:text="@string/auth_login"
+            app:rippleColor="@color/authRipple" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/auth_bth_register"
-            style="@style/BaseButton"
+            style="@style/BaseAuthButton"
             android:layout_marginTop="@dimen/padding_small"
-            android:text="@string/auth_to_registration" />
+            android:text="@string/auth_to_registration"
+            app:rippleColor="@color/authRipple" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

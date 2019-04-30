@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#1A1A1A</color>
     <color name="colorAccent">#000000</color>
     <color name="colorLoadingBackground">#40000000</color>
+
+    <!-- Auth activity -->
+    <color name="authBackground">#111111</color>
+    <color name="authRipple">#40FFFFFF</color>
 
     <!-- Profile fragment -->
     <color name="profileHeader">#1A1A1A</color>
@@ -42,4 +46,7 @@
     <!-- Quest cards -->
     <color name="quest_card_control">#000000</color>
     <color name="quest_card_background">#C0C0C0</color>
+
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>
+    <color name="hintColor">#C0C0C0</color>
 </resources>
