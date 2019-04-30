@@ -26,6 +26,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/profile_settings"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_settings"
+            android:tint="@color/profileText"
+            app:layout_constraintBottom_toBottomOf="@id/profile_user_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/profile_user_image" />
+
         <TextView
             android:id="@+id/profile_user_name"
             android:layout_width="wrap_content"
@@ -67,6 +78,7 @@
             android:id="@+id/profile_experience"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/profile_metrics"
             app:layout_constraintHorizontal_bias="0"

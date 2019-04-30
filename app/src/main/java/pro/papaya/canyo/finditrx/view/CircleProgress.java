@@ -2,6 +2,7 @@ package pro.papaya.canyo.finditrx.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
@@ -16,7 +17,6 @@ import androidx.core.content.ContextCompat;
 
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.utils.Constants;
-import timber.log.Timber;
 
 public class CircleProgress extends View {
   private static final String LEVEL_PREFIX = "lvl ";
@@ -28,7 +28,6 @@ public class CircleProgress extends View {
   private static final float FULL_CIRCLE_ANGLE_STOCK = 360f;
   private static final float ZERO_ANGLE = -90f;
   private static final float ALPHA_ROOT = 0.99f;
-  private static final float VIEW_RECTANGLE_SIDE = 400f;
   private static final float LINE_WIDTH_K = .2f;
   private static final float TEXT_SIZE = 36f;
 
@@ -95,13 +94,13 @@ public class CircleProgress extends View {
   private void initPaint() {
     int greenColor = ContextCompat.getColor(getContext(), R.color.profileTotalExperience);
     int textGreyColor = ContextCompat.getColor(getContext(), R.color.profileText);
+    int blackColor = Color.BLACK;
 
     outerCirclePaint = new Paint();
     outerCirclePaint.setColor(greenColor);
 
     innerCirclePaint = new Paint();
-    innerCirclePaint.setAlpha(0xFF);
-    innerCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+    innerCirclePaint.setColor(blackColor);
 
     levelPaint = new Paint();
     levelPaint.setColor(textGreyColor);
