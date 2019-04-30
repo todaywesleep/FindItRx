@@ -15,13 +15,15 @@
         android:layout_height="wrap_content"
         android:text="@string/change_nick_title"
         android:textAlignment="center"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dialog_change_nick_label"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/MaterialDarkBox"
         android:layout_width="match_parent"
+        app:boxStrokeColor="@android:color/black"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_small">
 

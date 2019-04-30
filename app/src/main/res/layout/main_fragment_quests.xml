@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/commonBody"
     android:clipToPadding="false"
     android:padding="@dimen/padding_default">
 
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         android:text="@string/fragment_quests_title"
         android:textAlignment="center"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,8 +38,9 @@
         android:layout_height="wrap_content"
         android:text="@string/fragment_quests_remaining_time"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/fragment_quests_rv"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_quests_rv" />
 </androidx.constraintlayout.widget.ConstraintLayout>

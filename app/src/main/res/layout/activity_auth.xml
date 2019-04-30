@@ -35,12 +35,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/auth_et_email_layout"
-            style="@style/MaterialLight"
+            style="@style/MaterialLightBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/auth_et_email"
+                style="@style/MaterialLightEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/auth_auth_email"
@@ -50,7 +51,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/auth_et_password_layout"
-            style="@style/MaterialLight"
+            style="@style/MaterialLightBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small">
@@ -66,7 +67,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/auth_et_repeat_password_layout"
-            style="@style/MaterialLight"
+            style="@style/MaterialLightBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small"

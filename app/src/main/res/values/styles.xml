@@ -15,17 +15,36 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <!-- Login material inputs -->
-    <style name="MaterialLight" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">@android:color/white</item>
+    <style name="MaterialLightBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/box_stroke_light</item>
         <item name="boxStrokeWidth">2dp</item>
-        <item name="android:textColorHint">@color/hintColor</item>
+        <item name="android:textColorHint">@color/hintColorLight</item>
         <item name="hintTextAppearance">@style/MaterialLightTextAppearance</item>
+    </style>
+
+    <style name="MaterialDarkBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/box_stroke_dark</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="android:textColorHint">@color/hintColorDark</item>
+        <item name="hintTextAppearance">@style/MaterialDarkTextAppearance</item>
+    </style>
+
+    <style name="MaterialLightEditText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="MaterialDarkEditText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="MaterialLightTextAppearance" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorHint">@android:color/white</item>
+    </style>
+
+    <style name="MaterialDarkTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/black</item>
     </style>
 
     <style name="loadingDialog" parent="Base.Theme.AppCompat.Dialog">
