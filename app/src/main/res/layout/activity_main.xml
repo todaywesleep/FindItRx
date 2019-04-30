@@ -17,24 +17,27 @@
         android:id="@+id/main_tab_navigator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tabIconTint="@android:color/white"
+        app:tabIndicatorColor="@android:color/white">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/main_profile_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/main_profile_title" />
+            android:icon="@drawable/ic_user" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/main_tab_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/main_photo_title" />
+            android:icon="@drawable/ic_photo_camera" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/main_stats_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/main_quests_title" />
+            android:icon="@drawable/ic_note" />
     </com.google.android.material.tabs.TabLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
