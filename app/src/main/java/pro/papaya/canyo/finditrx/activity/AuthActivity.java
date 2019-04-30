@@ -57,6 +57,7 @@ public class AuthActivity extends BaseActivity {
   }
 
   private void renewAuth() {
+    setLoading(true);
     authViewModel.renewAuth()
         .subscribe(new SingleObserver<Boolean>() {
           @Override
@@ -68,15 +69,18 @@ public class AuthActivity extends BaseActivity {
           public void onSuccess(Boolean aBoolean) {
             if (!aBoolean) {
               logDebug("Can't renew session");
+              setLoading(false);
               return;
             }
 
             logDebug("Auth renewed successfully");
+            setLoading(false);
             navigateToMainActivity();
           }
 
           @Override
           public void onError(Throwable e) {
+            setLoading(false);
             logDebug("Cant renew auth with error: %s", e);
             showSnackBar(e.getLocalizedMessage());
           }
