@@ -166,8 +166,8 @@ public class CircleProgress extends View {
   }
 
   private float getRestAngle() {
-    float singleAnglePart = userTotalExp / FULL_CIRCLE_ANGLE_STOCK;
-    return ZERO_ANGLE + singleAnglePart * userExp;
+    float singleAnglePart = FULL_CIRCLE_ANGLE_STOCK / (userTotalExp == 0 ? 1 : userTotalExp);
+    return singleAnglePart * userExp;
   }
 
   private void drawCircles(@NonNull Canvas canvas) {

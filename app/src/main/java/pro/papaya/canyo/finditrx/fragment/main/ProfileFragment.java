@@ -91,7 +91,7 @@ public class ProfileFragment extends BaseFragment
     setLoading(true);
 
     if (currentUserModel != null) {
-      if (currentUserModel.getBalance() > Constants.PRICE_CHANGE_NICKNAME) {
+      if (currentUserModel.getBalance() >= Constants.PRICE_CHANGE_NICKNAME) {
         profileViewModel.changeNickName(newUserName)
             .subscribe(new SingleObserver<Void>() {
               @Override
