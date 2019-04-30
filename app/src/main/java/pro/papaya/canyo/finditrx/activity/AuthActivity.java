@@ -52,7 +52,6 @@ public class AuthActivity extends BaseActivity {
     setContentView(R.layout.activity_auth);
     ButterKnife.bind(this);
     setListeners();
-
     authViewModel = ViewModelProviders.of(this).get(AuthViewModel.class);
     renewAuth();
   }
