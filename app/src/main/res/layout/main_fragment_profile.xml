@@ -4,107 +4,159 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_default">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/profile_username"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profile_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/profileHeader"
+        android:padding="@dimen/padding_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/profile_user_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_white_circle"
+            android:src="@drawable/ic_user"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/profile_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/padding_default"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/profileText"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_user_image"
+            tools:text="Username" />
+
+        <ImageButton
+            android:id="@+id/profile_edit_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_small"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/ic_edit"
+            android:tint="@color/profileText"
+            app:layout_constraintBottom_toBottomOf="@id/profile_user_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/profile_user_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/profile_edit_nickname"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/profile_edit_nickname"
-        tools:text="Username" />
-
-    <ImageButton
-        android:id="@+id/profile_edit_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding_small"
-        android:background="@android:color/transparent"
-        android:padding="@dimen/padding_small"
-        android:src="@drawable/ic_edit"
-        app:layout_constraintStart_toEndOf="@id/profile_username"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/profile_level"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_username"
-        tools:text="@string/fragment_profile_level" />
-
-    <TextView
-        android:id="@+id/profile_exp_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_profile_experience"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_level" />
-
-    <TextView
-        android:id="@+id/profile_rest_exp_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_profile_rest_experience"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_level" />
-
-    <ProgressBar
-        android:id="@+id/profile_exp_progress"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/profile_exp_label" />
-
-    <TextView
-        android:id="@+id/profile_exp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_exp_progress"
-        tools:text="123" />
-
-    <TextView
-        android:id="@+id/profile_rest_exp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_exp_progress"
-        tools:text="321" />
-
-    <TextView
-        android:id="@+id/profile_balance"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_small"
-        android:text="@string/fragment_quests_balance"
-        app:layout_constraintTop_toBottomOf="@id/profile_exp" />
-
-    <Button
-        android:id="@+id/profile_leader_board"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_profile_leader_board"
+        android:background="@color/profileBody"
+        android:padding="@dimen/padding_default"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/profile_logout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/profile_header">
 
-    <Button
-        android:id="@+id/profile_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_profile_logout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <pro.papaya.canyo.finditrx.view.CircleProgress
+            android:id="@+id/profile_experience"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/profile_metrics"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
+
+        <LinearLayout
+            android:id="@+id/profile_metrics"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@id/profile_experience"
+            app:layout_constraintTop_toTopOf="@id/profile_experience">
+
+            <TextView
+                android:id="@+id/profile_balance_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_profile_coins"
+                android:textColor="@color/profileText"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/profile_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/profileCoinBalance"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="5000" />
+
+            <TextView
+                android:id="@+id/profile_exp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_default"
+                android:text="@string/fragment_profile_total_exp"
+                android:textColor="@color/profileText"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/profile_exp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/profileTotalExperience"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="11920" />
+
+            <TextView
+                android:id="@+id/profile_completed_quests_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_default"
+                android:text="@string/fragment_profile_completed_quests"
+                android:textColor="@color/profileText"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/profile_completed_quests"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/profileCompletedQuests"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="11920" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/profile_leader_board"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_profile_leader_board"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/profile_logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/profile_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_profile_logout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

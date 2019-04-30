@@ -19,6 +19,8 @@ public final class Constants {
   //TEXT SECTION
   public static final String OPENED_BOLD_TAG = "<b>";
   public static final String CLOSED_BOLD_TAG = "</b>";
+  public static final String SLASH = "/";
+  public static final String SPACE = " ";
 
   //REWARD SECTION
   public static final int BOTTOM_BORDER_QUEST_REWARD = 20;

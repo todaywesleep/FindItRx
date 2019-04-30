@@ -1,5 +1,6 @@
 package pro.papaya.canyo.finditrx.firebase;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -17,6 +18,7 @@ import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import kotlin.math.UMathKt;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
@@ -40,6 +42,7 @@ public class FireBaseProfileManager {
   public static final String FIELD_FOUNDED_SUBJECTS = "foundedSubjects";
   public static final String FIELD_LEVEL = "level";
   public static final String FIELD_REWARD = "reward";
+  public static final String FIELD_COMPLETED_QUESTS = "completedQuests";
   private static final FirebaseFirestore database = FirebaseFirestore.getInstance();
 
   private static FireBaseProfileManager INSTANCE;
@@ -288,6 +291,15 @@ public class FireBaseProfileManager {
   }
 
   public Task<Void> completeQuest(UserQuestModel userQuest) {
+    getUserReference().get()
+        .addOnSuccessListener(documentSnapshot -> {
+          UserModel userModel = documentSnapshot.toObject(UserModel.class);
+          if (userModel != null) {
+            int oldCompleteQuestCount = userModel.getCompletedQuests();
+            getUserReference().update(FIELD_COMPLETED_QUESTS, ++oldCompleteQuestCount);
+          }
+        });
+
     return getUserQuestsReference()
         .document(userQuest.getIdentifier())
         .delete();

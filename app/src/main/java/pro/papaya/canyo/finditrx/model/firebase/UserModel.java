@@ -11,18 +11,20 @@ public class UserModel {
   private int level = 0;
   private int foundedSubjects = 0;
   private int experience = 0;
+  private int completedQuests = 0;
 
   public UserModel() {
     super();
   }
 
-  public UserModel(String email, String nickName, String id, int level, long experience) {
+  public UserModel(String email, String nickName, String id, int level, int experience, int completedQuests) {
     this.email = email;
     this.nickName = nickName;
     this.id = id;
     this.balance = 0;
-    this.level = 0;
-    this.experience = 0;
+    this.level = level;
+    this.experience = experience;
+    this.completedQuests = completedQuests;
   }
 
   public static UserModel getStabUser(String userEmail, int userIdx, String userId) {
@@ -30,6 +32,7 @@ public class UserModel {
         userEmail,
         Constants.STOCK_NICKNAME + userIdx,
         userId,
+        0,
         0,
         0
     );
@@ -89,5 +92,13 @@ public class UserModel {
 
   public void setFoundedSubjects(int foundedSubjects) {
     this.foundedSubjects = foundedSubjects;
+  }
+
+  public int getCompletedQuests() {
+    return completedQuests;
+  }
+
+  public void setCompletedQuests(int completedQuests) {
+    this.completedQuests = completedQuests;
   }
 }

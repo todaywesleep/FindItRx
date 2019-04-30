@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#1A1A1A</color>
     <color name="colorAccent">#000000</color>
     <color name="colorLoadingBackground">#40000000</color>
+
+    <!-- Profile fragment -->
+    <color name="profileHeader">#1A1A1A</color>
+    <color name="profileBody">#252525</color>
+    <color name="profileText">#AFAFAF</color>
+    <color name="profileCoinBalance">#FFC107</color>
+    <color name="profileTotalExperience">#52B76E</color>
+    <color name="profileCompletedQuests">#674377</color>
 
     <color name="buttonTint">#7e87b7</color>
     <color name="snackBarText">#FFFFFF</color>

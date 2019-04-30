@@ -42,7 +42,9 @@
     <string name="fragment_profile_logout">Logout</string>
     <string name="fragment_profile_leader_board">Leader board</string>
     <string name="fragment_profile_level">Level: %d</string>
-    <string name="fragment_profile_experience">Exp</string>
+    <string name="fragment_profile_total_exp">Total XP</string>
+    <string name="fragment_profile_completed_quests">Completed quests</string>
+    <string name="fragment_profile_coins">Coin balance</string>
     <string name="fragment_profile_rest_experience">Rest experience</string>
     <!-- Leader board activity -->
     <string name="leader_board_title">Leader board</string>

@@ -8,14 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
-
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +27,7 @@ import pro.papaya.canyo.finditrx.listener.ShortObserver;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.utils.CalculatorUtils;
 import pro.papaya.canyo.finditrx.utils.Constants;
+import pro.papaya.canyo.finditrx.view.CircleProgress;
 import pro.papaya.canyo.finditrx.viewmodel.ProfileViewModel;
 
 public class ProfileFragment extends BaseFragment
@@ -38,24 +36,22 @@ public class ProfileFragment extends BaseFragment
     void onLeaderBoardRequest();
   }
 
-  @BindView(R.id.profile_username)
+  @BindView(R.id.profile_user_name)
   TextView userName;
-  @BindView(R.id.profile_level)
-  TextView level;
   @BindView(R.id.profile_balance)
   TextView balance;
   @BindView(R.id.profile_exp)
-  TextView experience;
-  @BindView(R.id.profile_rest_exp)
-  TextView restExperience;
-  @BindView(R.id.profile_exp_progress)
-  ProgressBar expProgress;
+  TextView totalExperience;
+  @BindView(R.id.profile_completed_quests)
+  TextView completedQuests;
   @BindView(R.id.profile_logout)
   Button logout;
   @BindView(R.id.profile_leader_board)
   Button leaderBoard;
   @BindView(R.id.profile_edit_nickname)
   ImageButton editProfileName;
+  @BindView(R.id.profile_experience)
+  CircleProgress experienceProgress;
 
   private ProfileViewModel profileViewModel;
   private ProfileFragmentCallback callback;
@@ -156,10 +152,10 @@ public class ProfileFragment extends BaseFragment
     });
   }
 
+  @SuppressLint("SetTextI18n")
   private void setSubscriptions() {
     profileViewModel.getObservableUser()
         .subscribe(new ShortObserver<UserModel>() {
-          @SuppressLint("SetTextI18n")
           @Override
           public void onNext(UserModel userModel) {
             if (userModel != null) {
@@ -167,18 +163,20 @@ public class ProfileFragment extends BaseFragment
               int restExperienceValue = CalculatorUtils.getRestExperience(
                   userModel.getLevel(), userModel.getExperience()
               );
-              userName.setText(userModel.getNickName());
-              balance.setText(String.format(Locale.getDefault(),
-                  getString(R.string.fragment_quests_balance),
-                  userModel.getBalance()));
-              experience.setText(String.valueOf(userModel.getExperience()));
-              level.setText(String.format(Locale.getDefault(),
-                  getString(R.string.fragment_quests_level),
-                  userModel.getLevel())
+              experienceProgress.setData(
+                  currentUserModel.getLevel(),
+                  currentUserModel.getExperience(),
+                  CalculatorUtils.getTotalLevelExperience(currentUserModel.getLevel())
               );
-              restExperience.setText(String.valueOf(restExperienceValue));
-              expProgress.setMax(userModel.getExperience() + restExperienceValue);
-              expProgress.setProgress(userModel.getExperience());
+              userName.setText(userModel.getNickName());
+              balance.setText(Long.toString(userModel.getBalance()));
+              completedQuests.setText(Integer.toString(userModel.getCompletedQuests()));
+              totalExperience.setText(Integer.toString(
+                  CalculatorUtils.getAllExperienceFromLevel(
+                      userModel.getLevel(),
+                      userModel.getExperience()
+                  ))
+              );
 
               if (restExperienceValue <= 0) {
                 profileViewModel.increaseUserLevel()

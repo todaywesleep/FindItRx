@@ -146,14 +146,18 @@ public class MainActivity extends BaseActivity implements
   }
 
   private int generateReward(Random random) {
-    int result = random.nextInt(Constants.UPPER_BORDER_NEW_QUEST_REWARD - Constants.BOTTOM_BORDER_NEW_QUEST_REWARD);
+    int result = random.nextInt(
+        Constants.UPPER_BORDER_NEW_QUEST_REWARD - Constants.BOTTOM_BORDER_NEW_QUEST_REWARD
+    );
     result += 1 + Constants.BOTTOM_BORDER_NEW_QUEST_REWARD;
 
     return result;
   }
 
   private int generateRewardExperience(Random random) {
-    int result = random.nextInt(Constants.UPPER_BORDER_NEW_QUEST_EXP_REWARD - Constants.BOTTOM_BORDER_NEW_QUEST_EXP_REWARD);
+    int result = random.nextInt(
+        Constants.UPPER_BORDER_NEW_QUEST_EXP_REWARD - Constants.BOTTOM_BORDER_NEW_QUEST_EXP_REWARD
+    );
     result += 1 + Constants.BOTTOM_BORDER_NEW_QUEST_EXP_REWARD;
 
     return result;
