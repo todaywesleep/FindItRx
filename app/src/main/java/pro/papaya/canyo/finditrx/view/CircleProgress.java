@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
@@ -93,7 +91,7 @@ public class CircleProgress extends View {
 
   private void initPaint() {
     int greenColor = ContextCompat.getColor(getContext(), R.color.profileTotalExperience);
-    int textGreyColor = ContextCompat.getColor(getContext(), R.color.profileText);
+    int textGreyColor = ContextCompat.getColor(getContext(), R.color.commonText);
     int blackColor = Color.BLACK;
 
     outerCirclePaint = new Paint();

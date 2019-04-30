@@ -26,6 +26,10 @@ import pro.papaya.canyo.finditrx.utils.PixelUtils;
 import timber.log.Timber;
 
 public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.ViewHolder> {
+  public interface LeaderBoardAdapterCallback {
+    void onUserFounded(String username, String place);
+  }
+
   private final static int FIRST_PLACE_IDX = 0;
   private final static int SECOND_PLACE_IDX = 1;
   private final static int THIRD_PLACE_IDX = 2;
@@ -34,11 +38,18 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
 
   private List<UserModel> data = new ArrayList<>();
   private LeaderBoardPagerModel model;
+  private String userId;
   private Context context;
+  private LeaderBoardAdapterCallback callback;
 
-  public LeaderBoardAdapter(LeaderBoardPagerModel model, Context context) {
+  public LeaderBoardAdapter(LeaderBoardPagerModel model,
+                            Context context,
+                            LeaderBoardAdapterCallback callback,
+                            String userId) {
     this.model = model;
     this.context = context;
+    this.userId = userId;
+    this.callback = callback;
   }
 
   @NonNull
@@ -71,8 +82,24 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
   public void setData(List<UserModel> newData) {
     data.clear();
     data.addAll(newData);
+    lookForUser(data);
 
     notifyDataSetChanged();
+  }
+
+  private void lookForUser(List<UserModel> data) {
+    for (UserModel user : data) {
+      if (user.getId().equals(userId)) {
+        if (callback != null) {
+          callback.onUserFounded(
+              user.getNickName(),
+              Integer.toString(data.indexOf(user) + 1)
+          );
+        }
+
+        break;
+      }
+    }
   }
 
   private void applyCardStyle(@NonNull ViewHolder holder, int position) {

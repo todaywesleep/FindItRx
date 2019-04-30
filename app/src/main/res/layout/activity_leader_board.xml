@@ -5,31 +5,16 @@
     android:layout_height="match_parent">
 
     <ImageButton
-        android:elevation="3dp"
         android:id="@+id/leader_board_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        android:elevation="3dp"
         android:padding="@dimen/padding_default"
         android:src="@drawable/ic_arrow_back"
+        android:tint="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!--<androidx.appcompat.widget.Toolbar-->
-    <!--android:id="@+id/leader_board_toolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="?attr/actionBarSize"-->
-    <!--android:background="@android:color/white"-->
-    <!--android:clipToPadding="false"-->
-    <!--android:elevation="@dimen/elevation_base"-->
-    <!--android:outlineProvider="bounds"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent"-->
-    <!--app:navigationIcon="@drawable/ic_arrow_back"-->
-    <!--app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
-    <!--app:title="@string/leader_board_title"-->
-    <!--app:titleTextColor="@android:color/black" />-->
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/leader_board_view_pager"
@@ -44,7 +29,10 @@
         android:id="@+id/leader_board_tab_navigator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabTextColor="@android:color/white">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/leader_board_experience_action"

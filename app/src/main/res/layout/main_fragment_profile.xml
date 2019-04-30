@@ -10,7 +10,7 @@
         android:id="@+id/profile_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/profileHeader"
+        android:background="@color/headerBackground"
         android:padding="@dimen/padding_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
             android:layout_height="32dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_settings"
-            android:tint="@color/profileText"
+            android:tint="@color/commonText"
             app:layout_constraintBottom_toBottomOf="@id/profile_user_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/profile_user_image" />
@@ -44,7 +44,7 @@
             android:layout_marginTop="@dimen/padding_default"
             android:gravity="center"
             android:textAlignment="center"
-            android:textColor="@color/profileText"
+            android:textColor="@color/commonText"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             android:background="@android:color/transparent"
             android:padding="@dimen/padding_small"
             android:src="@drawable/ic_edit"
-            android:tint="@color/profileText"
+            android:tint="@color/commonText"
             app:layout_constraintBottom_toBottomOf="@id/profile_user_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/profile_user_name" />
@@ -69,7 +69,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/profileBody"
+        android:background="@color/commonBody"
         android:padding="@dimen/padding_default"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_header">
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_profile_coins"
-                android:textColor="@color/profileText"
+                android:textColor="@color/commonText"
                 android:textSize="16sp" />
 
             <TextView
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_default"
                 android:text="@string/fragment_profile_total_exp"
-                android:textColor="@color/profileText"
+                android:textColor="@color/commonText"
                 android:textSize="16sp" />
 
             <TextView
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_default"
                 android:text="@string/fragment_profile_completed_quests"
-                android:textColor="@color/profileText"
+                android:textColor="@color/commonText"
                 android:textSize="16sp" />
 
             <TextView

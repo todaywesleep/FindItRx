@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,16 +21,21 @@ import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.recycler.LeaderBoardAdapter;
+import pro.papaya.canyo.finditrx.adapter.recycler.LeaderBoardAdapter.LeaderBoardAdapterCallback;
+import pro.papaya.canyo.finditrx.firebase.FireBaseLoginManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseUsersManager;
 import pro.papaya.canyo.finditrx.fragment.main.BaseFragment;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 
-public abstract class BaseLeaderBoardFragment extends BaseFragment {
+public abstract class BaseLeaderBoardFragment extends BaseFragment
+    implements LeaderBoardAdapterCallback {
   @BindView(R.id.leader_board_recycler)
   RecyclerView recyclerView;
-  @BindView(R.id.leader_board_type)
-  TextView leaderBoardTypeLabel;
+  @BindView(R.id.leader_board_user_name)
+  TextView username;
+  @BindView(R.id.leader_board_user_place)
+  TextView place;
 
   protected LeaderBoardPagerModel model;
   protected LeaderBoardAdapter adapter;
@@ -56,14 +63,21 @@ public abstract class BaseLeaderBoardFragment extends BaseFragment {
     return view;
   }
 
+  @Override
+  public void onUserFounded(String username, String place) {
+    this.username.setText(username);
+    this.place.setText(place.concat(" place in ").concat(getTypeLabel().concat(" category.")));
+  }
+
   protected void initViews() {
-    adapter = new LeaderBoardAdapter(model, getContext());
+    adapter = new LeaderBoardAdapter(
+        model,
+        getContext(),
+        this, FireBaseLoginManager.getInstance().getUserId());
 
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.addItemDecoration(getItemDecorator());
     recyclerView.setAdapter(adapter);
-
-    leaderBoardTypeLabel.setText(getString(R.string.leader_board_type, getTypeLabel()));
   }
 
   protected void subscribeToModel() {

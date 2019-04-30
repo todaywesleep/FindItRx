@@ -4,15 +4,15 @@
     <color name="colorPrimaryDark">#1A1A1A</color>
     <color name="colorAccent">#000000</color>
     <color name="colorLoadingBackground">#40000000</color>
+    <color name="headerBackground">#1A1A1A</color>
+    <color name="commonText">#AFAFAF</color>
+    <color name="commonBody">#252525</color>
 
     <!-- Auth activity -->
     <color name="authBackground">#111111</color>
     <color name="authRipple">#40FFFFFF</color>
 
     <!-- Profile fragment -->
-    <color name="profileHeader">#1A1A1A</color>
-    <color name="profileBody">#252525</color>
-    <color name="profileText">#AFAFAF</color>
     <color name="profileCoinBalance">#FFC107</color>
     <color name="profileTotalExperience">#52B76E</color>
     <color name="profileCompletedQuests">#674377</color>
