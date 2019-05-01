@@ -21,6 +21,8 @@ public final class Constants {
   public static final String CLOSED_BOLD_TAG = "</b>";
   public static final String SLASH = "/";
   public static final String SPACE = " ";
+  public static final String BRACKET_OPEN = "(";
+  public static final String BRACKET_CLOSE = ")";
 
   //REWARD SECTION
   public static final int BOTTOM_BORDER_QUEST_REWARD = 20;

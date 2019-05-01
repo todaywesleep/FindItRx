@@ -25,6 +25,7 @@ import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.viewpager.MainPagerAdapter;
 import pro.papaya.canyo.finditrx.dialog.CameraUnavailableDialog;
+import pro.papaya.canyo.finditrx.dialog.CompleteQuestsDialog;
 import pro.papaya.canyo.finditrx.dialog.NewQuestsDialog;
 import pro.papaya.canyo.finditrx.fragment.main.ActionFragment;
 import pro.papaya.canyo.finditrx.fragment.main.ProfileFragment;
@@ -139,6 +140,8 @@ public class MainActivity extends BaseActivity implements
     );
 
     if (!completedQuests.isEmpty()) {
+      new CompleteQuestsDialog(this, completedQuests).show();
+
       mainViewModel.completeQuests(
           completedQuests
       );
