@@ -12,13 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.R;
 import pro.papaya.canyo.finditrx.adapter.recycler.LeaderBoardAdapter;
 import pro.papaya.canyo.finditrx.adapter.recycler.LeaderBoardAdapter.LeaderBoardAdapterCallback;
@@ -41,6 +40,7 @@ public abstract class BaseLeaderBoardFragment extends BaseFragment
   protected LeaderBoardAdapter adapter;
 
   protected abstract Observer<List<UserModel>> getObserver();
+  protected Disposable disposable;
 
   public BaseLeaderBoardFragment() {
     if (this instanceof LevelFragment) {
@@ -124,5 +124,12 @@ public abstract class BaseLeaderBoardFragment extends BaseFragment
         outRect.right = defaultOffset;
       }
     };
+  }
+
+  @Override
+  public void onDestroy() {
+    if (disposable != null && !disposable.isDisposed()) disposable.dispose();
+
+    super.onDestroy();
   }
 }

@@ -3,7 +3,7 @@ package pro.papaya.canyo.finditrx.fragment.leaderboard;
 import java.util.List;
 
 import io.reactivex.Observer;
-import pro.papaya.canyo.finditrx.listener.ShortObserver;
+import io.reactivex.disposables.Disposable;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 
 public class BalanceFragment extends BaseLeaderBoardFragment {
@@ -18,7 +18,12 @@ public class BalanceFragment extends BaseLeaderBoardFragment {
 
   @Override
   protected Observer<List<UserModel>> getObserver() {
-    return new ShortObserver<List<UserModel>>() {
+    return new Observer<List<UserModel>>() {
+      @Override
+      public void onSubscribe(Disposable d) {
+        disposable = d;
+      }
+
       @Override
       public void onNext(List<UserModel> userModels) {
         adapter.setData(userModels);
@@ -29,6 +34,11 @@ public class BalanceFragment extends BaseLeaderBoardFragment {
       public void onError(Throwable e) {
         showSnackBar(e.getLocalizedMessage());
         logError(e);
+      }
+
+      @Override
+      public void onComplete() {
+
       }
     };
   }

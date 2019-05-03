@@ -89,8 +89,4 @@ public class LeaderBoardActivity extends BaseActivity {
       }
     });
   }
-
-  private void configureToolbar() {
-//    toolbar.setNavigationOnClickListener(v -> finish());
-  }
 }

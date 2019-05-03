@@ -8,12 +8,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.UserModel;
 import pro.papaya.canyo.finditrx.model.view.LeaderBoardPagerModel;
 import pro.papaya.canyo.finditrx.utils.Constants;
-import timber.log.Timber;
 
 public final class FireBaseUsersManager {
   private static final String COLLECTION_USERS = "users";
@@ -35,26 +36,23 @@ public final class FireBaseUsersManager {
   public Observable<List<UserModel>> getUsersCollection(LeaderBoardPagerModel model) {
     String requiredField = getFieldFromModel(model);
 
-    return new Observable<List<UserModel>>() {
-      @Override
-      protected void subscribeActual(Observer<? super List<UserModel>> observer) {
-        database.collection(COLLECTION_USERS)
-            .orderBy(requiredField, Query.Direction.DESCENDING)
-            .limit(Constants.LEADER_BOARD_LIMIT)
-            .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
-              @Override
-              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<UserModel> users = queryDocumentSnapshots.toObjects(UserModel.class);
-                observer.onNext(users);
-              }
+    return Observable.create(emitter -> {
+      database.collection(COLLECTION_USERS)
+          .orderBy(requiredField, Query.Direction.DESCENDING)
+          .limit(Constants.LEADER_BOARD_LIMIT)
+          .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+              List<UserModel> users = queryDocumentSnapshots.toObjects(UserModel.class);
+              emitter.onNext(users);
+            }
 
-              @Override
-              public void onError(FirebaseFirestoreException e) {
-                observer.onError(e);
-              }
-            });
-      }
-    };
+            @Override
+            public void onError(FirebaseFirestoreException e) {
+              emitter.onError(e);
+            }
+          });
+    });
   }
 
   private String getFieldFromModel(LeaderBoardPagerModel model) {
