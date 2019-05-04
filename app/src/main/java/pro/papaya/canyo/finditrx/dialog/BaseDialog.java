@@ -17,6 +17,13 @@ public abstract class BaseDialog extends AlertDialog {
     init();
   }
 
+  protected BaseDialog(Context context, boolean isInitRequired) {
+    super(context);
+    if (isInitRequired) {
+      init();
+    }
+  }
+
   protected BaseDialog(Context context, int themeResId) {
     super(context, themeResId);
     init();

@@ -12,7 +12,7 @@ public class RejectQuestConfirmationDialog extends BaseDialog {
   public RejectQuestConfirmationDialog(Context context,
                                        QuestModel questModel,
                                        OnClickListener positiveListener) {
-    super(context);
+    super(context, false);
 
     this.positiveListener = positiveListener;
     this.questModel = questModel;
