@@ -43,13 +43,17 @@ public final class FireBaseUsersManager {
           .addSnapshotListener(new ExtendedEventListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-              List<UserModel> users = queryDocumentSnapshots.toObjects(UserModel.class);
-              emitter.onNext(users);
+              if (!emitter.isDisposed()) {
+                List<UserModel> users = queryDocumentSnapshots.toObjects(UserModel.class);
+                emitter.onNext(users);
+              }
             }
 
             @Override
             public void onError(FirebaseFirestoreException e) {
-              emitter.onError(e);
+              if (!emitter.isDisposed()) {
+                emitter.onError(e);
+              }
             }
           });
     });
