@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity implements
   }
 
   @Override
-  public void requestCameraPermissions() {
+  public void onRequestCameraPermissions() {
     ActivityCompat.requestPermissions(MainActivity.this,
         new String[]{Manifest.permission.CAMERA},
         CAMERA_PERMISSION_CODE);
@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity implements
   }
 
   @Override
-  public void snapshotTaken(List<QuestModel> takenSnapshotLabels) {
+  public void onSnapshotTaken(List<QuestModel> takenSnapshotLabels) {
     mainViewModel.updateLabelsRemote(itemsCollection, takenSnapshotLabels)
         .subscribe(new SingleObserver<List<QuestModel>>() {
           @Override

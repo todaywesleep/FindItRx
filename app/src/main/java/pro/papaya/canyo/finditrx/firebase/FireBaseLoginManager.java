@@ -39,7 +39,6 @@ public class FireBaseLoginManager {
   }
 
   public Single<FireBaseResponseModel> signInRemote(String email, String password) {
-    Timber.d("TEST %s %s", email, password);
     return new Single<FireBaseResponseModel>() {
       @Override
       protected void subscribeActual(SingleObserver<? super FireBaseResponseModel> observer) {

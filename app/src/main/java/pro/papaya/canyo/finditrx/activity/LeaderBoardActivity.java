@@ -40,7 +40,6 @@ public class LeaderBoardActivity extends BaseActivity {
 
   private void setUpViews(){
     back.setOnClickListener(v -> {
-      Timber.d("TEST back");
       finish();
     });
   }

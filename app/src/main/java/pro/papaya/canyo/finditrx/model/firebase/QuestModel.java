@@ -1,13 +1,16 @@
 package pro.papaya.canyo.finditrx.model.firebase;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class QuestModel {
-  protected String label;
-  protected String identifier;
+  private String label;
+  private String identifier;
 
   public static List<QuestModel> fromFirebaseCollection(List<FirebaseVisionImageLabel> firebaseCollection) {
     List<QuestModel> items = new ArrayList<>();
@@ -36,8 +39,8 @@ public class QuestModel {
 
   public static QuestModel from(UserQuestModel userQuestModel) {
     return new QuestModel(
-        userQuestModel.identifier,
-        userQuestModel.label
+        userQuestModel.getIdentifier(),
+        userQuestModel.getLabel()
     );
   }
 
@@ -65,15 +68,17 @@ public class QuestModel {
     this.identifier = identifier;
   }
 
+  @NonNull
+  @Override
+  public String toString() {
+    return (label == null ? "NONE LABEL" : label) +
+        " with " +
+        (identifier == null ? "NULL IDENTIFIER" : identifier);
+  }
+
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    QuestModel that = (QuestModel) o;
-
-    if (label != null ? !label.equals(that.label) : that.label != null) return false;
-    return identifier != null ? identifier.equals(that.identifier) : that.identifier == null;
+    return identifier.equals(((QuestModel) o).identifier);
   }
 
   @Override

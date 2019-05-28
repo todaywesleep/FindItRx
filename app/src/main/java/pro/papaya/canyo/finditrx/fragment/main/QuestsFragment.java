@@ -244,8 +244,7 @@ public class QuestsFragment extends BaseFragment implements
           public void onNext(List<UserQuestModel> userQuestModels) {
             if (adapter.isInitialized()) {
               if (userQuestModels.size() >= Constants.USER_MAX_QUESTS
-                  || (adapter.getItemCount() > userQuestModels.size()
-                  && adapter.getItemCount() >= Constants.USER_MAX_QUESTS)) {
+                  || adapter.getItemCount() >= Constants.USER_MAX_QUESTS) {
                 questsViewModel.initLastRequestedQuestTimestamp(new Date().getTime());
                 initTimerMillis(null);
               }

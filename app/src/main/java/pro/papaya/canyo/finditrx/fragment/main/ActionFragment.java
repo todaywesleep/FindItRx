@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 
@@ -46,11 +44,11 @@ import pro.papaya.canyo.finditrx.viewmodel.ActionViewModel;
 
 public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallback {
   public interface ActionFragmentCallback {
-    void requestCameraPermissions();
+    void onRequestCameraPermissions();
 
     boolean isCameraPermissionsGranted();
 
-    void snapshotTaken(List<QuestModel> takenSnapshotLabels);
+    void onSnapshotTaken(List<QuestModel> takenSnapshotLabels);
   }
 
   @BindView(R.id.action_camera_view)
@@ -160,7 +158,7 @@ public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallb
               }
 
               if (callback != null) {
-                callback.snapshotTaken(QuestModel.fromFirebaseCollection(firebaseVisionImageLabels));
+                callback.onSnapshotTaken(QuestModel.fromFirebaseCollection(firebaseVisionImageLabels));
               }
 
               setLoading(false);
@@ -256,7 +254,7 @@ public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallb
 
       fotoapparat.start();
     } else if (callback != null) {
-      callback.requestCameraPermissions();
+      callback.onRequestCameraPermissions();
     }
   }
 }

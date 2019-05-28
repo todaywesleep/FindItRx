@@ -1,6 +1,5 @@
 package pro.papaya.canyo.finditrx.firebase;
 
-
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;

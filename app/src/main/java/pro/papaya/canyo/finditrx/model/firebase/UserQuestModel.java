@@ -15,8 +15,8 @@ public class UserQuestModel extends QuestModel {
 
   public static UserQuestModel from(QuestModel model, Integer reward, int experience) {
     return new UserQuestModel(
-        model.identifier,
-        model.label,
+        model.getIdentifier(),
+        model.getLabel(),
         reward,
         experience
     );
