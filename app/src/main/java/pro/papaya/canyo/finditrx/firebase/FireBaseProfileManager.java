@@ -1,7 +1,5 @@
 package pro.papaya.canyo.finditrx.firebase;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -11,14 +9,15 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
-import kotlin.math.UMathKt;
 import pro.papaya.canyo.finditrx.listener.ExtendedEventListener;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
@@ -290,19 +289,26 @@ public class FireBaseProfileManager {
         ));
   }
 
-  public Task<Void> completeQuest(UserQuestModel userQuest) {
+  public void completeQuest(UserQuestModel userQuest) {
     getUserReference().get()
         .addOnSuccessListener(documentSnapshot -> {
           UserModel userModel = documentSnapshot.toObject(UserModel.class);
           if (userModel != null) {
             int oldCompleteQuestCount = userModel.getCompletedQuests();
-            getUserReference().update(FIELD_COMPLETED_QUESTS, ++oldCompleteQuestCount);
+            long newBalance = userModel.getBalance() + userQuest.getReward();
+            long newExperience = userModel.getExperience() + userQuest.getExperience();
+
+            Map<String, Object> fieldsToUpdate = new HashMap<>();
+            fieldsToUpdate.put(FIELD_COMPLETED_QUESTS, ++oldCompleteQuestCount);
+            fieldsToUpdate.put(FIELD_BALANCE, newBalance);
+            fieldsToUpdate.put(FIELD_EXPERIENCE, newExperience);
+
+            getUserReference().update(fieldsToUpdate);
+            getUserQuestsReference()
+                .document(userQuest.getIdentifier())
+                .delete();
           }
         });
-
-    return getUserQuestsReference()
-        .document(userQuest.getIdentifier())
-        .delete();
   }
 
   public void enrollMoney(int amount) {

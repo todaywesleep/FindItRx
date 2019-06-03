@@ -26,8 +26,7 @@ public class MainViewModel extends ViewModel {
   public void completeQuests(List<UserQuestModel> completedQuests) {
     for (UserQuestModel quest : completedQuests) {
       Timber.d("Quest %s successfully completed", quest.getIdentifier());
-      FireBaseProfileManager.getInstance().completeQuest(quest)
-          .addOnSuccessListener(aVoid -> enrollMoney(quest.getReward()));
+      FireBaseProfileManager.getInstance().completeQuest(quest);
     }
   }
 
