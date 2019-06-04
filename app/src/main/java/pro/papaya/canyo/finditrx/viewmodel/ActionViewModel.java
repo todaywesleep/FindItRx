@@ -8,15 +8,22 @@ import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 import java.util.List;
 
 import androidx.lifecycle.ViewModel;
+
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import pro.papaya.canyo.finditrx.firebase.FireBaseNotificationsManager;
 import pro.papaya.canyo.finditrx.firebase.FireBaseProfileManager;
 import pro.papaya.canyo.finditrx.model.firebase.FireBaseLabeler;
+import pro.papaya.canyo.finditrx.model.firebase.NotificationModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 
 public class ActionViewModel extends ViewModel {
   public Observable<SettingsModel> getSettingsReference() {
     return FireBaseProfileManager.getInstance().getObservableSettings();
+  }
+
+  public Observable<List<NotificationModel>> getObservableNotifications() {
+    return FireBaseNotificationsManager.getInstance().getObservableNotificaions();
   }
 
   public void setStableSettings() {

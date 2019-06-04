@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity implements
                   MainActivity.this,
                   rewardModel
               ).show();
+
               mainViewModel.enrollMoney(totalReward);
               mainViewModel.enrollExperience(totalRewardExperience);
               mainViewModel.addFoundQuests(newQuests);
@@ -246,23 +247,5 @@ public class MainActivity extends BaseActivity implements
   public void onLeaderBoardRequest() {
     Intent leaderBoardIntent = new Intent(MainActivity.this, LeaderBoardActivity.class);
     startActivity(leaderBoardIntent);
-//    mainViewModel.getUsersCollection()
-//        .subscribe(new SingleObserver<List<UserModel>>() {
-//          @Override
-//          public void onSubscribe(Disposable d) {
-//
-//          }
-//
-//          @Override
-//          public void onSuccess(List<UserModel> userModels) {
-//            logDebug("Users taken: %s", userModels);
-//          }
-//
-//          @Override
-//          public void onError(Throwable e) {
-//            logError(e);
-//            showSnackBar(e.getLocalizedMessage());
-//          }
-//        });
   }
 }

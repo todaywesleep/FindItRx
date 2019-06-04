@@ -18,6 +18,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fotoapparat.Fotoapparat;
@@ -34,7 +37,9 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import kotlin.jvm.functions.Function1;
 import pro.papaya.canyo.finditrx.R;
+import pro.papaya.canyo.finditrx.adapter.recycler.NotificationsAdapter;
 import pro.papaya.canyo.finditrx.listener.ShortObserver;
+import pro.papaya.canyo.finditrx.model.firebase.NotificationModel;
 import pro.papaya.canyo.finditrx.model.firebase.QuestModel;
 import pro.papaya.canyo.finditrx.model.firebase.SettingsModel;
 import pro.papaya.canyo.finditrx.model.view.FabMenuAction;
@@ -61,8 +66,15 @@ public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallb
   LinearLayout scanResultContainer;
   @BindView(R.id.snapshot_btn)
   FloatingActionButton btnSnapshot;
+  @BindView(R.id.action_notification)
+  FloatingActionButton btnNotifications;
+  @BindView(R.id.action_notification_badge)
+  TextView notificationsCount;
+  @BindView(R.id.action_notifications_recycler)
+  RecyclerView notificationRecycler;
 
   private Fotoapparat fotoapparat;
+  private NotificationsAdapter notificationsAdapter;
   private ActionFragmentCallback callback;
   private ActionViewModel actionViewModel;
   private SettingsModel settingsModel = SettingsModel.getStabSettings();
@@ -88,8 +100,13 @@ public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallb
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     ButterKnife.bind(this, view);
+
     actionViewModel = ViewModelProviders.of(this).get(ActionViewModel.class);
+    notificationsAdapter = new NotificationsAdapter();
     menu.setCallback(this);
+
+    notificationRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+    notificationRecycler.setAdapter(notificationsAdapter);
 
     initFotoapparat();
     subscribeToViewModel();
@@ -172,6 +189,10 @@ public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallb
         return null;
       });
     });
+
+    btnNotifications.setOnClickListener(view -> notificationRecycler.setVisibility(
+        notificationRecycler.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE
+    ));
   }
 
   private void getSettings() {
@@ -187,6 +208,23 @@ public class ActionFragment extends BaseFragment implements FabMenu.FabMenuCallb
               applySettings(SettingsModel.getStabSettings());
               logDebug("Settings in null");
             }
+          }
+
+          @Override
+          public void onError(Throwable e) {
+            showSnackBar(e.getLocalizedMessage());
+            logError(e);
+          }
+        });
+
+    actionViewModel.getObservableNotifications()
+        .subscribe(new ShortObserver<List<NotificationModel>>() {
+          @SuppressLint("SetTextI18n")
+          @Override
+          public void onNext(List<NotificationModel> notificationModels) {
+            notificationsCount.setVisibility(View.VISIBLE);
+            notificationsCount.setText(Integer.toString(notificationModels.size()));
+            notificationsAdapter.updateData(notificationModels);
           }
 
           @Override
